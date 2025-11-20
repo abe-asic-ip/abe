@@ -1,0 +1,36 @@
+# SPDX-FileCopyrightText: 2025 Hugh Walsh
+#
+# SPDX-License-Identifier: MIT
+
+# This file: src/abe/rad/rad_cdc_mcp/formal/rad_cdc_mcp_cover.sby
+
+[options]
+mode cover
+depth 16
+
+[engines]
+smtbmc boolector
+
+[files]
+src/abe/rad/shared/rtl/rad_timescale.svh
+src/abe/rad/rad_cdc_sync/rtl/rad_cdc_sync.sv
+src/abe/rad/shared/rtl/rad_pulse_gen.sv
+src/abe/rad/rad_cdc_mcp/rtl/rad_cdc_mcp_asend_fsm.sv
+src/abe/rad/rad_cdc_mcp/rtl/rad_cdc_mcp_back_fsm.sv
+src/abe/rad/rad_cdc_mcp/rtl/rad_cdc_mcp_amcp_send.sv
+src/abe/rad/rad_cdc_mcp/rtl/rad_cdc_mcp_bmcp_recv.sv
+src/abe/rad/rad_cdc_mcp/rtl/rad_cdc_mcp.sv
+src/abe/rad/rad_cdc_mcp/formal/rad_cdc_mcp_formal_top.sv
+
+[script]
+verilog_defines -D FORMAL
+read -formal -sv rad_timescale.svh rad_cdc_sync.sv rad_pulse_gen.sv rad_cdc_mcp_asend_fsm.sv rad_cdc_mcp_back_fsm.sv rad_cdc_mcp_amcp_send.sv rad_cdc_mcp_bmcp_recv.sv rad_cdc_mcp.sv rad_cdc_mcp_formal_top.sv
+hierarchy -top rad_cdc_mcp_formal_top
+proc; opt
+clk2fflogic
+opt
+prep -top rad_cdc_mcp_formal_top
+flatten
+memory -nomap
+opt_clean -purge
+

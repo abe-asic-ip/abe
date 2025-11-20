@@ -1,0 +1,37 @@
+# SPDX-FileCopyrightText: 2025 Hugh Walsh
+#
+# SPDX-License-Identifier: MIT
+
+# This file: src/abe/uarch/fifo_depth_examples/xon_xoff_cdc.yaml
+
+# Standard
+
+fifo_type: xon_xoff
+wr_latency: 1
+rd_latency: 1
+blind_window_cycles: 8
+write_profile:
+  transaction:
+    valid_cycles: 4
+    gap_cycles: 2
+  burst:
+    transactions_per_burst: 8
+    gap_cycles: 16
+read_profile:
+  transaction:
+    valid_cycles: 3
+    gap_cycles: 3
+  burst:
+    transactions_per_burst: 8
+    gap_cycles: 12
+
+# XON/XOFF specific
+
+atomic_tail: 4
+react_latency: 8
+
+# CDC specific
+
+cdc:
+  wr_clk_freq: 1 GHz
+  rd_clk_freq: 900 MHz

@@ -1,0 +1,11 @@
+# SPDX-FileCopyrightText: 2025 Hugh Walsh
+#
+# SPDX-License-Identifier: MIT
+
+# This file: .verible-format
+
+--indentation_spaces=2
+--column_limit=120
+--assignment_statement_alignment=flush-left
+--module_net_variable_alignment=align
+--port_declarations_alignment=align

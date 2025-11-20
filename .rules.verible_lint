@@ -1,0 +1,12 @@
+# SPDX-FileCopyrightText: 2025 Hugh Walsh
+#
+# SPDX-License-Identifier: MIT
+
+# This file: .rules.verible_lint
+
+# One rule per line. Same grammar as --rules.
+
++line-length=length:120
+-undersized-binary-literal
+-interface-name-style
+-explicit-parameter-storage-type

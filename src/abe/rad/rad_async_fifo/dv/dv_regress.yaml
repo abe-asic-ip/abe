@@ -1,0 +1,7 @@
+jobs:
+  - name: base
+    args:
+      - --design=rad_async_fifo
+      - --test=test_rad_async_fifo
+      - --nseeds=1
+      - --seed-base=1999

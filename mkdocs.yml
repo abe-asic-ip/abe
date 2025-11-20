@@ -1,0 +1,54 @@
+# SPDX-FileCopyrightText: 2025 Hugh Walsh
+#
+# SPDX-License-Identifier: MIT
+
+# This file: mkdocs.yml
+
+site_name: ABE - A Better Environment for Developing ASIC IP
+site_description: >-
+  ABE ("A Better Environment") is a lightweight, modern environment for
+  developing reusable ASIC IP. It combines microarchitecture tools, reusable
+  RTL designs, synthesis, formal verification, and Python‑based design
+  verification (DV). ABE runs on free and open‑source tools.
+site_url: https://example.com # update
+repo_url: https://github.com/hmcwalsh/abe
+repo_name: hmcwalsh/abe
+
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - navigation.top
+    - content.code.copy
+    - toc.integrate
+
+nav:
+  - Home: index.md
+  - Development:
+      - Python Development: python_dev.md
+  - Microarchitecture Tools:
+      - FIFO Depth Tool: fifo_depth.md
+      - Packet Quantization Tool: pkt_quantize.md
+  - Reusable ASIC Designs (RAD) Flow:
+      - RAD Design: design.md
+      - RAD Formal: formal.md
+      - RAD DV: dv.md
+      - RAD DV Template: rad_template_dv_readme.md
+      - Creating a New RAD Design: rad_new_design.md
+  - Reusable ASIC Designs (RAD) Library DV Overviews:
+      - RAD ASYNC FIFO DV Overview: rad_async_fifo_dv_readme.md
+      - RAD CDC MCP DV Overview: rad_cdc_mcp_dv_readme.md
+      - RAD CDC SYNC DV Overview: rad_cdc_sync_dv_readme.md
+
+markdown_extensions:
+  - admonition
+  - toc:
+      permalink: true
+  - codehilite
+  - footnotes
+  - def_list
+  - tables
+  - attr_list
+
+plugins:
+  - search

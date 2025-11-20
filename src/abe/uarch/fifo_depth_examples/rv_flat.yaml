@@ -1,0 +1,16 @@
+# SPDX-FileCopyrightText: 2025 Hugh Walsh
+#
+# SPDX-License-Identifier: MIT
+
+# This file: src/abe/uarch/fifo_depth_examples/rv_flat.yaml
+
+# Standard
+
+fifo_type: ready_valid
+horizon: 80
+sum_w_min: 40
+sum_w_max: 48
+sum_r_min: 24
+sum_r_max: 32
+wr_latency: 1
+rd_latency: 1

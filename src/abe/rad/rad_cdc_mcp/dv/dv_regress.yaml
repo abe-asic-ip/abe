@@ -1,0 +1,7 @@
+jobs:
+  - name: base
+    args:
+      - --design=rad_cdc_mcp
+      - --test=test_rad_cdc_mcp
+      - --nseeds=1
+      - --seed-base=1999

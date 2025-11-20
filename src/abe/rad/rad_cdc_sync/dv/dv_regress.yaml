@@ -1,0 +1,25 @@
+jobs:
+  - name: base
+    args:
+      - --design=rad_cdc_sync
+      - --test=test_rad_cdc_sync
+      - --nseeds=2
+      - --seed-base=1999
+
+  - name: meta_no_check
+    args:
+      - --design=rad_cdc_sync
+      - --test=test_rad_cdc_sync
+      - --build-arg=-DSIMULATE_METASTABILITY
+      - --nseeds=2
+      - --seed-base=12345
+      - --check-en=0
+
+  - name: meta_expect_fail
+    args:
+      - --design=rad_cdc_sync
+      - --test=test_rad_cdc_sync
+      - --build-arg=-DSIMULATE_METASTABILITY
+      - --nseeds=2
+      - --seed-base=67890
+      - --expect=FAIL

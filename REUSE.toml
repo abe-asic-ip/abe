@@ -1,0 +1,50 @@
+# SPDX-FileCopyrightText: 2025 Hugh Walsh
+#
+# SPDX-License-Identifier: MIT
+
+# This file: RESUSE.toml
+
+version = 1
+SPDX-PackageName = "asic-block-enablers"
+SPDX-PackageDownloadLocation = "https://github.com/hmcwalsh/abe"
+
+[[annotations]]
+path = "NOTICE"
+SPDX-License-Identifier = "MIT"
+SPDX-FileCopyrightText = "2025 Hugh Walsh"
+
+[[annotations]]
+path = "src/abe/rad/*/dv/**"
+precedence = "aggregate"
+SPDX-License-Identifier = "MIT"
+SPDX-FileCopyrightText = "2025 Hugh Walsh"
+
+[[annotations]]
+path = "src/abe/rad/*/formal/**"
+precedence = "aggregate"
+SPDX-License-Identifier = "MIT"
+SPDX-FileCopyrightText = "2025 Hugh Walsh"
+
+[[annotations]]
+path = "src/abe/rad/*/rtl/**"
+precedence = "aggregate"
+SPDX-License-Identifier = "Apache-2.0"
+SPDX-FileCopyrightText = "2025 Hugh Walsh"
+
+[[annotations]]
+path = "src/abe/rad/shared/dv/**"
+precedence = "aggregate"
+SPDX-License-Identifier = "MIT"
+SPDX-FileCopyrightText = "2025 Hugh Walsh"
+
+[[annotations]]
+path = "src/abe/rad/shared/rtl/**"
+precedence = "aggregate"
+SPDX-License-Identifier = "Apache-2.0"
+SPDX-FileCopyrightText = "2025 Hugh Walsh"
+
+[[annotations]]
+path = "src/abe/uarch/**"
+precedence = "aggregate"
+SPDX-License-Identifier = "MIT"
+SPDX-FileCopyrightText = "2025 Hugh Walsh"

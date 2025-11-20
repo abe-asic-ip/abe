@@ -1,0 +1,21 @@
+# SPDX-FileCopyrightText: 2025 Hugh Walsh
+#
+# SPDX-License-Identifier: MIT
+
+# This file: src/abe/uarch/fifo_depth_examples/replay.yaml
+
+# Standard
+
+fifo_type: replay
+horizon: 256
+
+# Replay specific
+
+atomic_tail: 2
+rtt: 64
+
+# CDC specific
+
+cdc:
+  wr_clk_freq: 1 GHz
+  rd_clk_freq: 900 MHz

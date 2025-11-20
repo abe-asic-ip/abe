@@ -1,0 +1,34 @@
+# SPDX-FileCopyrightText: 2025 Hugh Walsh
+#
+# SPDX-License-Identifier: MIT
+
+# This file: src/abe/rad/rad_async_fifo/formal/rad_async_fifo_cover.sby
+
+[options]
+mode cover
+depth 32
+
+[engines]
+smtbmc boolector
+
+[files]
+src/abe/rad/shared/rtl/rad_timescale.svh
+src/abe/rad/rad_async_fifo/rtl/rad_async_fifo.sv
+src/abe/rad/rad_async_fifo/rtl/rad_async_fifo_mem.sv
+src/abe/rad/rad_cdc_sync/rtl/rad_cdc_sync.sv
+src/abe/rad/rad_async_fifo/rtl/rad_async_fifo_sync.sv
+src/abe/rad/rad_async_fifo/rtl/rad_async_fifo_rptr.sv
+src/abe/rad/rad_async_fifo/rtl/rad_async_fifo_wptr.sv
+src/abe/rad/rad_async_fifo/formal/rad_async_fifo_formal_top.sv
+
+[script]
+verilog_defines -D FORMAL
+read -formal -sv rad_timescale.svh rad_async_fifo.sv rad_async_fifo_mem.sv rad_cdc_sync.sv rad_async_fifo_sync.sv rad_async_fifo_rptr.sv rad_async_fifo_wptr.sv rad_async_fifo_formal_top.sv
+hierarchy -top rad_async_fifo_formal_top
+proc; opt
+clk2fflogic
+opt
+prep -top rad_async_fifo_formal_top
+flatten
+memory -nomap
+opt_clean -purge

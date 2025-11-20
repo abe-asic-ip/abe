@@ -1,0 +1,31 @@
+# SPDX-FileCopyrightText: 2025 Hugh Walsh
+#
+# SPDX-License-Identifier: MIT
+
+# This file: src/abe/rad/rad_cdc_sync/formal/rad_cdc_sync.sby
+
+[options]
+mode prove
+depth 32
+expect pass
+
+[engines]
+smtbmc boolector
+
+[files]
+src/abe/rad/shared/rtl/rad_timescale.svh
+src/abe/rad/rad_cdc_sync/rtl/rad_cdc_sync.sv
+src/abe/rad/rad_cdc_sync/formal/rad_cdc_sync_formal_top.sv
+
+[script]
+verilog_defines -D FORMAL
+read -formal -sv rad_cdc_sync.sv rad_cdc_sync_formal_top.sv
+hierarchy -top rad_cdc_sync_formal_top
+proc; opt
+clk2fflogic
+opt
+prep -top rad_cdc_sync_formal_top
+flatten
+memory -nomap
+opt_clean -purge
+
