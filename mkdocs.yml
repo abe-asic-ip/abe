@@ -10,9 +10,9 @@ site_description: >-
   developing reusable ASIC IP. It combines microarchitecture tools, reusable
   RTL designs, synthesis, formal verification, and Python‑based design
   verification (DV). ABE runs on free and open‑source tools.
-site_url: https://example.com # update
-repo_url: https://github.com/hmcwalsh/abe
-repo_name: hmcwalsh/abe
+site_url: https://abe-asic-ip.github.io/abe/
+repo_url: https://github.com/abe-asic-ip/abe
+repo_name: abe-asic-ip/abe
 
 theme:
   name: material

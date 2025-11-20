@@ -28,7 +28,7 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/hmcwalsh/abe"
+Homepage = "https://github.com/abe-asic-ip/abe"
 
 [project.optional-dependencies]
 dev = [

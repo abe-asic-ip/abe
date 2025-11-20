@@ -6,7 +6,7 @@
 
 version = 1
 SPDX-PackageName = "asic-block-enablers"
-SPDX-PackageDownloadLocation = "https://github.com/hmcwalsh/abe"
+SPDX-PackageDownloadLocation = "https://github.com/abe-asic-ip/abe"
 
 [[annotations]]
 path = "NOTICE"

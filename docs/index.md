@@ -11,7 +11,7 @@ SPDX-License-Identifier: MIT
 [![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![GitHub](https://img.shields.io/badge/github-hmcwalsh%2Fabe-blue.svg)](https://github.com/hmcwalsh/abe)
+[![GitHub](https://img.shields.io/badge/github-abe-asic-ip%2Fabe-blue.svg)](https://github.com/abe-asic-ip/abe)
 [![REUSE Compliance](https://img.shields.io/badge/REUSE-compliant-green.svg)](https://reuse.software/)
 
 ABE ("A Better Environment") is a lightweight, modern environment for developing reusable ASIC IP. It combines microarchitecture tools, reusable RTL designs, synthesis, formal verification, and Python‑based design verification (DV). ABE runs on free and open‑source tools.
