@@ -13,10 +13,10 @@ docs-help:
 	@echo "  make docs-build                          # mkdocs build to ./site"
 	@echo "  make docs-deploy                         # Publish to GitHub Pages"
 
-.PHONE: docs-sync-readme
-docs-sync-readme:
-	@echo "Syncing docs/index.md to README.md"
-	@cp docs/index.md README.md
+# docs/index.md is the golden source for README.md
+.PHONY: docs-generate-readme
+docs-generate-readme:
+	@scripts/generate_readme.py
 
 # Create at http://127.0.0.1:8000/abe/
 .PHONY: docs-serve

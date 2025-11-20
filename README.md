@@ -199,11 +199,11 @@ ABE uses [pyuvm](https://github.com/pyuvm/pyuvm), a Python implementation of UVM
 
 ### **Can I use ABE with commercial simulators?**
 
-ABE currently supports [Verilator](https://verilator.org) and [Icarus Verilog](https://steveicarus.github.io/iverilog). While [cocotb](https://www.cocotb.org) works with commercial simulators, ABE's test infrastructure would need updates to support them. Contributors with simulator access can extend the [`dv`](dv.md#1-dv-main-front-end-runs-a-single-test) tool and submit changes to the repository.
+ABE currently supports [Verilator](https://verilator.org) and [Icarus Verilog](https://steveicarus.github.io/iverilog). While [cocotb](https://www.cocotb.org) works with commercial simulators, ABE's test infrastructure would need updates to support them. Contributors with simulator access can extend the [`dv`](docs/dv.md#1-dv-main-front-end-runs-a-single-test) tool and submit changes to the repository.
 
 ---
 
-### **Is the [fifo-depth](fifo_depth.md) tool a simulator?**
+### **Is the [fifo-depth](docs/fifo_depth.md) tool a simulator?**
 
 No. It is an analytical tool that uses deterministic traffic analysis and a CP‑SAT solver to determine worst‑case depths and flow-control parameters.
 

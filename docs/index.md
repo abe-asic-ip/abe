@@ -19,8 +19,6 @@ ABE ("A Better Environment") is a lightweight, modern environment for developing
 
 The goal is simple: **make block‑level ASIC development easier, clearer, and more productive** for professional engineers, students, researchers, and enthusiasts.
 
-📚 **[Read the full documentation](https://abe-asic-ip.github.io/abe/)**
-
 Welcome to ABE — a better environment for developing ASIC IP.
 
 ---
