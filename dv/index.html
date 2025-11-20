@@ -1,0 +1,2968 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="ABE ("A Better Environment") is a lightweight, modern environment for developing reusable ASIC IP. It combines microarchitecture tools, reusable RTL designs, synthesis, formal verification, and Python‑based design verification (DV). ABE runs on free and open‑source tools.">
+      
+      
+      
+        <link rel="canonical" href="https://abe-asic-ip.github.io/abe/dv/">
+      
+      
+        <link rel="prev" href="../formal/">
+      
+      
+        <link rel="next" href="../rad_template_dv_readme/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>RAD DV - ABE - A Better Environment for Developing ASIC IP</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#reusable-asic-designs-rad-design-verification-dv" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="ABE - A Better Environment for Developing ASIC IP" class="md-header__button md-logo" aria-label="ABE - A Better Environment for Developing ASIC IP" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ABE - A Better Environment for Developing ASIC IP
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              RAD DV
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/abe-asic-ip/abe" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    abe-asic-ip/abe
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="ABE - A Better Environment for Developing ASIC IP" class="md-nav__button md-logo" aria-label="ABE - A Better Environment for Developing ASIC IP" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ABE - A Better Environment for Developing ASIC IP
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/abe-asic-ip/abe" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    abe-asic-ip/abe
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Development
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../python_dev/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python Development
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Microarchitecture Tools
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Microarchitecture Tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fifo_depth/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FIFO Depth Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pkt_quantize/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Packet Quantization Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reusable ASIC Designs (RAD) Flow
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reusable ASIC Designs (RAD) Flow
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../formal/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD Formal
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD DV
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD DV
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#audience" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audience
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#getting-started" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Getting Started
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Getting Started">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#set-up-and-install-the-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Set Up and Install the Environment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#install-required-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Install Required Tools
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#outputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Outputs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#relevant-directory-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Relevant Directory Layout
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#methodology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Methodology
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Methodology">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#choices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Choices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#methodology-uvm-for-block-level-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Methodology: UVM for Block-Level Verification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#technology-cocotbpyuvm-over-verilatorsystemverilog-uvm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Technology: cocotb/pyuvm over Verilator/SystemVerilog UVM
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#discipline-uvm-standard-patterns-over-python-idioms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Discipline: UVM Standard Patterns over Python Idioms
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#benefits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Benefits
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Benefits">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#python-reference-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Python Reference Models
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rich-python-ecosystem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rich Python Ecosystem
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#known-limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Known Limitations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#future-enhancements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Future Enhancements
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#makefiles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Makefiles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rad-dv-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RAD DV Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#structure-of-a-rad-dv-bench" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Structure of a RAD DV Bench
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dv-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DV Tools
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="DV Tools">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-dv-main-front-end-runs-a-single-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. dv — Main Front-End (Runs a Single Test)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. dv — Main Front-End (Runs a Single Test)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dv-purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dv Purpose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dv-typical-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dv Typical Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dv-arguments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dv Arguments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dv-build-outputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dv Build Outputs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dv-test-outputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dv Test Outputs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-dv-regress-yamldriven-regression-runner" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. dv-regress — YAML‑Driven Regression Runner
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. dv-regress — YAML‑Driven Regression Runner">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dv-regress-purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dv-regress Purpose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dv-regress-typical-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dv-regress Typical Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dv-regress-arguments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dv-regress Arguments
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-dv-regress-all-run-all-rad-regressions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. dv-regress-all — Run All RAD Regressions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. dv-regress-all — Run All RAD Regressions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dv-regress-all-purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dv-regress-all Purpose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dv-regress-all-typical-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dv-regress-all Typical Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dv-regress-all-arguments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dv-regress-all Arguments
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-dv-report-summaries-reporting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. dv-report — Summaries &amp; Reporting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. dv-report — Summaries &amp; Reporting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dv-report-purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dv-report Purpose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dv-report-typical-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dv-report Typical Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dv-report-arguments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dv-report Arguments
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-dv-make-bench-autogenerate-a-new-dv-bench" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. dv-make-bench — Auto‑Generate a New DV Bench
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. dv-make-bench — Auto‑Generate a New DV Bench">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dv-make-bench-purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dv-make-bench Purpose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dv-make-bench-typical-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dv-make-bench Typical Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dv-make-bench-arguments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dv-make-bench Arguments
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#regression-guidelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Regression Guidelines
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Regression Guidelines">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#schema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Schema
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#job-arguments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Job Arguments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Patterns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#guidelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Guidelines
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Guidelines">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifying-a-new-rad-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verifying a New RAD Design
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Verifying a New RAD Design">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-create-a-bench-from-a-suitable-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Create a Bench from a Suitable Template
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Create a Bench from a Suitable Template">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#single-clock-designs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Single-Clock Designs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multi-clock-multi-agent-designs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-Clock / Multi-Agent Designs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output-timing-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output Timing Considerations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-implement-core-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Implement Core Components
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-develop-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Develop Tests
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-create-regression-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Create Regression Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-run-debug" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Run &amp; Debug
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-document" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Document
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FAQ
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="FAQ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#can-i-use-rad-dv-with-commercial-simulators" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Can I use RAD DV with commercial simulators?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-do-regression-tests-run-sequentially-instead-of-in-parallel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why do regression tests run sequentially instead of in parallel?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-use-uvm-methodology-with-python-instead-of-pure-cocotb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why use UVM methodology with Python instead of pure cocotb?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#can-i-use-systemverilog-assertions-with-rad-dv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Can I use SystemVerilog assertions with RAD DV?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-separate-monitors-for-inputs-and-outputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why separate monitors for inputs and outputs?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-do-i-debug-a-failing-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How do I debug a failing test?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-should-i-use-multiple-agents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When should I use multiple agents?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-doesnt-my-reference-model-match-the-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why doesn't my reference model match the design?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-do-i-add-a-new-test-to-an-existing-bench" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How do I add a new test to an existing bench?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#literature" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Literature
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#licensing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Licensing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#author" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Author
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rad_template_dv_readme/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD DV Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rad_new_design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Creating a New RAD Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reusable ASIC Designs (RAD) Library DV Overviews
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reusable ASIC Designs (RAD) Library DV Overviews
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rad_async_fifo_dv_readme/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD ASYNC FIFO DV Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rad_cdc_mcp_dv_readme/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD CDC MCP DV Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rad_cdc_sync_dv_readme/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD CDC SYNC DV Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<!--
+SPDX-FileCopyrightText: 2025 Hugh Walsh
+
+SPDX-License-Identifier: MIT
+-->
+
+<!--- This file: docs/dv.md -->
+
+<h1 id="reusable-asic-designs-rad-design-verification-dv">Reusable ASIC Designs (RAD) – Design Verification (DV)<a class="headerlink" href="#reusable-asic-designs-rad-design-verification-dv" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>The <strong>Reusable ASIC Designs (RAD)</strong> DV environment provides a complete, reusable, and open‑source verification framework for all RAD designs. It combines <strong><a href="https://www.cocotb.org">cocotb</a></strong>, <strong><a href="https://github.com/pyuvm/pyuvm">pyuvm</a></strong>, and a robust set of <strong>shared base classes</strong>, enabling UVM‑style verification using modern Python tooling.</p>
+<p>RAD DV follows the ABE philosophy:</p>
+<ul>
+<li><strong>Consistency</strong>: All RAD designs use the same structure and DV architecture</li>
+<li><strong>Reusability</strong>: Shared base classes for agents, drivers, monitors, sequences, scoreboards, and coverage</li>
+<li><strong>Automation</strong>: Make targets, regression scripts, auto‑generated benches</li>
+<li><strong>Portability</strong>: 100% open‑source toolchain (<a href="https://www.cocotb.org">cocotb</a>, <a href="https://verilator.org">Verilator</a>, <a href="https://github.com/pyuvm/pyuvm">pyuvm</a>, <a href="https://docs.pytest.org/en/stable">pytest</a>)</li>
+</ul>
+<p><strong><a href="../design/">RAD Design</a></strong> ensures RTL quality, <strong><a href="../formal/">RAD Formal</a></strong> ensures logical correctness, and <strong><a href="./">RAD DV</a></strong> ensures <em>functional correctness under realistic stimulus</em>.</p>
+<h3 id="audience">Audience<a class="headerlink" href="#audience" title="Permanent link">&para;</a></h3>
+<ul>
+<li>DV engineers building verification environments for new RAD designs</li>
+<li>RTL designers writing tests or debugging failures</li>
+<li>Contributors adding new modules to the RAD library</li>
+</ul>
+<h3 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Establish consistent DV architecture across all RAD designs</li>
+<li>Explain the shared DV infrastructure, tools, and base classes</li>
+<li>Show how to create a new RAD DV bench</li>
+<li>Document how to run, debug, and extend RAD testbenches</li>
+</ul>
+<h3 id="key-features">Key Features<a class="headerlink" href="#key-features" title="Permanent link">&para;</a></h3>
+<ul>
+<li>UVM‑style architecture built on <a href="https://www.cocotb.org">cocotb</a> + <a href="https://github.com/pyuvm/pyuvm">pyuvm</a></li>
+<li>Reusable base class library (agent/driver/monitor/env/sb/coverage)</li>
+<li>Automated regression tools</li>
+<li>Built‑in support for multi‑clock, multi‑agent designs</li>
+<li>Bench template generator (<code>dv-make-bench</code>)</li>
+<li>YAML‑driven regressions (<code>dv-regress</code>)</li>
+<li>Unified Makefile integration (<code>make dv</code>, <code>make dv-regress</code>)</li>
+</ul>
+<hr />
+<h2 id="getting-started">Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
+<h3 id="set-up-and-install-the-environment">Set Up and Install the Environment<a class="headerlink" href="#set-up-and-install-the-environment" title="Permanent link">&para;</a></h3>
+<p>See <a href="../python_dev/">ABE Python Development</a> for Python environment setup details.</p>
+<div class="codehilite"><pre><span></span><code>make<span class="w"> </span>py-venv-all
+<span class="nb">source</span><span class="w"> </span>.venv/bin/activate
+make<span class="w"> </span>py-install-all
+</code></pre></div>
+
+<h3 id="install-required-tools">Install Required Tools<a class="headerlink" href="#install-required-tools" title="Permanent link">&para;</a></h3>
+<p>Install <a href="https://verilator.org">Verilator</a> and a waveform viewer such as <a href="https://surfer-project.org">Surfer</a> or <a href="https://gtkwave.sourceforge.net">GTKWave</a>.</p>
+<h3 id="run-examples">Run Examples<a class="headerlink" href="#run-examples" title="Permanent link">&para;</a></h3>
+<p>A single test:</p>
+<div class="codehilite"><pre><span></span><code>dv<span class="w"> </span>--design<span class="o">=</span>rad_async_fifo<span class="w"> </span>--test<span class="o">=</span>test_rad_async_fifo<span class="w"> </span>--waves<span class="w"> </span><span class="m">1</span>
+</code></pre></div>
+
+<p>A regression:</p>
+<div class="codehilite"><pre><span></span><code>make<span class="w"> </span><span class="nv">DESIGN</span><span class="o">=</span>rad_cdc_sync<span class="w"> </span>dv-regress-design
+</code></pre></div>
+
+<p>All regressions in the repo:</p>
+<div class="codehilite"><pre><span></span><code>make<span class="w"> </span>dv-regress-all-and-report
+</code></pre></div>
+
+<h3 id="outputs">Outputs<a class="headerlink" href="#outputs" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code>out_dv/builds/&lt;rad_design&gt;.&lt;hash&gt;/
+out_dv/tests/&lt;rad_design&gt;.&lt;hash&gt;.&lt;test&gt;.&lt;seed&gt;
+</code></pre></div>
+
+<h3 id="relevant-directory-layout">Relevant Directory Layout<a class="headerlink" href="#relevant-directory-layout" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code>.
+├── mk
+│   ├── 00-vars.mk
+│   ├── 10-helpers.mk
+│   ├── 20-python.mk
+│   ├── 60-dv.mk
+├── src
+│   └── abe
+│       ├── rad
+│       │   ├── rad_async_fifo
+│       │   │   ├── dv
+│       │   │   │   ├── __init__.py
+│       │   │   │   ├── dv_regress.yaml
+│       │   │   │   ├── rad_async_fifo_coverage.py
+│       │   │   │   ├── rad_async_fifo_driver.py
+│       │   │   │   ├── rad_async_fifo_env.py
+│       │   │   │   ├── rad_async_fifo_item.py
+│       │   │   │   ├── rad_async_fifo_monitor_in.py
+│       │   │   │   ├── rad_async_fifo_monitor_out.py
+│       │   │   │   ├── rad_async_fifo_ref_model.py
+│       │   │   │   ├── rad_async_fifo_reset_sink.py
+│       │   │   │   ├── rad_async_fifo_sb.py
+│       │   │   │   ├── rad_async_fifo_sequence.py
+│       │   │   │   ├── README.md
+│       │   │   │   └── test_rad_async_fifo.py
+│       │   │   └── __init__.py
+│       │   ├── rad_template
+│       │   │   └── dv
+│       │   │       ├── __init__.py
+│       │   │       ├── README.md
+│       │   │       ├── template_coverage.py
+│       │   │       ├── template_driver.py
+│       │   │       ├── template_item.py
+│       │   │       ├── template_monitor_in.py
+│       │   │       ├── template_monitor_out.py
+│       │   │       ├── template_ref_model.py
+│       │   │       ├── template_sequence.py
+│       │   │       └── test_template.py
+│       │   ├── shared
+│       │   │   ├── dv
+│       │   │   │   ├── __init__.py
+│       │   │   │   ├── base_agent.py
+│       │   │   │   ├── base_clock_driver.py
+│       │   │   │   ├── base_clock_mixin.py
+│       │   │   │   ├── base_coverage.py
+│       │   │   │   ├── base_driver.py
+│       │   │   │   ├── base_env.py
+│       │   │   │   ├── base_item.py
+│       │   │   │   ├── base_monitor_in.py
+│       │   │   │   ├── base_monitor_out.py
+│       │   │   │   ├── base_monitor.py
+│       │   │   │   ├── base_ref_model.py
+│       │   │   │   ├── base_reset_driver.py
+│       │   │   │   ├── base_reset_item.py
+│       │   │   │   ├── base_reset_monitor.py
+│       │   │   │   ├── base_reset_sink.py
+│       │   │   │   ├── base_sb_comparator.py
+│       │   │   │   ├── base_sb_predictor.py
+│       │   │   │   ├── base_sb.py
+│       │   │   │   ├── base_sequence.py
+│       │   │   │   ├── base_sequencer.py
+│       │   │   │   ├── base_test.py
+│       │   │   │   ├── utils_cli.py
+│       │   │   │   └── utils_dv.py
+│       │   │   └── __init__.py
+│       │   ├── tools
+│       │   │   ├── __init__.py
+│       │   │   ├── dv_make_bench.py
+│       │   │   ├── dv_regress_all.py
+│       │   │   ├── dv_regress.py
+│       │   │   ├── dv_report.py
+│       │   │   ├── dv.py
+│       │   │   └── flatten_srclist.sh
+│       │   └── __init__.py
+├── Makefile
+</code></pre></div>
+
+<hr />
+<h2 id="methodology">Methodology<a class="headerlink" href="#methodology" title="Permanent link">&para;</a></h2>
+<h3 id="choices">Choices<a class="headerlink" href="#choices" title="Permanent link">&para;</a></h3>
+<h4 id="methodology-uvm-for-block-level-verification">Methodology: UVM for Block-Level Verification<a class="headerlink" href="#methodology-uvm-for-block-level-verification" title="Permanent link">&para;</a></h4>
+<p>UVM provides a proven, standardized methodology that is good for block-level verification. Cliff Cummings' uvmtb_template paper (see <a href="#literature">Literature</a> section) shows how UVM works well for block-level testbenches.</p>
+<h4 id="technology-cocotbpyuvm-over-verilatorsystemverilog-uvm">Technology: cocotb/pyuvm over Verilator/SystemVerilog UVM<a class="headerlink" href="#technology-cocotbpyuvm-over-verilatorsystemverilog-uvm" title="Permanent link">&para;</a></h4>
+<p>ABE's open-source mission uses an open-source simulator. When the project began, <a href="https://verilator.org">Verilator</a> did not support UVM for SystemVerilog (it does now). This made <a href="https://www.cocotb.org">cocotb</a>/<a href="https://github.com/pyuvm/pyuvm">pyuvm</a> a natural choice for combining UVM methodology with open-source simulation.</p>
+<h4 id="discipline-uvm-standard-patterns-over-python-idioms">Discipline: UVM Standard Patterns over Python Idioms<a class="headerlink" href="#discipline-uvm-standard-patterns-over-python-idioms" title="Permanent link">&para;</a></h4>
+<p>Python enables design patterns not possible in SystemVerilog. Standard UVM does not support these patterns. However, RAD DV uses fewer Python-specific patterns. This keeps UVM portable and easier to read for engineers who know SystemVerilog UVM. Exception: small mixins for clock/reset infrastructure reduce repetitive code without hiding the UVM structure.</p>
+<h3 id="benefits">Benefits<a class="headerlink" href="#benefits" title="Permanent link">&para;</a></h3>
+<h4 id="python-reference-models">Python Reference Models<a class="headerlink" href="#python-reference-models" title="Permanent link">&para;</a></h4>
+<p>Traditional UVM testbenches implement reference models in SystemVerilog or C++ (via DPI-C). Using Python with SystemVerilog simulators is very difficult. This creates several challenges:</p>
+<ul>
+<li><strong>The translation gap</strong>: ASIC architects often develop specifications and models in Python. Verification engineers must rewrite them in SystemVerilog or C++ for use in UVM scoreboards</li>
+<li><strong>Maintenance creates errors</strong>: Keeping reference models synchronized with changing Python specifications causes translation errors and extra maintenance work</li>
+<li><strong>Missed reuse opportunities</strong>: Python's powerful features and extensive libraries (NumPy, SciPy, etc.) cannot be used for behavioral modeling in traditional UVM</li>
+</ul>
+<p>RAD DV solves these problems by allowing reference models to be written directly in Python with the testbench:</p>
+<ul>
+<li>Architects' Python specifications can often be used directly as reference models with small changes</li>
+<li>Model mismatches are greatly reduced because there is no translation layer</li>
+<li>Debug time can decrease—the Wilson Research Group Functional Verification Study reports that debugging is a significant portion of verification effort</li>
+</ul>
+<h4 id="rich-python-ecosystem">Rich Python Ecosystem<a class="headerlink" href="#rich-python-ecosystem" title="Permanent link">&para;</a></h4>
+<p>Open-source simulators like <a href="https://verilator.org">Verilator</a> and <a href="https://steveicarus.github.io/iverilog">Icarus Verilog</a> provide basic simulation capabilities. They do not have the integrated test management, analysis, and debugging tools found in commercial products. Python's ecosystem fills this gap and gives open-source developers access to similar capabilities:</p>
+<ul>
+<li><strong>Test management</strong>: <a href="https://docs.pytest.org/en/stable">pytest</a> for test discovery, parametrization, fixtures, and regression orchestration</li>
+<li><strong>Data analysis</strong>: NumPy, pandas for processing results, analyzing coverage trends, and generating metrics</li>
+<li><strong>Visualization</strong>: Matplotlib, seaborn for plotting coverage data, regression trends, and performance metrics</li>
+<li><strong>Debugging and introspection</strong>: Interactive debugging and comprehensive logging for development and debug workflows</li>
+<li><strong>Automation and CI/CD</strong>: Direct integration with git, reporting tools, and continuous integration pipelines</li>
+</ul>
+<h3 id="known-limitations">Known Limitations<a class="headerlink" href="#known-limitations" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Simulator support</strong>: Only <a href="https://verilator.org">Verilator</a> and <a href="https://steveicarus.github.io/iverilog">Icarus Verilog</a> are currently supported. While <a href="https://www.cocotb.org">cocotb</a> supports many commercial simulators (VCS, Questa, Xcelium, etc.), integration into RAD DV requires access to licenses for testing and validation.</li>
+<li><strong>Sequential test execution</strong>: Regression tests run one at a time instead of in parallel. This makes large test suites run slower</li>
+<li><strong>Third-party VIP integration</strong>: Does not integrate with commercial VIP or third-party AIP</li>
+</ul>
+<h3 id="future-enhancements">Future Enhancements<a class="headerlink" href="#future-enhancements" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Additional simulator support</strong>: Expand beyond <a href="https://verilator.org">Verilator</a> and <a href="https://steveicarus.github.io/iverilog">Icarus Verilog</a></li>
+<li><strong>Parallel test execution</strong>: Enable concurrent test runs for faster regression completion</li>
+<li><strong>Multi-agent single-clock example</strong>: Example bench demonstrating single clock/reset domain with multiple agents (multiple interfaces)</li>
+<li><strong>Code coverage integration</strong>: Example using <a href="https://verilator.org">Verilator</a>'s coverage capabilities</li>
+<li><strong>Constrained randomization</strong>: Example using <a href="https://github.com/mciepluc/cocotb-coverage">cocotb-coverage</a> for constraint-based stimulus generation</li>
+<li><strong>Functional coverage workflows</strong>: Examples demonstrating coverage database merging, cross-coverage, and coverage-driven verification</li>
+<li><strong>Standard protocol libraries</strong>: Pre-built reusable agents for common bus protocols (AXI, APB, AHB, etc.)</li>
+</ul>
+<hr />
+<h2 id="makefiles">Makefiles<a class="headerlink" href="#makefiles" title="Permanent link">&para;</a></h2>
+<p>Makefiles are in directory <code>mk</code></p>
+<ul>
+<li>Common flags come from <code>00-vars.mk</code>.</li>
+<li>Python commands are in <code>20-python.mk</code>.</li>
+<li>DV commands are in <code>mk/60-dv.mk</code>.</li>
+</ul>
+<p>Common commands:</p>
+<div class="codehilite"><pre><span></span><code>make<span class="w"> </span>py-help
+make<span class="w"> </span>dv-help
+</code></pre></div>
+
+<hr />
+<h2 id="rad-dv-architecture">RAD DV Architecture<a class="headerlink" href="#rad-dv-architecture" title="Permanent link">&para;</a></h2>
+<p>Located under:</p>
+<div class="codehilite"><pre><span></span><code>src/abe/rad/shared/dv/
+</code></pre></div>
+
+<p>RAD DV environments use classic UVM patterns implemented in Python via <a href="https://github.com/pyuvm/pyuvm">pyuvm</a> and <a href="https://www.cocotb.org">cocotb</a>. All testbenches inherit from reusable base classes that provide standard verification infrastructure.</p>
+<p>The following table summarizes the shared base classes. See the module docstrings for detailed usage.</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>base_agent.py</code></td>
+<td>UVM agent connecting sequencer, driver, and separate input/output monitors</td>
+</tr>
+<tr>
+<td><code>base_clock_driver.py</code></td>
+<td>Clock generation component with configurable period, phase, and startup delay</td>
+</tr>
+<tr>
+<td><code>base_clock_mixin.py</code></td>
+<td>Shared clock configuration, signal binding, and drive edge alignment utilities</td>
+</tr>
+<tr>
+<td><code>base_coverage.py</code></td>
+<td>Functional coverage subscriber integrating <a href="https://github.com/mciepluc/cocotb-coverage">cocotb-coverage</a> with <a href="https://github.com/pyuvm/pyuvm">pyuvm</a></td>
+</tr>
+<tr>
+<td><code>base_driver.py</code></td>
+<td>UVM driver with clock synchronization, reset handling, and BFM hooks</td>
+</tr>
+<tr>
+<td><code>base_env.py</code></td>
+<td>Top-level environment creating agents, coverage, scoreboard, and reset infrastructure</td>
+</tr>
+<tr>
+<td><code>base_item.py</code></td>
+<td>Transaction item with input/output field separation, cloning, and comparison</td>
+</tr>
+<tr>
+<td><code>base_monitor.py</code></td>
+<td>Base monitor with clock synchronization and analysis port infrastructure</td>
+</tr>
+<tr>
+<td><code>base_monitor_in.py</code></td>
+<td>Design input monitor sampling at rising edge using ReadOnly trigger</td>
+</tr>
+<tr>
+<td><code>base_monitor_out.py</code></td>
+<td>Design output monitor sampling in read-only phase before next active edge</td>
+</tr>
+<tr>
+<td><code>base_ref_model.py</code></td>
+<td>Reference model computing expected design behavior from input transactions</td>
+</tr>
+<tr>
+<td><code>base_reset_driver.py</code></td>
+<td>Reset generation with configurable polarity, duration, and settling time</td>
+</tr>
+<tr>
+<td><code>base_reset_item.py</code></td>
+<td>Reset transaction capturing raw signal level and polarity-resolved state</td>
+</tr>
+<tr>
+<td><code>base_reset_monitor.py</code></td>
+<td>Reset monitor publishing transactions on reset signal changes</td>
+</tr>
+<tr>
+<td><code>base_reset_sink.py</code></td>
+<td>Subscriber forwarding reset events to driver and predictor components</td>
+</tr>
+<tr>
+<td><code>base_sb.py</code></td>
+<td>Top-level scoreboard managing predictor and comparator components</td>
+</tr>
+<tr>
+<td><code>base_sb_comparator.py</code></td>
+<td>Dual-FIFO comparator for expected vs actual transaction checking</td>
+</tr>
+<tr>
+<td><code>base_sb_predictor.py</code></td>
+<td>Predictor generating expected transactions using reference model</td>
+</tr>
+<tr>
+<td><code>base_sequence.py</code></td>
+<td>Item-generating sequence with factory support and customization hooks</td>
+</tr>
+<tr>
+<td><code>base_sequencer.py</code></td>
+<td>Standard UVM sequencer managing sequence scheduling and driver connection</td>
+</tr>
+<tr>
+<td><code>base_test.py</code></td>
+<td>Base test with configuration management, factory overrides, and phase execution</td>
+</tr>
+<tr>
+<td><code>utils_cli.py</code></td>
+<td>CLI utilities for reading environment variables, plusargs, and factory overrides</td>
+</tr>
+<tr>
+<td><code>utils_dv.py</code></td>
+<td>Type-safe config_db wrappers, signal handle utilities, and logger configuration</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="structure-of-a-rad-dv-bench">Structure of a RAD DV Bench<a class="headerlink" href="#structure-of-a-rad-dv-bench" title="Permanent link">&para;</a></h2>
+<p>Core files required in every bench:</p>
+<div class="codehilite"><pre><span></span><code>rad_&lt;design&gt;/dv/
+├── __init__.py
+├── dv_regress.yaml
+├── rad_&lt;design&gt;_coverage.py
+├── rad_&lt;design&gt;_driver.py
+├── rad_&lt;design&gt;_item.py
+├── rad_&lt;design&gt;_monitor_in.py
+├── rad_&lt;design&gt;_monitor_out.py
+├── rad_&lt;design&gt;_ref_model.py
+├── rad_&lt;design&gt;_sequence.py
+├── README.md
+└── test_rad_&lt;design&gt;.py
+</code></pre></div>
+
+<p>Additional files for complex designs:</p>
+<div class="codehilite"><pre><span></span><code>rad_&lt;design&gt;/dv/
+├── rad_&lt;design&gt;_env.py          # Custom environment (multi-agent, etc.)
+├── rad_&lt;design&gt;_reset_sink.py   # Custom reset routing
+└── rad_&lt;design&gt;_sb.py           # Custom scoreboard logic
+</code></pre></div>
+
+<p><strong>Note:</strong> The test file should have the prefix <code>test_</code> for pytest discovery.</p>
+<hr />
+<h2 id="dv-tools">DV Tools<a class="headerlink" href="#dv-tools" title="Permanent link">&para;</a></h2>
+<p>The RAD DV environment includes five main tools under:</p>
+<div class="codehilite"><pre><span></span><code>src/abe/rad/tools/
+</code></pre></div>
+
+<p>The following sections describe the tools at a high level. See the module docstrings for more detail.</p>
+<h3 id="1-dv-main-front-end-runs-a-single-test">1. <code>dv</code> — Main Front-End (Runs a Single Test)<a class="headerlink" href="#1-dv-main-front-end-runs-a-single-test" title="Permanent link">&para;</a></h3>
+<h4 id="dv-purpose"><code>dv</code> Purpose<a class="headerlink" href="#dv-purpose" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Verify RTL designs using <a href="https://www.cocotb.org">cocotb</a> + <a href="https://github.com/pyuvm/pyuvm">pyuvm</a> + <a href="https://docs.pytest.org/en/stable">pytest</a> framework</li>
+<li>Support multiple simulators (<a href="https://verilator.org">Verilator</a>, <a href="https://steveicarus.github.io/iverilog">Icarus Verilog</a>) with configurable waveform generation (FST, VCD)</li>
+<li>Execute single or multi-seed regression testing with automatic result tracking</li>
+<li>Generate test manifests for build/test reproducibility and caching</li>
+<li>Provide flexible build/test orchestration via <code>--cmd</code> (build-only, test-only, or both)</li>
+</ul>
+<h4 id="dv-typical-usage"><code>dv</code> Typical Usage<a class="headerlink" href="#dv-typical-usage" title="Permanent link">&para;</a></h4>
+<div class="codehilite"><pre><span></span><code>dv<span class="w"> </span>--design<span class="o">=</span>rad_async_fifo<span class="w"> </span>--test<span class="o">=</span>test_rad_async_fifo<span class="w"> </span>--seed<span class="o">=</span><span class="m">1999</span>
+make<span class="w"> </span><span class="nv">DESIGN</span><span class="o">=</span>rad_async_fifo<span class="w"> </span><span class="nv">TEST</span><span class="o">=</span>test_rad_async_fifo<span class="w"> </span><span class="nv">DV_OPTS</span><span class="o">=</span><span class="s1">&#39;-seed=123&#39;</span><span class="w"> </span>dv
+</code></pre></div>
+
+<h4 id="dv-arguments"><code>dv</code> Arguments<a class="headerlink" href="#dv-arguments" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--cmd</code></td>
+<td>choice</td>
+<td>No</td>
+<td><code>both</code></td>
+<td>Run only build, only test, or both (choices: build, test, both)</td>
+</tr>
+<tr>
+<td><code>--sim</code></td>
+<td>choice</td>
+<td>No</td>
+<td><code>verilator</code></td>
+<td>Simulator to use (choices: verilator, icarus)</td>
+</tr>
+<tr>
+<td><code>--outdir</code></td>
+<td>string</td>
+<td>No</td>
+<td><code>out_dv</code></td>
+<td>Output directory for build and test artifacts</td>
+</tr>
+<tr>
+<td><code>--verbosity</code></td>
+<td>choice</td>
+<td>No</td>
+<td><code>info</code></td>
+<td>Logging level for Python/pyuvm/cocotb (choices: critical, error, warning, info, debug, notset)</td>
+</tr>
+<tr>
+<td><code>--waves</code></td>
+<td>choice</td>
+<td>No</td>
+<td><code>0</code></td>
+<td>Enable waveform generation (choices: 0, 1)</td>
+</tr>
+<tr>
+<td><code>--waves_fmt</code></td>
+<td>choice</td>
+<td>No</td>
+<td><code>fst</code></td>
+<td>Waveform format (choices: fst, vcd)</td>
+</tr>
+<tr>
+<td><code>--design</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>-</td>
+<td>Design to build (e.g., rad_async_fifo)</td>
+</tr>
+<tr>
+<td><code>--build-force</code></td>
+<td>flag</td>
+<td>No</td>
+<td><code>False</code></td>
+<td>Force a rebuild even if build directory exists</td>
+</tr>
+<tr>
+<td><code>--build-arg</code></td>
+<td>string</td>
+<td>No</td>
+<td>-</td>
+<td>Extra build argument passed verbatim to the simulator (repeatable, e.g., --build-arg=-DSIMULATE_METASTABILITY)</td>
+</tr>
+<tr>
+<td><code>--test</code></td>
+<td>string</td>
+<td>Yes*</td>
+<td>-</td>
+<td>Test module name in format abe.rad.\&lt;rad_design&gt;.dv.\&lt;test_module&gt; (required for test/both commands)</td>
+</tr>
+<tr>
+<td><code>--expect</code></td>
+<td>choice</td>
+<td>No</td>
+<td><code>PASS</code></td>
+<td>Expected test result for reporting (choices: PASS, FAIL)</td>
+</tr>
+<tr>
+<td><code>--seeds</code></td>
+<td>list</td>
+<td>No</td>
+<td>-</td>
+<td>Explicit seed list (decimal or 0x...). Overrides --nseeds</td>
+</tr>
+<tr>
+<td><code>--nseeds</code></td>
+<td>int</td>
+<td>No</td>
+<td><code>0</code></td>
+<td>Generate N random seeds if --seeds not given</td>
+</tr>
+<tr>
+<td><code>--seed-base</code></td>
+<td>int</td>
+<td>No</td>
+<td><code>1999</code></td>
+<td>Base seed for generating additional seeds</td>
+</tr>
+<tr>
+<td><code>--seed-out</code></td>
+<td>path</td>
+<td>No</td>
+<td>-</td>
+<td>Write the final seed list to a file (one per line)</td>
+</tr>
+<tr>
+<td><code>--check-en</code></td>
+<td>choice</td>
+<td>No</td>
+<td><code>1</code></td>
+<td>Enable checkers (choices: 0, 1)</td>
+</tr>
+<tr>
+<td><code>--coverage-en</code></td>
+<td>choice</td>
+<td>No</td>
+<td><code>1</code></td>
+<td>Enable coverage collection (choices: 0, 1)</td>
+</tr>
+</tbody>
+</table>
+<h4 id="dv-build-outputs"><code>dv</code>  Build Outputs<a class="headerlink" href="#dv-build-outputs" title="Permanent link">&para;</a></h4>
+<p>Output directory:</p>
+<div class="codehilite"><pre><span></span><code>&lt;outdir&gt;/builds/&lt;rad_design&gt;.&lt;hash&gt;
+</code></pre></div>
+
+<p>The hash is a 10-character SHA-1 fingerprint computed from build-affecting parameters: simulator type, waveform settings (enabled/format), and user build arguments. This ensures identical build configurations reuse the same directory while different configurations get separate builds.</p>
+<p>Key files:</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>build.log</code></td>
+<td>Complete build log from the simulator (Verilator/Icarus)</td>
+</tr>
+<tr>
+<td><code>manifest.json</code></td>
+<td>Build metadata including status (started/built/failed), timestamp, simulator config, waveform settings, build arguments, and fingerprint for reproducibility</td>
+</tr>
+<tr>
+<td><code>srclist.abs.f</code></td>
+<td>Absolutized source file list with include paths, generated from the design's rtl/srclist.f</td>
+</tr>
+</tbody>
+</table>
+<h4 id="dv-test-outputs"><code>dv</code>  Test Outputs<a class="headerlink" href="#dv-test-outputs" title="Permanent link">&para;</a></h4>
+<p>Output directory:</p>
+<div class="codehilite"><pre><span></span><code>&lt;outdir&gt;/tests/&lt;build-dir-name&gt;.&lt;test&gt;.&lt;seed&gt;
+</code></pre></div>
+
+<p>Key files:</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>test.log</code></td>
+<td>Complete test execution log including cocotb/pyuvm output</td>
+</tr>
+<tr>
+<td><code>manifest.json</code></td>
+<td>Test result metadata including status (PASS/FAIL), expected result, duration, replay command, build/test directories, and full context snapshot</td>
+</tr>
+<tr>
+<td><code>waves.fst</code> or <code>waves.vcd</code></td>
+<td>Waveform file (if <code>--waves=1</code>) in the specified format</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="2-dv-regress-yamldriven-regression-runner">2. <code>dv-regress</code> — YAML‑Driven Regression Runner<a class="headerlink" href="#2-dv-regress-yamldriven-regression-runner" title="Permanent link">&para;</a></h3>
+<h4 id="dv-regress-purpose"><code>dv-regress</code> Purpose<a class="headerlink" href="#dv-regress-purpose" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Execute YAML-defined regression test suites with strict configuration management</li>
+<li>Apply global default arguments to all jobs with per-job override capability</li>
+<li>Run multiple test jobs one at a time with automatic pass/fail tracking</li>
+<li>Generate colored summary reports with copy-pasteable replay commands for failed tests</li>
+<li>Let <code>dv</code> handle seeds for consistent multi-seed support</li>
+</ul>
+<h4 id="dv-regress-typical-usage"><code>dv-regress</code> Typical Usage<a class="headerlink" href="#dv-regress-typical-usage" title="Permanent link">&para;</a></h4>
+<div class="codehilite"><pre><span></span><code>dv-regress<span class="w"> </span>--file<span class="o">=</span>src/abe/rad/rad_cdc_sync/dv/dv_regress.yaml
+make<span class="w"> </span><span class="nv">DESIGN</span><span class="o">=</span>rad_cdc_sync<span class="w"> </span>dv-regress-design
+</code></pre></div>
+
+<h4 id="dv-regress-arguments"><code>dv-regress</code> Arguments<a class="headerlink" href="#dv-regress-arguments" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--file</code></td>
+<td>path</td>
+<td>Yes</td>
+<td>-</td>
+<td>Path to dv_regress.yaml configuration file</td>
+</tr>
+<tr>
+<td><code>--outdir</code></td>
+<td>string</td>
+<td>No</td>
+<td><code>out_dv</code></td>
+<td>Output directory for build and test artifacts</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="3-dv-regress-all-run-all-rad-regressions">3. <code>dv-regress-all</code> — Run All RAD Regressions<a class="headerlink" href="#3-dv-regress-all-run-all-rad-regressions" title="Permanent link">&para;</a></h3>
+<h4 id="dv-regress-all-purpose"><code>dv-regress-all</code> Purpose<a class="headerlink" href="#dv-regress-all-purpose" title="Permanent link">&para;</a></h4>
+<p>Searches all directories for <code>dv_regress.yaml</code> files in the repository and runs each regression using <code>dv-regress</code>. All regressions share the same output directory for unified result tracking.</p>
+<h4 id="dv-regress-all-typical-usage"><code>dv-regress-all</code> Typical Usage<a class="headerlink" href="#dv-regress-all-typical-usage" title="Permanent link">&para;</a></h4>
+<div class="codehilite"><pre><span></span><code>dv-regress-all
+make<span class="w"> </span>dv-regress-all
+</code></pre></div>
+
+<h4 id="dv-regress-all-arguments"><code>dv-regress-all</code> Arguments<a class="headerlink" href="#dv-regress-all-arguments" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--roots</code></td>
+<td>list</td>
+<td>No</td>
+<td><code>[.]</code></td>
+<td>Root directories to scan for dv_regress.yaml files (can specify multiple)</td>
+</tr>
+<tr>
+<td><code>--outdir</code></td>
+<td>string</td>
+<td>No</td>
+<td><code>out_dv</code></td>
+<td>Output directory for build and test artifacts</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="4-dv-report-summaries-reporting">4. <code>dv-report</code> — Summaries &amp; Reporting<a class="headerlink" href="#4-dv-report-summaries-reporting" title="Permanent link">&para;</a></h3>
+<h4 id="dv-report-purpose"><code>dv-report</code> Purpose<a class="headerlink" href="#dv-report-purpose" title="Permanent link">&para;</a></h4>
+<p>Scans test output directories for manifest files and generates an organized report of expected/unexpected passes and failures with copy-pasteable replay commands.</p>
+<h4 id="dv-report-typical-usage"><code>dv-report</code> Typical Usage<a class="headerlink" href="#dv-report-typical-usage" title="Permanent link">&para;</a></h4>
+<div class="codehilite"><pre><span></span><code>dv-report
+make<span class="w"> </span>dv-report
+</code></pre></div>
+
+<h4 id="dv-report-arguments"><code>dv-report</code> Arguments<a class="headerlink" href="#dv-report-arguments" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--outdir</code></td>
+<td>string</td>
+<td>No</td>
+<td><code>out_dv</code></td>
+<td>Output directory to scan for test results</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="5-dv-make-bench-autogenerate-a-new-dv-bench">5. <code>dv-make-bench</code> — Auto‑Generate a New DV Bench<a class="headerlink" href="#5-dv-make-bench-autogenerate-a-new-dv-bench" title="Permanent link">&para;</a></h3>
+<p>Creates a new bench from the template in <code>src/abe/rad/rad_template/dv</code>.</p>
+<h4 id="dv-make-bench-purpose"><code>dv-make-bench</code> Purpose<a class="headerlink" href="#dv-make-bench-purpose" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Generate complete testbench directory structure from template for new designs</li>
+<li>Use consistent naming across snake_case, PascalCase, and UPPER_CASE contexts</li>
+<li>Insert copyright headers with specified author and year</li>
+<li>Clean up template-specific directives for production-ready code</li>
+<li>Run static analysis tools on generated files to find remaining FIXME items</li>
+</ul>
+<h4 id="dv-make-bench-typical-usage"><code>dv-make-bench</code> Typical Usage<a class="headerlink" href="#dv-make-bench-typical-usage" title="Permanent link">&para;</a></h4>
+<div class="codehilite"><pre><span></span><code>dv-make-bench<span class="w"> </span>&lt;rad_design&gt;<span class="w"> </span><span class="s1">&#39;George Nakashima&#39;</span>
+</code></pre></div>
+
+<h4 id="dv-make-bench-arguments"><code>dv-make-bench</code> Arguments<a class="headerlink" href="#dv-make-bench-arguments" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>module_name</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>-</td>
+<td>Module name (e.g., 'rad_async_fifo' or 'RadAsyncFifo') - converted to appropriate case as needed</td>
+</tr>
+<tr>
+<td><code>author</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>-</td>
+<td>Author name for copyright headers</td>
+</tr>
+<tr>
+<td><code>--year</code></td>
+<td>int</td>
+<td>No</td>
+<td>Current year</td>
+<td>Year for copyright headers</td>
+</tr>
+<tr>
+<td><code>--force</code></td>
+<td>flag</td>
+<td>No</td>
+<td><code>False</code></td>
+<td>Overwrite existing directory if it exists</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="regression-guidelines">Regression Guidelines<a class="headerlink" href="#regression-guidelines" title="Permanent link">&para;</a></h2>
+<p>The <code>dv_regress.yaml</code> file defines regression test jobs using YAML. Each bench includes this file to enable <code>dv-regress</code> execution.</p>
+<h3 id="schema">Schema<a class="headerlink" href="#schema" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Optional: Global defaults applied to all jobs</span>
+<span class="nt">defaults</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;--sim=verilator&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;--waves=0&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="c1"># Required: List of test jobs</span>
+<span class="nt">jobs</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;job_name&gt;</span>
+<span class="w">    </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;--design=...&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;--test=...&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;--nseeds=N&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">...</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;job_name2&gt;</span>
+<span class="w">    </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;--design=...</span><span class="nv"> </span><span class="s">--test=...&quot;</span><span class="w">  </span><span class="c1"># Single string also supported</span>
+</code></pre></div>
+
+<h3 id="job-arguments">Job Arguments<a class="headerlink" href="#job-arguments" title="Permanent link">&para;</a></h3>
+<p>Each job's <code>args</code> can be:</p>
+<ul>
+<li><strong>List of strings</strong>: <code>["--design=rad_foo", "--test=test_rad_foo"]</code></li>
+<li><strong>Single string</strong>: <code>"--design=rad_foo --test=test_rad_foo"</code></li>
+</ul>
+<p>Arguments are passed directly to <code>dv</code>, supporting all <code>dv</code> command-line options (see <a href="#dv-arguments"><code>dv</code> Arguments</a> table).</p>
+<h3 id="common-patterns">Common Patterns<a class="headerlink" href="#common-patterns" title="Permanent link">&para;</a></h3>
+<p><strong>Basic regression with multiple seeds:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="nt">jobs</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">base</span>
+<span class="w">    </span><span class="nt">args</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">--design=rad_async_fifo</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">--test=test_rad_async_fifo</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">--nseeds=10</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">--seed-base=1999</span>
+</code></pre></div>
+
+<p><strong>Multiple configurations:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="nt">jobs</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">normal</span>
+<span class="w">    </span><span class="nt">args</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">--design=rad_cdc_sync</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">--test=test_rad_cdc_sync</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">--nseeds=2</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">--seed-base=1999</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">metastability_simulation</span>
+<span class="w">    </span><span class="nt">args</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">--design=rad_cdc_sync</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">--test=test_rad_cdc_sync</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">--build-arg=-DSIMULATE_METASTABILITY</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">--nseeds=2</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">--seed-base=12345</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">--check-en=0</span>
+</code></pre></div>
+
+<p><strong>Expected failures (negative testing):</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="nt">jobs</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">expect_fail</span>
+<span class="w">    </span><span class="nt">args</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">--design=rad_cdc_sync</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">--test=test_rad_cdc_sync</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">--build-arg=-DSIMULATE_METASTABILITY</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">--nseeds=2</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">--seed-base=67890</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">--expect=FAIL</span>
+</code></pre></div>
+
+<p><strong>Using global defaults:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="nt">defaults</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">args</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">--sim=verilator</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">--waves=0</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">--nseeds=5</span>
+
+<span class="nt">jobs</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">job1</span>
+<span class="w">    </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;--design=rad_foo&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;--test=test_rad_foo&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">job2</span>
+<span class="w">    </span><span class="nt">args</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;--design=rad_bar&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;--test=test_rad_bar&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;--nseeds=10&quot;</span><span class="p p-Indicator">]</span><span class="w">  </span><span class="c1"># Overrides default</span>
+</code></pre></div>
+
+<h3 id="guidelines">Guidelines<a class="headerlink" href="#guidelines" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Job names</strong>: Use descriptive names for easy identification in reports</li>
+<li><strong>Required args</strong>: Each job needs to specify <code>--design</code> and <code>--test</code></li>
+<li><strong>Seeds</strong>: Use <code>--nseeds</code> for random seeds or <code>--seeds</code> for explicit values</li>
+<li><strong>Build variants</strong>: Use <code>--build-arg</code> for RTL compilation flags</li>
+<li><strong>Defaults</strong>: Use global defaults to reduce repetition across jobs</li>
+<li><strong>Job args override defaults</strong>: Per-job arguments take precedence over global defaults</li>
+</ol>
+<h4 id="example-files">Example Files<a class="headerlink" href="#example-files" title="Permanent link">&para;</a></h4>
+<p>See existing regression files for reference:</p>
+<ul>
+<li><code>src/abe/rad/rad_async_fifo/dv/dv_regress.yaml</code> - Simple single-job regression</li>
+<li><code>src/abe/rad/rad_cdc_sync/dv/dv_regress.yaml</code> - Multiple configurations including negative tests</li>
+<li><code>src/abe/rad/rad_cdc_mcp/dv/dv_regress.yaml</code> - Basic pattern</li>
+</ul>
+<hr />
+<h2 id="verifying-a-new-rad-design">Verifying a New RAD Design<a class="headerlink" href="#verifying-a-new-rad-design" title="Permanent link">&para;</a></h2>
+<h3 id="1-create-a-bench-from-a-suitable-template">1. Create a Bench from a Suitable Template<a class="headerlink" href="#1-create-a-bench-from-a-suitable-template" title="Permanent link">&para;</a></h3>
+<p>Choose a starting point based on your design's characteristics:</p>
+<table>
+<thead>
+<tr>
+<th>Template</th>
+<th>Clocks</th>
+<th>Agents</th>
+<th>Best For</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dv-make-bench</code></td>
+<td>1</td>
+<td>1</td>
+<td>Common single-clock designs with registered outputs</td>
+</tr>
+<tr>
+<td><code>rad_cdc_sync</code></td>
+<td>1</td>
+<td>1</td>
+<td>Single-clock pipelines</td>
+</tr>
+<tr>
+<td><code>rad_cdc_mcp</code></td>
+<td>2</td>
+<td>2</td>
+<td>Dual-clock handshake protocols (both domains registered)</td>
+</tr>
+<tr>
+<td><code>rad_async_fifo</code></td>
+<td>2</td>
+<td>2</td>
+<td>Dual-clock designs with combinational outputs</td>
+</tr>
+</tbody>
+</table>
+<h4 id="single-clock-designs">Single-Clock Designs<a class="headerlink" href="#single-clock-designs" title="Permanent link">&para;</a></h4>
+<p>For designs with a single clock/reset domain and a single agent:</p>
+<ol>
+<li>Run <code>dv-make-bench &lt;module_name&gt; '&lt;Author Name&gt;'</code> to generate the template</li>
+<li>Replace all <code>NotImplementedError</code> and <code>FIXME</code> markers with design-specific logic</li>
+<li>Reference <code>rad_cdc_sync</code> bench for implementation examples</li>
+</ol>
+<h4 id="multi-clock-multi-agent-designs">Multi-Clock / Multi-Agent Designs<a class="headerlink" href="#multi-clock-multi-agent-designs" title="Permanent link">&para;</a></h4>
+<p>For designs with multiple independent clock domains or requiring separate agents per domain:</p>
+<ol>
+<li>Copy the bench most similar to your design (<code>rad_cdc_mcp</code> or <code>rad_async_fifo</code>)</li>
+<li>Rename all files and classes to match your design</li>
+<li>Customize the agent count, clock configurations, and reset routing in the environment and test classes.</li>
+<li>See the README.md files in these benches for dual-agent architecture patterns</li>
+</ol>
+<h4 id="output-timing-considerations">Output Timing Considerations<a class="headerlink" href="#output-timing-considerations" title="Permanent link">&para;</a></h4>
+<p>How you implement monitors depends on output timing and protocol complexity:</p>
+<ul>
+<li><strong>Simple registered outputs</strong>: Use <code>BaseMonitorOut</code> directly</li>
+<li>
+<p>Example: <code>rad_cdc_sync</code> - output updates same cycle, sampled at standard timing</p>
+</li>
+<li>
+<p><strong>Pipelined registered outputs</strong>: Extend <code>BaseMonitorOut</code> with cycle tracking</p>
+</li>
+<li>Example: <code>rad_cdc_mcp</code> - <code>bdata</code> updates one cycle after <code>bload &amp;&amp; bvalid</code></li>
+<li>Monitor uses <code>_prev_load_pending</code> to track when valid data is available</li>
+<li>
+<p>Only emits transactions when actual data transfer completes</p>
+</li>
+<li>
+<p><strong>Conditional sampling</strong>: Override <code>run_phase()</code> to filter transactions</p>
+</li>
+<li>Examples: Both <code>rad_async_fifo</code> and <code>rad_cdc_mcp</code></li>
+<li>Only send transactions to analysis port when transfer conditions are met</li>
+<li>Prevents scoreboard from checking invalid/idle cycles</li>
+</ul>
+<p>Most simple designs have registered outputs and can use <code>BaseMonitorOut</code> unchanged. For pipelined protocols or conditional sampling, reference the existing benches for patterns.</p>
+<h3 id="2-implement-core-components">2. Implement Core Components<a class="headerlink" href="#2-implement-core-components" title="Permanent link">&para;</a></h3>
+<p>Customize these design-specific files:</p>
+<ul>
+<li><strong>Item</strong> (<code>rad_&lt;design&gt;_item.py</code>): Define input and output fields</li>
+<li>Implement <code>_in_fields()</code> and <code>_out_fields()</code> methods</li>
+<li>
+<p>Add any design-specific constraints or configuration parameters</p>
+</li>
+<li>
+<p><strong>Driver</strong> (<code>rad_&lt;design&gt;_driver.py</code>): Drive design inputs with proper timing</p>
+</li>
+<li>Set <code>initial_dut_input_values</code> for reset state</li>
+<li>Implement <code>drive_item()</code> to apply transactions on drive edges</li>
+<li>
+<p>Handle backpressure or protocol requirements</p>
+</li>
+<li>
+<p><strong>Monitors</strong> (<code>rad_&lt;design&gt;_monitor_in.py</code>, <code>rad_&lt;design&gt;_monitor_out.py</code>): Observe design signals</p>
+</li>
+<li>Input monitor: Sample inputs for reference model</li>
+<li>Output monitor: Sample outputs for scoreboard comparison</li>
+<li>
+<p>Implement <code>sample_dut()</code> to capture signal values</p>
+</li>
+<li>
+<p><strong>Reference Model</strong> (<code>rad_&lt;design&gt;_ref_model.py</code>): Compute expected behavior</p>
+</li>
+<li>Implement <code>calc_exp()</code> to predict design outputs from inputs</li>
+<li>Maintain internal state matching design behavior</li>
+<li>
+<p>Handle <code>reset_change()</code> for proper state initialization</p>
+</li>
+<li>
+<p><strong>Sequence</strong> (<code>rad_&lt;design&gt;_sequence.py</code>): Generate stimulus patterns</p>
+</li>
+<li>Implement <code>set_item_inputs()</code> to randomize or set input field values</li>
+<li>
+<p>Configure sequence length via <code>RAD_&lt;DESIGN&gt;_SEQ_LEN</code> environment variable</p>
+</li>
+<li>
+<p><strong>Coverage</strong> (<code>rad_&lt;design&gt;_coverage.py</code>): Define functional coverage</p>
+</li>
+<li>Use <code>@CoverPoint</code> decorators from <a href="https://github.com/mciepluc/cocotb-coverage">cocotb-coverage</a></li>
+<li>Implement <code>write()</code> method to sample coverage from transactions</li>
+</ul>
+<h3 id="3-develop-tests">3. Develop Tests<a class="headerlink" href="#3-develop-tests" title="Permanent link">&para;</a></h3>
+<p>All tests need to:</p>
+<ol>
+<li>Inherit from <code>BaseTest</code></li>
+<li>Implement <code>set_factory_overrides()</code> to register design-specific components</li>
+<li>Use <code>@pyuvm.test()</code> decorator</li>
+</ol>
+<p><strong>Single-clock example:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="nd">@pyuvm</span><span class="o">.</span><span class="n">test</span><span class="p">()</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">RadCdcSyncBaseTest</span><span class="p">(</span><span class="n">BaseTest</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Execute basic RadCdcSync test.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_factory_overrides</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">override</span> <span class="o">=</span> <span class="n">pyuvm</span><span class="o">.</span><span class="n">uvm_factory</span><span class="p">()</span><span class="o">.</span><span class="n">set_type_override_by_type</span>
+        <span class="n">override</span><span class="p">(</span><span class="n">BaseCoverage</span><span class="p">,</span> <span class="n">RadCdcSyncCoverage</span><span class="p">)</span>
+        <span class="o">...</span>
+</code></pre></div>
+
+<p><strong>Multi-clock example:</strong></p>
+<p>For designs with multiple clocks/resets, create clock and reset drivers in the test. Reference <code>rad_cdc_mcp</code> and <code>rad_async_fifo</code>.</p>
+<h3 id="4-create-regression-configuration">4. Create Regression Configuration<a class="headerlink" href="#4-create-regression-configuration" title="Permanent link">&para;</a></h3>
+<p>Add <code>dv_regress.yaml</code> to define test jobs (see <a href="#regression-guidelines">Regression Guidelines</a>).</p>
+<h3 id="5-run-debug">5. Run &amp; Debug<a class="headerlink" href="#5-run-debug" title="Permanent link">&para;</a></h3>
+<p><strong>Run single test:</strong></p>
+<div class="codehilite"><pre><span></span><code>dv<span class="w"> </span>--design<span class="o">=</span>rad_&lt;design&gt;<span class="w"> </span>--test<span class="o">=</span>test_rad_&lt;design&gt;<span class="w"> </span>--waves<span class="o">=</span><span class="m">1</span>
+</code></pre></div>
+
+<p><strong>View waveforms:</strong></p>
+<div class="codehilite"><pre><span></span><code>surfer<span class="w"> </span>out_dv/tests/rad_&lt;design&gt;.*/waves.fst
+</code></pre></div>
+
+<p><strong>Run regression:</strong></p>
+<div class="codehilite"><pre><span></span><code>make<span class="w"> </span><span class="nv">DESIGN</span><span class="o">=</span>rad_&lt;design&gt;<span class="w"> </span>dv-regress-design
+</code></pre></div>
+
+<p><strong>Evaluate coverage:</strong></p>
+<p>Current RAD examples use simple counters logged during <code>report_phase()</code>. Check test logs for coverage summaries:</p>
+<div class="codehilite"><pre><span></span><code>grep<span class="w"> </span>-A5<span class="w"> </span><span class="s2">&quot;Coverage summary&quot;</span><span class="w"> </span>out_dv/tests/*/test.log
+</code></pre></div>
+
+<p><strong>Note:</strong> The <code>BaseCoverage</code> class supports <a href="https://github.com/mciepluc/cocotb-coverage">cocotb-coverage</a> with <code>@CoverPoint</code> decorators for database-driven coverage collection and merging. To use this feature:</p>
+<ol>
+<li>Import decorators: <code>from cocotb_coverage.coverage import CoverPoint, CoverCross</code></li>
+<li>Decorate the <code>sample()</code> method with coverpoints</li>
+<li>Set <code>COV_YAML=path/to/output.yaml</code> to export coverage database</li>
+<li>Use <code>coverage_db</code> API for merging and reporting across multiple test runs</li>
+</ol>
+<p><strong>Debug tips:</strong></p>
+<ul>
+<li>Enable verbose logging: <code>--verbosity=debug</code></li>
+<li>Check test log: <code>out_dv/tests/&lt;test_dir&gt;/test.log</code></li>
+<li>Review manifest: <code>out_dv/tests/&lt;test_dir&gt;/manifest.json</code></li>
+<li>Use <code>self.logger.debug()</code> in components for detailed tracing</li>
+</ul>
+<h3 id="6-document">6. Document<a class="headerlink" href="#6-document" title="Permanent link">&para;</a></h3>
+<p>Complete the bench documentation:</p>
+<ul>
+<li><strong>Module docstrings</strong>: Explain purpose and usage of each component</li>
+<li><strong>README.md</strong>: Architecture, design rationale, protocol details, examples</li>
+<li><strong>dv_regress.yaml</strong>: Add descriptive job names and comments for complex configurations</li>
+</ul>
+<hr />
+<h2 id="faq">FAQ<a class="headerlink" href="#faq" title="Permanent link">&para;</a></h2>
+<h3 id="can-i-use-rad-dv-with-commercial-simulators">Can I use RAD DV with commercial simulators?<a class="headerlink" href="#can-i-use-rad-dv-with-commercial-simulators" title="Permanent link">&para;</a></h3>
+<p>Yes, with caveats:</p>
+<ul>
+<li><a href="https://www.cocotb.org">cocotb</a> supports VCS, Questa, Xcelium, and others</li>
+<li>RAD DV tools (<code>dv</code>, <code>dv-regress</code>) currently only configure <a href="https://verilator.org">Verilator</a> and <a href="https://steveicarus.github.io/iverilog">Icarus Verilog</a></li>
+<li>Extending to commercial simulators requires license access for testing</li>
+</ul>
+<p>The testbench code itself is simulator-agnostic.</p>
+<hr />
+<h3 id="why-do-regression-tests-run-sequentially-instead-of-in-parallel">Why do regression tests run sequentially instead of in parallel?<a class="headerlink" href="#why-do-regression-tests-run-sequentially-instead-of-in-parallel" title="Permanent link">&para;</a></h3>
+<p>Parallel execution is a <a href="#future-enhancements">future enhancement</a>. For faster regressions, consider:</p>
+<ul>
+<li>Running multiple <code>dv-regress</code> instances on different machines</li>
+<li>Reducing <code>--nseeds</code> for smoke testing</li>
+<li>Using <code>--cmd=test</code> to skip redundant rebuilds</li>
+</ul>
+<hr />
+<h3 id="why-use-uvm-methodology-with-python-instead-of-pure-cocotb">Why use UVM methodology with Python instead of pure cocotb?<a class="headerlink" href="#why-use-uvm-methodology-with-python-instead-of-pure-cocotb" title="Permanent link">&para;</a></h3>
+<p>UVM provides:</p>
+<ul>
+<li><strong>Proven patterns</strong> for testbench architecture</li>
+<li><strong>Standardized components</strong> (agents, scoreboards, coverage)</li>
+<li><strong>Familiar structure</strong> for verification engineers</li>
+<li><strong>Reusability</strong> across designs through base classes</li>
+</ul>
+<p>Pure <a href="https://www.cocotb.org">cocotb</a> is excellent for simple testbenches. For complex block-level verification, RAD DV benefits from UVM's structural framework.</p>
+<hr />
+<h3 id="can-i-use-systemverilog-assertions-with-rad-dv">Can I use SystemVerilog assertions with RAD DV?<a class="headerlink" href="#can-i-use-systemverilog-assertions-with-rad-dv" title="Permanent link">&para;</a></h3>
+<p>Yes. SVA assertions in RTL are fully supported by <a href="https://verilator.org">Verilator</a> and <a href="https://steveicarus.github.io/iverilog">Icarus Verilog</a>. They complement the Python testbench by checking protocol compliance and design constraints at the RTL level. See also <a href="../formal/">RAD Formal</a> for property-based verification.</p>
+<hr />
+<h3 id="why-separate-monitors-for-inputs-and-outputs">Why separate monitors for inputs and outputs?<a class="headerlink" href="#why-separate-monitors-for-inputs-and-outputs" title="Permanent link">&para;</a></h3>
+<p>This mirrors UVM best practices:</p>
+<ul>
+<li><strong>Input monitors</strong> capture stimulus for the reference model</li>
+<li><strong>Output monitors</strong> capture design responses for checking</li>
+<li><strong>Clean separation</strong> enables independent sampling and timing</li>
+<li><strong>Reusability</strong> across different verification strategies</li>
+</ul>
+<p>See Cliff Cummings' "Applying stimulus and sampling outputs" paper (<a href="#literature">Literature</a> section).</p>
+<hr />
+<h3 id="how-do-i-debug-a-failing-test">How do I debug a failing test?<a class="headerlink" href="#how-do-i-debug-a-failing-test" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Check the test log</strong>: <code>out_dv/tests/&lt;test_dir&gt;/test.log</code></li>
+<li><strong>Enable verbose logging</strong>: <code>dv --design=&lt;design&gt; --test=&lt;test&gt; --verbosity=debug</code></li>
+<li><strong>View waveforms</strong>: <code>dv --design=&lt;design&gt; --test=&lt;test&gt; --waves=1</code>, then <code>surfer out_dv/tests/*/waves.fst</code></li>
+<li><strong>Add debug logging</strong>: Use <code>self.logger.debug()</code> in components</li>
+<li><strong>Check manifest</strong>: Review <code>out_dv/tests/&lt;test_dir&gt;/manifest.json</code> for test configuration</li>
+</ol>
+<hr />
+<h3 id="when-should-i-use-multiple-agents">When should I use multiple agents?<a class="headerlink" href="#when-should-i-use-multiple-agents" title="Permanent link">&para;</a></h3>
+<p>Use multiple agents when:</p>
+<ul>
+<li><strong>Independent clock domains</strong> (e.g., <code>rad_async_fifo</code>, <code>rad_cdc_mcp</code>)</li>
+<li><strong>Separate interfaces</strong> with independent protocols</li>
+<li><strong>Different timing domains</strong> require isolated control</li>
+</ul>
+<p>Single agent is sufficient for:</p>
+<ul>
+<li><strong>Single clock domain</strong> designs</li>
+<li><strong>Simple pipelines</strong> (e.g., <code>rad_cdc_sync</code>)</li>
+</ul>
+<hr />
+<h3 id="why-doesnt-my-reference-model-match-the-design">Why doesn't my reference model match the design?<a class="headerlink" href="#why-doesnt-my-reference-model-match-the-design" title="Permanent link">&para;</a></h3>
+<p>Common issues:</p>
+<ul>
+<li><strong>Reset initialization</strong>: Ensure reference model resets in <code>reset_change()</code></li>
+<li><strong>Timing</strong>: Check that monitors sample at correct clock edges</li>
+<li><strong>Pipeline delays</strong>: Account for design latency in reference model</li>
+<li><strong>Edge cases</strong>: Verify reference model handles corner cases (empty, full, etc.)</li>
+</ul>
+<p>Add debug logging to both reference model and monitors to trace mismatches.</p>
+<hr />
+<h3 id="how-do-i-add-a-new-test-to-an-existing-bench">How do I add a new test to an existing bench?<a class="headerlink" href="#how-do-i-add-a-new-test-to-an-existing-bench" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Add test function</strong> to <code>test_&lt;design&gt;.py</code> with <code>@pyuvm.test()</code> decorator</li>
+<li><strong>Inherit from BaseTest</strong> or existing test class</li>
+<li><strong>Override <code>set_factory_overrides()</code></strong> if using custom components</li>
+<li><strong>Add to regression</strong>: Update <code>dv_regress.yaml</code> with new job</li>
+</ol>
+<hr />
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://www.accellera.org/images/downloads/standards/uvm/uvm_users_guide_1.2.pdf">Universal Verification Methodology (UVM) 1.2 User’s Guide</a></li>
+<li><a href="https://www.accellera.org/images/downloads/standards/uvm/UVM_Class_Reference_Manual_1.2.pdf">UVM Class Reference Manual, Version 1.2</a></li>
+<li><a href="https://www.cocotb.org">cocotb</a></li>
+<li><a href="https://github.com/pyuvm/pyuvm">pyuvm</a></li>
+<li><a href="https://docs.pytest.org/en/stable">pytest</a></li>
+<li><a href="https://verilator.org">Verilator</a></li>
+<li><a href="https://steveicarus.github.io/iverilog">Icarus Verilog</a></li>
+<li><a href="https://surfer-project.org">Surfer</a></li>
+<li><a href="https://gtkwave.sourceforge.net">GTKWave</a></li>
+<li><a href="https://github.com/mciepluc/cocotb-coverage">cocotb-coverage</a></li>
+</ul>
+<hr />
+<h2 id="literature">Literature<a class="headerlink" href="#literature" title="Permanent link">&para;</a></h2>
+<p>[1] R. Salemi, <em>Python for RTL Verification: A Complete Course in Python, cocotb, and pyuvm</em>. Boston, MA, USA: Boston Light Press, 2022.</p>
+<p>[2] B. Hunter, <em>Advanced UVM</em>. North Charleston, SC, USA: CreateSpace Independent Publishing Platform, 2016.</p>
+<p>[3] C. E. Cummings, “uvmtb_template files—An efficient and rapid way to create UVM testbenches,” in <em>Proc. Synopsys Users Group (SNUG)</em>, Silicon Valley, CA, USA, 2025.</p>
+<p>[4] C. E. Cummings, “Applying stimulus and sampling outputs—UVM verification testing techniques,” in <em>Proc. Synopsys Users Group (SNUG)</em>, Austin, TX, USA, 2016.</p>
+<p>[5] C. E. Cummings, “OVM/UVM scoreboards—Fundamental architectures,” in <em>Proc. Synopsys Users Group (SNUG)</em>, Silicon Valley, CA, USA, 2013.</p>
+<p>[6] C. E. Cummings, “The OVM/UVM factory and factory overrides—How they work and why they are important,” in <em>Proc. Synopsys Users Group (SNUG)</em>, 2012.</p>
+<p>[7] C. E. Cummings and T. Fitzpatrick, “OVM and UVM techniques for terminating tests,” in <em>Proc. Design and Verification Conf. (DVCon)</em>, San Jose, CA, USA, 2011.</p>
+<hr />
+<h2 id="licensing">Licensing<a class="headerlink" href="#licensing" title="Permanent link">&para;</a></h2>
+<p>See the <code>LICENSES</code> directory at the repository root.</p>
+<hr />
+<h2 id="author">Author<a class="headerlink" href="#author" title="Permanent link">&para;</a></h2>
+<p><a href="https://linkedin.com/in/hughwalsh">Hugh Walsh</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.top", "content.code.copy", "toc.integrate"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  </body>
+</html>

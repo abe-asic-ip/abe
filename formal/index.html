@@ -1,0 +1,1602 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="ABE ("A Better Environment") is a lightweight, modern environment for developing reusable ASIC IP. It combines microarchitecture tools, reusable RTL designs, synthesis, formal verification, and Python‑based design verification (DV). ABE runs on free and open‑source tools.">
+      
+      
+      
+        <link rel="canonical" href="https://abe-asic-ip.github.io/abe/formal/">
+      
+      
+        <link rel="prev" href="../design/">
+      
+      
+        <link rel="next" href="../dv/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>RAD Formal - ABE - A Better Environment for Developing ASIC IP</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#reusable-asic-designs-rad-formal" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="ABE - A Better Environment for Developing ASIC IP" class="md-header__button md-logo" aria-label="ABE - A Better Environment for Developing ASIC IP" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ABE - A Better Environment for Developing ASIC IP
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              RAD Formal
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/abe-asic-ip/abe" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    abe-asic-ip/abe
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="ABE - A Better Environment for Developing ASIC IP" class="md-nav__button md-logo" aria-label="ABE - A Better Environment for Developing ASIC IP" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ABE - A Better Environment for Developing ASIC IP
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/abe-asic-ip/abe" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    abe-asic-ip/abe
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Development
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../python_dev/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python Development
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Microarchitecture Tools
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Microarchitecture Tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fifo_depth/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FIFO Depth Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pkt_quantize/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Packet Quantization Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reusable ASIC Designs (RAD) Flow
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reusable ASIC Designs (RAD) Flow
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD Formal
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD Formal
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#audience" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audience
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#getting-started" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Getting Started
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Getting Started">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#set-up-and-install-the-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Set Up and Install the Environment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#install-required-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Install Required Tools
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#outputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Outputs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examine-the-relevant-directory-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examine the Relevant Directory Layout
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#makefiles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Makefiles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#initial-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Initial Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#formal-verification-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Formal Verification Flow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Formal Verification Flow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#formal-testbench-design_formal_topsv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Formal Testbench: &lt;design&gt;_formal_top.sv
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#symbiyosys-configuration-designsby" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SymbiYosys Configuration: &lt;design&gt;.sby
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-proofs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running Proofs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#formal-coverage-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Formal Coverage Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FAQ
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="FAQ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-use-formal-if-simulation-passes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why use formal if simulation passes?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-depth-should-i-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What depth should I use?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-doesnt-induction-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why doesn't induction work?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#which-solvers-should-i-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Which solvers should I use?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#difference-between-formal-and-formal-cover" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Difference between formal and formal-cover?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-global_clock" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why $global_clock?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-many-assumptions-are-too-many" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How many assumptions are too many?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-does-symbiyosys-copy-source-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why does SymbiYosys copy source files?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#licensing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Licensing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#author" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Author
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dv/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD DV
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rad_template_dv_readme/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD DV Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rad_new_design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Creating a New RAD Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reusable ASIC Designs (RAD) Library DV Overviews
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reusable ASIC Designs (RAD) Library DV Overviews
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rad_async_fifo_dv_readme/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD ASYNC FIFO DV Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rad_cdc_mcp_dv_readme/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD CDC MCP DV Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rad_cdc_sync_dv_readme/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD CDC SYNC DV Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<!--
+SPDX-FileCopyrightText: 2025 Hugh Walsh
+
+SPDX-License-Identifier: MIT
+-->
+
+<!--- This file: docs/formal.md -->
+
+<h1 id="reusable-asic-designs-rad-formal">Reusable ASIC Designs (RAD) – Formal<a class="headerlink" href="#reusable-asic-designs-rad-formal" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>The <strong>Reusable ASIC Designs (RAD)</strong> environment includes a formal verification flow built with open‑source tools. Formal verification works together with RAD's linting, synthesis, and DV flows. It uses math to prove that key safety properties are correct in each design.</p>
+<p>The <a href="../design/">RAD Design</a> flow checks <strong>structure and synthesis</strong>. The <a href="./">RAD Formal</a> flow checks <strong>logic</strong> for <em>all possible</em> input sequences.</p>
+<p>The RAD Formal methodology focuses on:</p>
+<ul>
+<li><strong>Practical properties</strong> that match the implementation</li>
+<li><strong>Small, focused proof harnesses</strong></li>
+<li><strong>Reusable SBY templates</strong></li>
+<li><strong>Repeatable Make‑based automation</strong></li>
+</ul>
+<p>This document describes a flow that fits naturally <em>after initial RTL and design‑side checks</em> and <em>before <a href="../dv/">DV</a> simulation</em>.</p>
+<h3 id="audience">Audience<a class="headerlink" href="#audience" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>ASIC RTL designers</strong> adding formal checks to RAD IP</li>
+<li><strong>Verification engineers</strong> using formal together with simulation</li>
+<li><strong>Architects</strong> checking safety and corner‑case behavior</li>
+</ul>
+<h3 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Check that key safety properties work correctly for all legal inputs</li>
+<li>Find corner‑case bugs earlier than simulation</li>
+<li>Provide automated, repeatable proofs that work with Make</li>
+<li>Use the same structure for formal files across all RAD designs</li>
+</ul>
+<h3 id="key-features">Key Features<a class="headerlink" href="#key-features" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://github.com/YosysHQ/sby">SymbiYosys</a>‑based flow (<code>prove</code> and <code>cover</code>)</li>
+<li>Reusable SBY templates for each design</li>
+<li>Standard formal testbench structure</li>
+<li>Open‑source SMT solvers (<a href="https://github.com/Boolector/boolector">Boolector</a> recommended)</li>
+<li>Make‑based automation for proofs and coverage</li>
+<li>Same directory structure for each <code>rad_&lt;design&gt;</code> design</li>
+</ul>
+<hr />
+<h2 id="getting-started">Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
+<h3 id="set-up-and-install-the-environment">Set Up and Install the Environment<a class="headerlink" href="#set-up-and-install-the-environment" title="Permanent link">&para;</a></h3>
+<p>See <a href="../python_dev/">ABE Python Development</a> for Python environment setup details.</p>
+<div class="codehilite"><pre><span></span><code>make<span class="w"> </span>py-venv-all
+<span class="nb">source</span><span class="w"> </span>.venv/bin/activate
+make<span class="w"> </span>py-install-all
+</code></pre></div>
+
+<h3 id="install-required-tools">Install Required Tools<a class="headerlink" href="#install-required-tools" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code>make<span class="w"> </span>deps
+</code></pre></div>
+
+<p>This shows any missing tools. Installation steps depend on your platform and are not covered in this document.</p>
+<h3 id="run-examples">Run Examples<a class="headerlink" href="#run-examples" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code>make<span class="w"> </span><span class="nv">DESIGN</span><span class="o">=</span>rad_async_fifo<span class="w"> </span>formal
+make<span class="w"> </span><span class="nv">DESIGN</span><span class="o">=</span>rad_async_fifo<span class="w"> </span>formal-cover
+</code></pre></div>
+
+<h3 id="outputs">Outputs<a class="headerlink" href="#outputs" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>out_formal/&lt;design&gt;</code></li>
+<li><code>out_formal/&lt;design&gt;_cover</code></li>
+</ul>
+<h3 id="examine-the-relevant-directory-layout">Examine the Relevant Directory Layout<a class="headerlink" href="#examine-the-relevant-directory-layout" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code>.
+├── mk
+│   ├── 00-vars.mk
+│   ├── 10-helpers.mk
+│   ├── 20-python.mk
+│   ├── 50-formal.mk
+├── src
+│   └── abe
+│       ├── rad
+│       │   ├── rad_async_fifo
+│       │   │   ├── rtl
+│       │   │   │   ├── rad_async_fifo_mem.sv
+│       │   │   │   ├── rad_async_fifo_rptr.sv
+│       │   │   │   ├── rad_async_fifo_sync.sv
+│       │   │   │   ├── rad_async_fifo_wptr.sv
+│       │   │   │   ├── rad_async_fifo.sv
+│       │   │   │   └── srclist.f
+│       │   │   ├── formal
+│       │   │   │   ├── rad_async_fifo_cover.sby
+│       │   │   │   ├── rad_async_fifo_formal_top.sv
+│       │   │   │   └── rad_async_fifo.sby
+│       │   ├── shared
+│       │   │   ├── rtl
+│       │   │   │   ├── rad_pulse_gen.sv
+│       │   │   │   └── rad_timescale.svh
+├── Makefile
+</code></pre></div>
+
+<hr />
+<h2 id="makefiles">Makefiles<a class="headerlink" href="#makefiles" title="Permanent link">&para;</a></h2>
+<p>Makefiles are in directory <code>mk</code>.</p>
+<ul>
+<li>Common flags come from <code>00-vars.mk</code>.</li>
+<li>Formal commands are in <code>50-formal.mk</code>.</li>
+</ul>
+<p>Common commands:</p>
+<div class="codehilite"><pre><span></span><code>make<span class="w"> </span>formal-help
+</code></pre></div>
+
+<hr />
+<h2 id="initial-steps">Initial Steps<a class="headerlink" href="#initial-steps" title="Permanent link">&para;</a></h2>
+<ol>
+<li>It's helpful to complete design‑side checks first:</li>
+<li><code>rtl-format</code></li>
+<li><code>rtl-lint-verible</code></li>
+<li><code>rtl-lint-verilator</code></li>
+<li><code>synth</code></li>
+<li>Create: <code>src/abe/rad/rad_&lt;design&gt;/formal</code></li>
+<li>Templates from proven designs like <code>rad_async_fifo</code> can serve as a starting point.</li>
+<li>Review existing formal collateral for examples.</li>
+</ol>
+<p>See also: <a href="#formal-verification-flow">Formal Verification Flow</a> and <a href="#formal-coverage-flow">Formal Coverage Flow</a>.</p>
+<hr />
+<h2 id="formal-verification-flow">Formal Verification Flow<a class="headerlink" href="#formal-verification-flow" title="Permanent link">&para;</a></h2>
+<h3 id="formal-testbench-design_formal_topsv">Formal Testbench: <code>&lt;design&gt;_formal_top.sv</code><a class="headerlink" href="#formal-testbench-design_formal_topsv" title="Permanent link">&para;</a></h3>
+<p>Main parts:</p>
+<ul>
+<li>Clock generation using <code>$global_clock</code> and <code>(* gclk *)</code> (see <a href="#why-global_clock">FAQ #6</a>).</li>
+<li>Reset sequence for each domain.</li>
+<li><code>(* anyseq *)</code> for free inputs.</li>
+<li><code>assume</code> for legal input conditions (see <a href="#how-many-assumptions-are-too-many">FAQ #7</a>).</li>
+<li><code>assert</code> for invariants and safety properties.</li>
+<li><code>$past()</code> protected by <code>past_valid</code>.</li>
+</ul>
+<p>Reference:</p>
+<div class="codehilite"><pre><span></span><code>src/abe/rad/rad_async_fifo/formal/rad_async_fifo_formal_top.sv
+</code></pre></div>
+
+<p>See also: <a href="#symbiyosys-configuration-designsby">SymbiYosys Configuration</a>.</p>
+<hr />
+<h3 id="symbiyosys-configuration-designsby"><a href="https://github.com/YosysHQ/sby">SymbiYosys</a> Configuration: <code>&lt;design&gt;.sby</code><a class="headerlink" href="#symbiyosys-configuration-designsby" title="Permanent link">&para;</a></h3>
+<p>Sections:</p>
+<table>
+<thead>
+<tr>
+<th>Section</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>[options]</code></td>
+<td>Mode (<code>prove</code>), depth, multiclock</td>
+</tr>
+<tr>
+<td><code>[engines]</code></td>
+<td>Solver selection (see <a href="#which-solvers-should-i-use">FAQ #4</a>)</td>
+</tr>
+<tr>
+<td><code>[script]</code></td>
+<td><a href="https://yosyshq.readthedocs.io/projects/yosys/en/latest/cmd/smtbmc.html">Yosys</a> steps</td>
+</tr>
+<tr>
+<td><code>[files]</code></td>
+<td>RTL + formal top</td>
+</tr>
+</tbody>
+</table>
+<p>Reference:</p>
+<div class="codehilite"><pre><span></span><code>rad_async_fifo/formal/rad_async_fifo.sby
+</code></pre></div>
+
+<p>See also: <a href="#running-proofs">Running Proofs</a> and <a href="#formal-coverage-flow">Formal Coverage Flow</a>.</p>
+<hr />
+<h3 id="running-proofs">Running Proofs<a class="headerlink" href="#running-proofs" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code>make<span class="w"> </span><span class="nv">DESIGN</span><span class="o">=</span>&lt;design&gt;<span class="w"> </span>formal
+</code></pre></div>
+
+<p><strong>Examine the Output Directory: <code>out_formal/&lt;design&gt;</code></strong></p>
+<table>
+<thead>
+<tr>
+<th>File/Directory</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PASS</code></td>
+<td>Status marker file containing verification statistics and elapsed time</td>
+</tr>
+<tr>
+<td><code>config.sby</code></td>
+<td>Copy of the <code>.sby</code> configuration file used for this run</td>
+</tr>
+<tr>
+<td><code>engine_0/</code></td>
+<td>Engine-specific outputs including trace files (<code>.vcd</code>, <code>.yw</code>) for counterexamples</td>
+</tr>
+<tr>
+<td><code>logfile.txt</code></td>
+<td>Complete <a href="https://github.com/YosysHQ/sby">SymbiYosys</a> log showing all steps, solver progress, and results</td>
+</tr>
+<tr>
+<td><code>model/</code></td>
+<td>Intermediate <a href="https://yosyshq.readthedocs.io/projects/yosys/en/latest/cmd/smtbmc.html">Yosys</a> files including the SMT2 model and design elaboration logs</td>
+</tr>
+<tr>
+<td><code>&lt;design&gt;.xml</code></td>
+<td>JUnit-style XML report of verification results</td>
+</tr>
+<tr>
+<td><code>src/</code></td>
+<td>Copies of all source files used in verification for reproducibility (see <a href="#why-does-symbiyosys-copy-source-files">FAQ #8</a>)</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>Human-readable summary of verification status (basecase/induction results)</td>
+</tr>
+<tr>
+<td><code>status.sqlite</code></td>
+<td>SQLite database with detailed status information</td>
+</tr>
+</tbody>
+</table>
+<p>See also: <a href="#what-depth-should-i-use">FAQ #2</a> and <a href="#why-doesnt-induction-work">FAQ #3</a>.</p>
+<hr />
+<h2 id="formal-coverage-flow">Formal Coverage Flow<a class="headerlink" href="#formal-coverage-flow" title="Permanent link">&para;</a></h2>
+<p><strong>Create the Coverage Configuration: <code>&lt;design&gt;_cover.sby</code></strong></p>
+<p>The coverage <code>.sby</code> file is almost the same as the <a href="#symbiyosys-configuration-designsby">verification configuration</a>. The main difference is in the <code>[options]</code> section: use <code>mode cover</code> instead of <code>mode prove</code> (see <a href="#difference-between-formal-and-formal-cover">FAQ #5</a>). Coverage mode finds traces that meet the <code>cover</code> statements in your formal testbench. This is useful for:</p>
+<ul>
+<li>Creating traces.</li>
+<li>Checking reachability.</li>
+<li>Finding over‑constrained assumptions.</li>
+</ul>
+<p>Run:</p>
+<div class="codehilite"><pre><span></span><code>make<span class="w"> </span><span class="nv">DESIGN</span><span class="o">=</span>&lt;design&gt;<span class="w"> </span>formal-cover
+</code></pre></div>
+
+<p>Reference:</p>
+<div class="codehilite"><pre><span></span><code>src/abe/rad/rad_async_fifo/formal/rad_async_fifo_cover.sby
+</code></pre></div>
+
+<hr />
+<h2 id="faq">FAQ<a class="headerlink" href="#faq" title="Permanent link">&para;</a></h2>
+<h3 id="why-use-formal-if-simulation-passes">Why use formal if simulation passes?<a class="headerlink" href="#why-use-formal-if-simulation-passes" title="Permanent link">&para;</a></h3>
+<p>Formal checks <em>all</em> legal input sequences. It works together with <a href="../dv/">simulation testing</a>. It can help find:</p>
+<ul>
+<li>Underflow/overflow.</li>
+<li>Race conditions.</li>
+<li>Reset bugs.</li>
+<li>Multi‑clock hazards.</li>
+<li>Illegal input patterns.</li>
+</ul>
+<p>These issues are hard to find with only simulation.</p>
+<hr />
+<h3 id="what-depth-should-i-use">What depth should I use?<a class="headerlink" href="#what-depth-should-i-use" title="Permanent link">&para;</a></h3>
+<p>Here are some starting values:</p>
+<ul>
+<li>Small modules: <strong>16–40</strong></li>
+<li>FIFOs &amp; CDC logic: <strong>40–80</strong></li>
+<li>Handshakes: <strong>20–50</strong></li>
+</ul>
+<p>Increase the depth if induction does not work at first.</p>
+<hr />
+<h3 id="why-doesnt-induction-work">Why doesn't induction work?<a class="headerlink" href="#why-doesnt-induction-work" title="Permanent link">&para;</a></h3>
+<p>Check these common causes:</p>
+<ul>
+<li>Reset not modeled correctly.</li>
+<li>Missing assumptions.</li>
+<li><code>$past()</code> guard missing.</li>
+<li>Real bug in the design.</li>
+<li>Long initialization sequences.</li>
+</ul>
+<p>Making assumptions simpler or stronger can often fix induction problems.</p>
+<hr />
+<h3 id="which-solvers-should-i-use">Which solvers should I use?<a class="headerlink" href="#which-solvers-should-i-use" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong><a href="https://github.com/Boolector/boolector">Boolector</a></strong> (recommended to start).</li>
+<li><a href="https://yices.csl.sri.com/">Yices</a> or <a href="https://github.com/Z3Prover/z3">Z3</a> can help if Boolector does not support something.</li>
+</ul>
+<hr />
+<h3 id="difference-between-formal-and-formal-cover">Difference between <code>formal</code> and <code>formal-cover</code>?<a class="headerlink" href="#difference-between-formal-and-formal-cover" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>prove</strong></td>
+<td>Property must hold always</td>
+</tr>
+<tr>
+<td><strong>cover</strong></td>
+<td>Scenario must be reachable</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="why-global_clock">Why <code>$global_clock</code>?<a class="headerlink" href="#why-global_clock" title="Permanent link">&para;</a></h3>
+<p>It enables:</p>
+<ul>
+<li>Correct multi‑clock modeling.</li>
+<li>Correct SMT scheduling.</li>
+<li>No need for manual clock generation.</li>
+</ul>
+<hr />
+<h3 id="how-many-assumptions-are-too-many">How many assumptions are too many?<a class="headerlink" href="#how-many-assumptions-are-too-many" title="Permanent link">&para;</a></h3>
+<p>Here is a helpful guide:</p>
+<blockquote>
+<p>Use assumptions for legal <em>inputs</em>, not for internal design behavior.</p>
+</blockquote>
+<hr />
+<h3 id="why-does-symbiyosys-copy-source-files">Why does <a href="https://github.com/YosysHQ/sby">SymbiYosys</a> copy source files?<a class="headerlink" href="#why-does-symbiyosys-copy-source-files" title="Permanent link">&para;</a></h3>
+<p>To make results repeatable.
+Each run includes everything:</p>
+<ul>
+<li>RTL.</li>
+<li>formal tops.</li>
+<li>logs.</li>
+<li>SMT model.</li>
+</ul>
+<hr />
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://github.com/YosysHQ/sby">SymbiYosys</a></li>
+<li><a href="https://yosyshq.readthedocs.io/projects/yosys/en/latest/cmd/smtbmc.html">yosys-smtbmc</a></li>
+<li><a href="https://github.com/Boolector/boolector">Boolector</a></li>
+</ul>
+<hr />
+<h2 id="licensing">Licensing<a class="headerlink" href="#licensing" title="Permanent link">&para;</a></h2>
+<p>See the <code>LICENSES</code> directory at the repository root.</p>
+<hr />
+<h2 id="author">Author<a class="headerlink" href="#author" title="Permanent link">&para;</a></h2>
+<p><a href="https://linkedin.com/in/hughwalsh">Hugh Walsh</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.top", "content.code.copy", "toc.integrate"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  </body>
+</html>

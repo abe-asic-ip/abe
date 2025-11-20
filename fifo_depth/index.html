@@ -1,0 +1,3910 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="ABE ("A Better Environment") is a lightweight, modern environment for developing reusable ASIC IP. It combines microarchitecture tools, reusable RTL designs, synthesis, formal verification, and Python‑based design verification (DV). ABE runs on free and open‑source tools.">
+      
+      
+      
+        <link rel="canonical" href="https://abe-asic-ip.github.io/abe/fifo_depth/">
+      
+      
+        <link rel="prev" href="../python_dev/">
+      
+      
+        <link rel="next" href="../pkt_quantize/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>FIFO Depth Tool - ABE - A Better Environment for Developing ASIC IP</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#fifo-depth-tool-fifo-depth" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="ABE - A Better Environment for Developing ASIC IP" class="md-header__button md-logo" aria-label="ABE - A Better Environment for Developing ASIC IP" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ABE - A Better Environment for Developing ASIC IP
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              FIFO Depth Tool
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/abe-asic-ip/abe" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    abe-asic-ip/abe
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="ABE - A Better Environment for Developing ASIC IP" class="md-nav__button md-logo" aria-label="ABE - A Better Environment for Developing ASIC IP" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ABE - A Better Environment for Developing ASIC IP
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/abe-asic-ip/abe" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    abe-asic-ip/abe
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Development
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../python_dev/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python Development
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Microarchitecture Tools
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Microarchitecture Tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FIFO Depth Tool
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FIFO Depth Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#audience" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audience
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Features
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Key Features">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#flat-vs-layered-specifications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flat vs. Layered Specifications
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-flat-vs-layered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Use Flat vs Layered
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#known-limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Known Limitations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#getting-started" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Getting Started
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Getting Started">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#set-up-and-install" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Set Up and Install
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#look-at-the-outputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Look at the Outputs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examine-the-relevant-directory-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examine the Relevant Directory Layout
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conceptual-background" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conceptual Background
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Conceptual Background">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scope
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#motivation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Motivation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#unique-approach" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unique Approach
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Unique Approach">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deterministic-construction-of-worst-case-write-and-read-profiles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deterministic Construction of Worst-Case Write and Read Profiles
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Deterministic Construction of Worst-Case Write and Read Profiles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#write-side-worst-case-maximizing-clustering-of-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Write-side Worst Case (maximizing clustering of data)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#read-side-worst-case-delaying-consumption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Read-side Worst Case (delaying consumption)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#constraint-based-optimization-using-cp-sat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Constraint-Based Optimization Using CP-SAT
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-both-stages-are-necessary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Both Stages Are Necessary
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#typical-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Typical Workflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File Overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#command-line-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command Line Interface
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Command Line Interface">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#arguments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Arguments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#input-specifications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Input Specifications
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Input Specifications">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#types-of-specs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Types of Specs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-quantities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Quantities
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#horizon-concept" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Horizon Concept
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flat-spec-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flat Spec Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layered-spec-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layered Spec Parameters
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Layered Spec Parameters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#layered-profiles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layered Profiles
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#outputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Outputs
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Outputs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#common-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Results
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#future-enhancements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Future Enhancements
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Future Enhancements">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#replay-solver-extensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replay Solver Extensions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-quantum-and-units-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Quantum and Units Support
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ready-valid-solver" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ready / Valid Solver
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Ready / Valid Solver">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ready-valid-purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ready / Valid Purpose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ready-valid-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ready / Valid Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ready-valid-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ready / Valid Results
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ready-valid-recommendations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ready / Valid Recommendations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#xon-xoff-solver" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        XON / XOFF Solver
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="XON / XOFF Solver">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#xon-xoff-purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        XON / XOFF Purpose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#xon-xoff-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        XON / XOFF Overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#xon-xoff-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        XON / XOFF Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#xon-xoff-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        XON / XOFF Results
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#xon-xoff-recommendations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        XON / XOFF Recommendations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cbfc-solver" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CBFC Solver
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CBFC Solver">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cbfc-purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CBFC Purpose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cbfc-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CBFC Overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cbfc-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CBFC Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cbfc-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CBFC Results
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cbfc-recommendations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CBFC Recommendations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cdc-solver" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CDC Solver
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CDC Solver">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cdc-purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CDC Purpose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cdc-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CDC Overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cdc-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CDC Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cdc-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CDC Results
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cdc-recommendations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CDC Recommendations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#replay-solver" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replay Solver
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Replay Solver">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#replay-purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replay Purpose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#replay-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replay Overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#replay-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replay Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#replay-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replay Results
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-topics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Topics
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Topics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#performance-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Considerations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-layers-compose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How Layers Compose
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FAQ
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="FAQ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-does-the-solver-sometimes-take-several-minutes-to-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why does the solver sometimes take several minutes to run?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-does-horizon-auto-sometimes-produce-very-large-horizons" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why does horizon: auto sometimes produce very large horizons?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-does-the-depth-equal-sum_w_max-for-flat-readyvalid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why does the depth equal sum_w_max for flat ready/valid?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-does-the-solver-switch-from-cp-sat-to-analytic-mode-for-balanced-specs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why does the solver switch from CP-SAT to analytic mode for balanced specs?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-does-the-xonxoff-solver-choose-a-higher-xoff-than-expected" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why does the XON/XOFF solver choose a higher xoff than expected?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-are-thresholds-or-credits-ignored-when-using-auto-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why are thresholds or credits ignored when using auto mode?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-is-peak-occupancy-lower-than-expected" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why is peak occupancy lower than expected?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-is-peak-occupancy-higher-than-expected" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why is peak occupancy higher than expected?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-does-xonxoff-auto-mode-take-longer-than-other-solvers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why does XON/XOFF auto mode take longer than other solvers?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-is-replay-modeled-with-cp-sat-if-the-result-is-just-bdp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why is replay modeled with CP-SAT if the result is just BDP?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-does-cdc-always-use-closed-form-math-instead-of-cp-sat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why does CDC always use closed-form math instead of CP-SAT?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-does-rounding-sometimes-jump-depth-by-a-large-factor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why does rounding sometimes jump depth by a large factor?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-does-the-tool-warn-that-the-horizon-may-be-too-small" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why does the tool warn that the horizon may be too small?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-are-witness-traces-sometimes-non-intuitive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why are witness traces sometimes non-intuitive?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Appendix">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Classes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#licensing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Licensing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#author" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Author
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pkt_quantize/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Packet Quantization Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reusable ASIC Designs (RAD) Flow
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reusable ASIC Designs (RAD) Flow
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../formal/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD Formal
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dv/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD DV
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rad_template_dv_readme/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD DV Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rad_new_design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Creating a New RAD Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reusable ASIC Designs (RAD) Library DV Overviews
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reusable ASIC Designs (RAD) Library DV Overviews
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rad_async_fifo_dv_readme/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD ASYNC FIFO DV Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rad_cdc_mcp_dv_readme/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD CDC MCP DV Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rad_cdc_sync_dv_readme/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD CDC SYNC DV Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<!--
+SPDX-FileCopyrightText: 2025 Hugh Walsh
+
+SPDX-License-Identifier: MIT
+-->
+
+<!--- This file: docs/fifo_depth.md -->
+
+<h1 id="fifo-depth-tool-fifo-depth">FIFO Depth Tool (<code>fifo-depth</code>)<a class="headerlink" href="#fifo-depth-tool-fifo-depth" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>The <strong>ABE Uarch FIFO Depth Tool</strong> computes the <em>optimal</em> FIFO depth and flow-control thresholds for ASIC micro-architectures. It uses <strong>Constraint Programming - Satisfiability (CP-SAT)</strong> optimization to find minimal-area solutions that satisfy latency and congestion requirements.</p>
+<p><strong>Note:</strong> Throughout this document, "CP-SAT" is used consistently to refer to the constraint programming satisfiability solver.</p>
+<h3 id="audience">Audience<a class="headerlink" href="#audience" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>ASIC designers</strong> who need to size FIFOs precisely under complex traffic profiles.</li>
+<li><strong>ASIC DV engineers</strong> who want to create stress scenarios or validate margin in performance simulations.</li>
+</ul>
+<h3 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Determine the <strong>smallest FIFO depth</strong> and <strong>thresholds</strong> that prevent underflow or overflow.</li>
+<li>Generate <strong>witness sequences</strong> (read/write patterns) that show the limiting case.</li>
+<li>For multi-clock FIFOs, find an <strong>optimal partition</strong> between asynchronous and synchronous storage.</li>
+</ul>
+<h3 id="key-features">Key Features<a class="headerlink" href="#key-features" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Unified solver supporting major flow-control protocols:</li>
+<li>Ready / Valid</li>
+<li>XON/XOFF</li>
+<li>Credit-Based Flow Control (CBFC)</li>
+<li>Layered traffic profile input (cycle, transaction, burst, or stream).</li>
+<li>Uses a deterministic algorithm to construct the worst-case write and read profiles.</li>
+<li>Uses a mathematical solver (CP-SAT) to find the worst peak occupancy.</li>
+<li>Proposes optimal Clock Domain Crossing (CDC) solution for multi-clock FIFOs.</li>
+<li>Replay buffer baseline solver for future expansion.</li>
+</ul>
+<h4 id="flat-vs-layered-specifications">Flat vs. Layered Specifications<a class="headerlink" href="#flat-vs-layered-specifications" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Spec Type</th>
+<th>Description</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Flat</td>
+<td>Direct FIFO parameters, explicit bounds on total read/write data over a fixed window.</td>
+<td>Simple, well-understood traffic or spreadsheet migration</td>
+</tr>
+<tr>
+<td>Layered</td>
+<td>Hierarchical profiles (cycle, transaction, burst, stream), tool derives worst-case from structure.</td>
+<td>Complex, protocol-specific, or bursty traffic</td>
+</tr>
+</tbody>
+</table>
+<h4 id="when-to-use-flat-vs-layered">When to Use Flat vs Layered<a class="headerlink" href="#when-to-use-flat-vs-layered" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Traffic Type</th>
+<th>Recommended Spec Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Simple burst with known bounds</td>
+<td>Flat</td>
+</tr>
+<tr>
+<td>Protocol-modeled behavior</td>
+<td>Layered</td>
+</tr>
+<tr>
+<td>Unknown or exploratory behavior</td>
+<td>Layered</td>
+</tr>
+<tr>
+<td>Arbitrary bounds without structure</td>
+<td>Flat</td>
+</tr>
+</tbody>
+</table>
+<h3 id="known-limitations">Known Limitations<a class="headerlink" href="#known-limitations" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Cannot yet model interface/storage quantum mismatches</li>
+<li>Layered replay not supported</li>
+<li>Threshold optimization for XON/XOFF may have long runtimes for large horizons</li>
+<li>CBFC headroom auto-selection depends on read-valid gapiness</li>
+<li>CDC solver assumes Gray-coded pointers and synchronizers (not handshake-based async FIFOs)</li>
+</ul>
+<hr />
+<h2 id="getting-started">Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
+<h3 id="set-up-and-install">Set Up and Install<a class="headerlink" href="#set-up-and-install" title="Permanent link">&para;</a></h3>
+<p>See <a href="../python_dev/">ABE Python Development</a> for Python environment setup details.</p>
+<div class="codehilite"><pre><span></span><code>make<span class="w"> </span>py-venv-all
+<span class="nb">source</span><span class="w"> </span>.venv/bin/activate
+make<span class="w"> </span>py-install-all
+</code></pre></div>
+
+<h3 id="run-examples">Run Examples<a class="headerlink" href="#run-examples" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code>fifo-depth<span class="w"> </span>src/abe/uarch/fifo_depth_examples/rv_layered.yaml
+fifo-depth<span class="w"> </span>src/abe/uarch/fifo_depth_examples/cbfc_cdc.yaml
+</code></pre></div>
+
+<h3 id="look-at-the-outputs">Look at the Outputs<a class="headerlink" href="#look-at-the-outputs" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code>ls<span class="w"> </span>out_uarch_fd*
+cat<span class="w"> </span>out_uarch_fd_rv_layered/results_scalars.json
+</code></pre></div>
+
+<h3 id="examine-the-relevant-directory-layout">Examine the Relevant Directory Layout<a class="headerlink" href="#examine-the-relevant-directory-layout" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code>.
+├──<span class="w"> </span>src
+│<span class="w">   </span>└──<span class="w"> </span>abe
+│<span class="w">       </span>├──<span class="w"> </span>uarch
+│<span class="w">       </span>│<span class="w">   </span>├──<span class="w"> </span>fifo_depth_examples
+│<span class="w">       </span>│<span class="w">   </span>│<span class="w">   </span>├──<span class="w"> </span>cbfc_balanced.yaml
+│<span class="w">       </span>│<span class="w">   </span>│<span class="w">   </span>├──<span class="w"> </span>cbfc_cdc.yaml
+│<span class="w">       </span>│<span class="w">   </span>│<span class="w">   </span>├──<span class="w"> </span>cbfc_flat.yaml
+│<span class="w">       </span>│<span class="w">   </span>│<span class="w">   </span>├──<span class="w"> </span>cbfc_layered.yaml
+│<span class="w">       </span>│<span class="w">   </span>│<span class="w">   </span>├──<span class="w"> </span>replay_cdc.yaml
+│<span class="w">       </span>│<span class="w">   </span>│<span class="w">   </span>├──<span class="w"> </span>replay.yaml
+│<span class="w">       </span>│<span class="w">   </span>│<span class="w">   </span>├──<span class="w"> </span>rv_balanced.yaml
+│<span class="w">       </span>│<span class="w">   </span>│<span class="w">   </span>├──<span class="w"> </span>rv_cdc.yaml
+│<span class="w">       </span>│<span class="w">   </span>│<span class="w">   </span>├──<span class="w"> </span>rv_flat.yaml
+│<span class="w">       </span>│<span class="w">   </span>│<span class="w">   </span>├──<span class="w"> </span>rv_layered.yaml
+│<span class="w">       </span>│<span class="w">   </span>│<span class="w">   </span>├──<span class="w"> </span>xon_xoff_balanced.yaml
+│<span class="w">       </span>│<span class="w">   </span>│<span class="w">   </span>├──<span class="w"> </span>xon_xoff_cdc.yaml
+│<span class="w">       </span>│<span class="w">   </span>│<span class="w">   </span>├──<span class="w"> </span>xon_xoff_flat.yaml
+│<span class="w">       </span>│<span class="w">   </span>│<span class="w">   </span>└──<span class="w"> </span>xon_xoff_layered.yaml
+│<span class="w">       </span>│<span class="w">   </span>├──<span class="w"> </span>__init__.py
+│<span class="w">       </span>│<span class="w">   </span>├──<span class="w"> </span>fifo_depth_base.py
+│<span class="w">       </span>│<span class="w">   </span>├──<span class="w"> </span>fifo_depth_cbfc.py
+│<span class="w">       </span>│<span class="w">   </span>├──<span class="w"> </span>fifo_depth_cdc.py
+│<span class="w">       </span>│<span class="w">   </span>├──<span class="w"> </span>fifo_depth_ready_valid.py
+│<span class="w">       </span>│<span class="w">   </span>├──<span class="w"> </span>fifo_depth_replay.py
+│<span class="w">       </span>│<span class="w">   </span>├──<span class="w"> </span>fifo_depth_utils.py
+│<span class="w">       </span>│<span class="w">   </span>├──<span class="w"> </span>fifo_depth_xon_xoff.py
+│<span class="w">       </span>│<span class="w">   </span>├──<span class="w"> </span>fifo_depth.py
+│<span class="w">       </span>│<span class="w">   </span>└──<span class="w"> </span>pkt_quantize.py
+</code></pre></div>
+
+<h2 id="conceptual-background">Conceptual Background<a class="headerlink" href="#conceptual-background" title="Permanent link">&para;</a></h2>
+<h3 id="scope">Scope<a class="headerlink" href="#scope" title="Permanent link">&para;</a></h3>
+<p>This tool models <strong>short-term congestion</strong> in data paths. The YAML specifications describe finite-duration traffic bursts where writes exceed reads. Over longer timescales, system-level flow control ensures balance; that equilibrium is beyond this tool’s scope.</p>
+<p>A “balanced” spec (equal write/read densities) requires only minimal buffering for arbitration or phase alignment. The tool automatically detects balanced cases and switches from CP-SAT to a closed-form analytic solver. Such cases may be detected and handled analytically. The main use case is the <strong>imbalanced</strong> case — temporary write oversubscription requiring real buffering.</p>
+<h3 id="motivation">Motivation<a class="headerlink" href="#motivation" title="Permanent link">&para;</a></h3>
+<p>Traditional sizing methods rely on closed-form equations or spreadsheet estimation. Those approaches may be less accurate when traffic is bursty, multi-layered, or latency-constrained. This tool computes FIFO depth using a hybrid deterministic + solver-based approach. The key idea is to combine (a) domain-specific knowledge of worst-case congestion patterns with (b) an exact optimization stage using CP-SAT. This combination provides a practical and mathematically accurate solution.</p>
+<p>For details on how layers compose and how worst-case patterns are generated, see <a href="#how-layers-compose">How Layers Compose</a>.</p>
+<hr />
+<h2 id="unique-approach">Unique Approach<a class="headerlink" href="#unique-approach" title="Permanent link">&para;</a></h2>
+<h3 id="deterministic-construction-of-worst-case-write-and-read-profiles">Deterministic Construction of Worst-Case Write and Read Profiles<a class="headerlink" href="#deterministic-construction-of-worst-case-write-and-read-profiles" title="Permanent link">&para;</a></h3>
+<p>The user’s layered traffic specification (transaction, burst, and stream structure) is first compiled into <strong>binary valid profiles</strong> for the write and read sides. These profiles are not arbitrary: the tool intentionally creates <strong>worst-case congestion patterns</strong> using a set of deterministic rules derived from theory and literature.</p>
+<h4 id="write-side-worst-case-maximizing-clustering-of-data"><strong>Write-side Worst Case (maximizing clustering of data)</strong><a class="headerlink" href="#write-side-worst-case-maximizing-clustering-of-data" title="Permanent link">&para;</a></h4>
+<p>The write profile generator creates patterns that produce the densest possible windows of valid cycles:</p>
+<ul>
+<li>Transactions inside a burst alternate between <code>valid-first</code> and <code>gap-first</code> to create long, contiguous data regions.</li>
+<li>Bursts with data (D) and idles (I) are arranged using an <code>(I,D)</code> / <code>(D,I)</code> envelope based on the number of bursts:</li>
+<li><code>s_cnt = 1</code>: <code>(D,I)</code></li>
+<li><code>s_cnt = 2</code>: <code>(I,D) (D,I)</code></li>
+<li><code>s_cnt = 3</code>: <code>(I,D) (D,I) (D,I)</code></li>
+<li><code>s_cnt = 4</code>: <code>(I,D) (D,I) (I,D) (D,I)</code></li>
+<li>This places idles at the start and end of the stream, while concentrating data in the interior.</li>
+<li>For multi-burst streams, boundaries are constructed to create <code>...1 | 1...</code> transitions (“Case-4” behavior), known to maximize FIFO occupancy.</li>
+</ul>
+<h4 id="read-side-worst-case-delaying-consumption"><strong>Read-side Worst Case (delaying consumption)</strong><a class="headerlink" href="#read-side-worst-case-delaying-consumption" title="Permanent link">&para;</a></h4>
+<p>The read profile generator clusters <strong>idle</strong> cycles to delay consumption:</p>
+<ul>
+<li>Every burst begins with a gap (<code>I,D</code>) to ensure reads start as late as possible.</li>
+<li>Transactions alternate so that gap boundaries align and create long idle runs.</li>
+<li>Burst boundaries aggregate idles across the stream.</li>
+<li>A causality guard rotates the read mask so that <strong>no read occurs before data can physically arrive</strong>, incorporating write latency.</li>
+</ul>
+<p>The result is a pair of profiles <code>(write_valid[], read_valid[])</code> that represent <strong>the worst traffic environment allowed by the user’s layered specification</strong>.</p>
+<h3 id="constraint-based-optimization-using-cp-sat">Constraint-Based Optimization Using CP-SAT<a class="headerlink" href="#constraint-based-optimization-using-cp-sat" title="Permanent link">&para;</a></h3>
+<p>After generating deterministic worst-case masks, the tool invokes a <strong>cycle-accurate CP-SAT optimization</strong> stage.</p>
+<p>The solver determines <strong>when</strong> writes and reads actually fire within cycles marked valid, while enforcing:</p>
+<ul>
+<li><strong>FIFO causality</strong>
+  <code>occ[t+1] = occ[t] + writes[t] - reads[t]</code></li>
+<li><strong>Non-negativity</strong>
+  <code>occ[t] ≥ 0</code></li>
+<li><strong>Throughput constraints</strong></li>
+<li>total writes = <code>sum_w</code></li>
+<li>total reads  = <code>sum_r</code></li>
+<li><strong>Latency constraints</strong></li>
+<li><code>wr_latency</code>, <code>rd_latency</code></li>
+<li>synchronizer delays (CDC)</li>
+</ul>
+<p>The solver’s objective is to <strong>maximize the peak occupancy</strong> under these constraints.</p>
+<p>Because the deterministic masks already encode the worst-case timing structure, CP-SAT only needs to explore <em>cycle-level scheduling</em> inside those windows — which is computationally tractable while still exact.</p>
+<h3 id="why-both-stages-are-necessary">Why Both Stages Are Necessary<a class="headerlink" href="#why-both-stages-are-necessary" title="Permanent link">&para;</a></h3>
+<p>Using <strong>only deterministic mask construction</strong> would give plausible worst cases, but could miss problematic write/read alignments that depend on exact cycle timing.</p>
+<p>Using <strong>only CP-SAT</strong> would require the solver to reason about transactions, bursts, and streams directly, which is computationally impractical for realistic horizons.</p>
+<p>The hybrid method combines the strengths of both:</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Purpose</th>
+<th>Strength</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Deterministic Worst-Case Mask Builder</strong></td>
+<td>Shapes adversarial write/read behavior</td>
+<td>Fast, structured, captures known worst-case patterns</td>
+</tr>
+<tr>
+<td><strong>CP-SAT Optimization</strong></td>
+<td>Finds the mathematically worst alignment and firing schedule</td>
+<td>Exact, global maximum of occupancy</td>
+</tr>
+</tbody>
+</table>
+<p>Together, they compute FIFO depths that are <strong>tight, consistent, and reliable</strong>, yet fast enough for interactive use.</p>
+<p>The hybrid deterministic + CP-SAT method provides a true worst-case bound for the reported depth.</p>
+<hr />
+<h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code>YAML spec files (flat / layered)
+             |
+             v
+   Pydantic models + validation
+             |
+   ----------------------------
+   |                          |
+   v                          v
+Traffic compiler        CDC solver
+(layered → worst-case   (closed-form
+ write/read masks)       CDC depth)
+   |                          |
+   v                          |
+CP-SAT solvers                |
+(Ready/Valid, XON/XOFF,       |
+ CBFC, Replay)                |
+   \                         /
+    \                       /
+     v                     v
+        Core results (occ_peak,
+        thresholds, credits…)
+                     |
+                     v
+     Post-processing (atomic_tail +
+          CDC + margin + rounding)
+                     |
+                     v
+      JSON / CSV / PNG / log outputs
+</code></pre></div>
+
+<p>Each solver (<a href="#ready-valid-solver">Ready/Valid</a>, <a href="#xon-xoff-solver">XON/XOFF</a>, <a href="#cbfc-solver">CBFC</a>, <a href="#replay-solver">Replay</a>, <a href="#cdc-solver">CDC</a>) extends <code>FifoSolver</code>. Common data structures are defined in <code>fifo_depth_base.py</code>.</p>
+<h3 id="typical-workflow">Typical Workflow<a class="headerlink" href="#typical-workflow" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Start with a layered write/read spec</li>
+<li>Run fifo-depth → observe occ_peak and witness</li>
+<li>Apply margin/rounding</li>
+<li>For CDC: use CDC solver first, then feed into sync FIFO solver</li>
+<li>Integrate results in RTL</li>
+</ol>
+<hr />
+<h3 id="file-overview">File Overview<a class="headerlink" href="#file-overview" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fifo_depth.py</code></td>
+<td>Top-level orchestrator, CLI entrypoint</td>
+</tr>
+<tr>
+<td><code>fifo_depth_base.py</code></td>
+<td>Common models and solver framework</td>
+</tr>
+<tr>
+<td><code>fifo_depth_utils.py</code></td>
+<td>Shared helper functions</td>
+</tr>
+<tr>
+<td><code>fifo_depth_ready_valid.py</code></td>
+<td>Ready / Valid flow control solver</td>
+</tr>
+<tr>
+<td><code>fifo_depth_xon_xoff.py</code></td>
+<td>XON/XOFF flow control solver</td>
+</tr>
+<tr>
+<td><code>fifo_depth_cbfc.py</code></td>
+<td>Credit-based flow control solver</td>
+</tr>
+<tr>
+<td><code>fifo_depth_replay.py</code></td>
+<td>Replay buffer solver</td>
+</tr>
+<tr>
+<td><code>fifo_depth_cdc.py</code></td>
+<td>CDC composition and partitioning</td>
+</tr>
+<tr>
+<td><code>fifo_depth_examples/</code></td>
+<td>Example YAML configurations</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="command-line-interface">Command Line Interface<a class="headerlink" href="#command-line-interface" title="Permanent link">&para;</a></h2>
+<h3 id="arguments">Arguments<a class="headerlink" href="#arguments" title="Permanent link">&para;</a></h3>
+<p>The <code>fifo-depth</code> tool accepts the following command-line arguments:</p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>spec</code></td>
+<td>positional</td>
+<td>Yes</td>
+<td>—</td>
+<td>One or more YAML/JSON spec file path(s). You can specify multiple files.</td>
+</tr>
+<tr>
+<td><code>--outdir</code></td>
+<td>optional</td>
+<td>No</td>
+<td>See description</td>
+<td>Output directory for results files (JSON, CSV, PNG) and log file. If not specified, outputs to "out_uarch_fd_\&lt;spec-stem&gt;, where \&lt;spec-stem&gt; is the stem of the spec file.</td>
+</tr>
+<tr>
+<td><code>--results-name</code></td>
+<td>optional</td>
+<td>No</td>
+<td>See description</td>
+<td>Prefix for results filenames. The default prefix is the name of the solver results class.</td>
+</tr>
+<tr>
+<td><code>--verbosity</code></td>
+<td>optional</td>
+<td>No</td>
+<td><code>info</code></td>
+<td>Logging level. Choices: <code>critical</code>, <code>error</code>, <code>warning</code>, <code>info</code>, <code>debug</code>.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Basic usage with single spec file</span>
+fifo-depth<span class="w"> </span>src/abe/uarch/fifo_depth_examples/ready_valid.yaml
+
+<span class="c1"># Multiple spec files</span>
+fifo-depth<span class="w"> </span>spec1.yaml<span class="w"> </span>spec2.yaml
+
+<span class="c1"># With custom output directory and results prefix</span>
+fifo-depth<span class="w"> </span>my_spec.yaml<span class="w"> </span>--outdir<span class="w"> </span>./results<span class="w"> </span>--results-name<span class="w"> </span>run1
+
+<span class="c1"># With debug logging</span>
+fifo-depth<span class="w"> </span>my_spec.yaml<span class="w"> </span>--verbosity<span class="w"> </span>debug
+</code></pre></div>
+
+<h2 id="input-specifications">Input Specifications<a class="headerlink" href="#input-specifications" title="Permanent link">&para;</a></h2>
+<h3 id="types-of-specs">Types of Specs<a class="headerlink" href="#types-of-specs" title="Permanent link">&para;</a></h3>
+<p>Two YAML specification forms are supported:</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Flat</strong></td>
+<td>Direct FIFO parameters (simple cases).</td>
+</tr>
+<tr>
+<td><strong>Layered</strong></td>
+<td>Hierarchical read/write profiles (cycle, transaction, burst, stream).</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Flat specifications</strong> provide explicit bounds on total read and write data over a fixed horizon. Users directly specify <code>sum_w_min</code>, <code>sum_w_max</code>, <code>sum_r_min</code>, and <code>sum_r_max</code> to limit the worst-case traffic pattern. This approach works well when traffic characteristics are well-understood or when migrating from spreadsheet-based analysis. Flat specs require the user to manually calculate aggregate traffic bounds.</p>
+<p><strong>Layered specifications</strong> define traffic patterns hierarchically through independent read and write profiles. Each profile can include multiple layers (e.g., cycle-level behavior, transaction grouping, burst patterns, stream periodicity) that combine to describe complex, realistic traffic. The tool automatically calculates the worst-case aggregate constraints from these layered descriptions. This approach is more intuitive for modeling protocol-specific behavior and allows the solver to explore combinations of layer parameters to find the most stressful scenario.</p>
+<h3 id="data-quantities">Data Quantities<a class="headerlink" href="#data-quantities" title="Permanent link">&para;</a></h3>
+<p>The <code>fifo-depth</code> tool:</p>
+<ul>
+<li>Assumes that the interface data quantum matches the FIFO storage data quantum.</li>
+<li>Treats all data quantities as unitless integers.</li>
+<li>Does not automatically scale data values for the CP-SAT solver.</li>
+</ul>
+<p>Users must ensure that all write and read data parameters are specified in consistent units (e.g., bytes, words, flits) and at appropriate magnitudes for the solver.</p>
+<h3 id="horizon-concept">Horizon Concept<a class="headerlink" href="#horizon-concept" title="Permanent link">&para;</a></h3>
+<p>The <strong>horizon</strong> defines the time window (in cycles) over which the solver analyzes traffic patterns and computes FIFO depth requirements. It represents the finite duration of the scenario being modeled — typically a burst or congestion event where write traffic temporarily exceeds read traffic.</p>
+<p>Key characteristics:</p>
+<ul>
+<li><strong>Finite-duration analysis</strong>: The horizon captures a specific traffic scenario, not steady-state equilibrium. The solver finds the worst-case FIFO occupancy within this time window.</li>
+<li><strong>Flat specs</strong>: Users specify horizon directly as a positive integer. All traffic constraints (<code>sum_w_min</code>, <code>sum_w_max</code>, <code>sum_r_min</code>, <code>sum_r_max</code>) apply over this fixed window.</li>
+<li><strong>Layered specs</strong>: Horizon can be <code>"auto"</code> (recommended) or user-specified. Auto mode computes horizon based on the traffic pattern's natural periodicity (<code>overall_period</code>), the blind window (<code>blind_window_cycles</code>), and minimum repetition count (<code>kmin_blocks</code>). This ensures the solver examines sufficient pattern cycles to find worst-case alignment.</li>
+<li><strong>Longer horizons</strong>: Generally capture more realistic worst-case scenarios but increase solver runtime. For layered specs, the auto-computed horizon balances coverage and efficiency.</li>
+</ul>
+<p>The horizon does not model long-term system-level flow control or equilibrium — it focuses on short-term congestion that requires buffering.</p>
+<p><strong>Horizon Sufficiency Check</strong>: The solver checks if the specified horizon may be too short to observe the maximum FIFO occupancy. The check uses this formula:</p>
+<div class="codehilite"><pre><span></span><code>horizon &gt;= (sum_w_max / w_max) + (sum_r_max / r_max)
+</code></pre></div>
+
+<p>This check ensures there are enough cycles to write the maximum write traffic (<code>sum_w_max</code> at rate <code>w_max</code>) and read the maximum read traffic (<code>sum_r_max</code> at rate <code>r_max</code>). If the horizon is shorter than this threshold, a warning is issued showing that the computed FIFO depth may be underestimated. This check is most important for protocols without flow control (e.g., <code>ready_valid</code>) where occupancy can reach <code>sum_w_max</code>. Protocols with flow control (e.g., <code>xon_xoff</code>, <code>cbfc</code>) typically have lower occupancy limits because of their flow control mechanisms.</p>
+<h3 id="common-parameters">Common Parameters<a class="headerlink" href="#common-parameters" title="Permanent link">&para;</a></h3>
+<p>All solvers use these YAML parameters:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fifo_type</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>—</td>
+<td>FIFO protocol type. Choices: <code>ready_valid</code>, <code>xon_xoff</code>, <code>cbfc</code>, <code>replay</code>, <code>cdc</code>.</td>
+</tr>
+<tr>
+<td><code>margin_type</code></td>
+<td>string</td>
+<td>No</td>
+<td><code>"absolute"</code></td>
+<td>Type of margin to apply. Choices: <code>percentage</code>, <code>absolute</code>.</td>
+</tr>
+<tr>
+<td><code>margin_val</code></td>
+<td>int</td>
+<td>No</td>
+<td><code>0</code></td>
+<td>Margin value (non-negative). Interpreted based on <code>margin_type</code>.</td>
+</tr>
+<tr>
+<td><code>rounding</code></td>
+<td>string</td>
+<td>No</td>
+<td><code>"none"</code></td>
+<td>Rounding strategy for final depth. Choices: <code>power2</code>, <code>none</code>.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="flat-spec-parameters">Flat Spec Parameters<a class="headerlink" href="#flat-spec-parameters" title="Permanent link">&para;</a></h3>
+<p>The Ready / Valid, XON / XOFF, and CBFC solvers use these YAML parameters for flat specs:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>horizon</code></td>
+<td>int</td>
+<td>Yes</td>
+<td>—</td>
+<td>Number of cycles to model (positive integer).</td>
+</tr>
+<tr>
+<td><code>wr_latency</code></td>
+<td>int</td>
+<td>No</td>
+<td><code>0</code></td>
+<td>Write latency in cycles (non-negative).</td>
+</tr>
+<tr>
+<td><code>rd_latency</code></td>
+<td>int</td>
+<td>No</td>
+<td><code>0</code></td>
+<td>Read latency in cycles (non-negative).</td>
+</tr>
+<tr>
+<td><code>w_max</code></td>
+<td>int</td>
+<td>No</td>
+<td><code>1</code></td>
+<td>Maximum write data per cycle (non-negative).</td>
+</tr>
+<tr>
+<td><code>r_max</code></td>
+<td>int</td>
+<td>No</td>
+<td><code>1</code></td>
+<td>Maximum read data per cycle (non-negative).</td>
+</tr>
+<tr>
+<td><code>sum_w_min</code></td>
+<td>int</td>
+<td>Yes</td>
+<td>—</td>
+<td>Minimum total write data over horizon (non-negative).</td>
+</tr>
+<tr>
+<td><code>sum_w_max</code></td>
+<td>int</td>
+<td>Yes</td>
+<td>—</td>
+<td>Maximum total write data over horizon (non-negative, ≥ <code>sum_w_min</code>).</td>
+</tr>
+<tr>
+<td><code>sum_r_min</code></td>
+<td>int</td>
+<td>Yes</td>
+<td>—</td>
+<td>Minimum total read data over horizon (non-negative).</td>
+</tr>
+<tr>
+<td><code>sum_r_max</code></td>
+<td>int</td>
+<td>Yes</td>
+<td>—</td>
+<td>Maximum total read data over horizon (non-negative, ≥ <code>sum_r_min</code>).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="layered-spec-parameters">Layered Spec Parameters<a class="headerlink" href="#layered-spec-parameters" title="Permanent link">&para;</a></h3>
+<p>The Ready / Valid, XON / XOFF, and CBFC solvers use these YAML parameters for layered specs:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>horizon</code></td>
+<td>int or string</td>
+<td>No</td>
+<td><code>"auto"</code></td>
+<td>Number of cycles to model. Can be <code>"auto"</code> (recommended) to automatically compute based on <code>overall_period</code>, <code>blind_window_cycles</code>, and <code>kmin_blocks</code>, or a user-specified positive integer (will be rounded up to multiple of <code>overall_period</code>).</td>
+</tr>
+<tr>
+<td><code>wr_latency</code></td>
+<td>int</td>
+<td>No</td>
+<td><code>0</code></td>
+<td>Write latency in cycles (non-negative).</td>
+</tr>
+<tr>
+<td><code>rd_latency</code></td>
+<td>int</td>
+<td>No</td>
+<td><code>0</code></td>
+<td>Read latency in cycles (non-negative).</td>
+</tr>
+<tr>
+<td><code>kmin_blocks</code></td>
+<td>int</td>
+<td>No</td>
+<td><code>4</code></td>
+<td>Minimum number of complete periods to include in auto-computed horizon. Ensures sufficient repetition of layered traffic pattern. Must be ≥ 1.</td>
+</tr>
+<tr>
+<td><code>blind_window_cycles</code></td>
+<td>int</td>
+<td>No</td>
+<td><code>0</code></td>
+<td>Number of cycles during which reads cannot observe writes (e.g., round-trip latency). Auto-computed horizon ensures at least <code>4 × blind_window_cycles</code> to capture worst-case behavior. Must be ≥ 0.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="layered-profiles">Layered Profiles<a class="headerlink" href="#layered-profiles" title="Permanent link">&para;</a></h4>
+<p>Layered specs specify independent <strong>write</strong> and <strong>read</strong> traffic profiles using a hierarchical structure. Both <code>write_profile</code> and <code>read_profile</code> use identical YAML parameters organized into four layers that build upon each other to create complex, realistic traffic patterns.</p>
+<p><strong>Layer Structure:</strong></p>
+<p>Each profile is composed of up to 4 layers that define traffic at increasing levels of granularity:</p>
+<ol>
+<li><strong>Cycle Layer</strong> (optional): Defines the maximum data items per cycle</li>
+<li><strong>Transaction Layer</strong> (required): Defines active and idle periods within a transaction</li>
+<li><strong>Burst Layer</strong> (required): Defines how transactions are grouped with inter-burst gaps</li>
+<li><strong>Stream Layer</strong> (optional): Defines how bursts are grouped with inter-stream gaps</li>
+</ol>
+<p><strong>Layer Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Cycle</strong></td>
+<td><code>cycle.max_items_per_cycle</code></td>
+<td>int</td>
+<td>No</td>
+<td><code>1</code></td>
+<td>Maximum data items that can be transferred in a single cycle (≥ 1).</td>
+</tr>
+<tr>
+<td><strong>Transaction</strong></td>
+<td><code>transaction.valid_cycles</code></td>
+<td>int</td>
+<td>Yes</td>
+<td>—</td>
+<td>Number of active cycles in a transaction (≥ 0).</td>
+</tr>
+<tr>
+<td><strong>Transaction</strong></td>
+<td><code>transaction.gap_cycles</code></td>
+<td>int</td>
+<td>Yes</td>
+<td>—</td>
+<td>Number of idle cycles in a transaction (≥ 0).</td>
+</tr>
+<tr>
+<td><strong>Burst</strong></td>
+<td><code>burst.transactions_per_burst</code></td>
+<td>int</td>
+<td>Yes</td>
+<td>—</td>
+<td>Number of transactions in each burst (≥ 1).</td>
+</tr>
+<tr>
+<td><strong>Burst</strong></td>
+<td><code>burst.gap_cycles</code></td>
+<td>int</td>
+<td>Yes</td>
+<td>—</td>
+<td>Number of idle cycles between bursts (≥ 0).</td>
+</tr>
+<tr>
+<td><strong>Stream</strong></td>
+<td><code>stream.bursts_per_stream</code></td>
+<td>int</td>
+<td>No</td>
+<td><code>1</code></td>
+<td>Number of bursts in each stream (≥ 1).</td>
+</tr>
+<tr>
+<td><strong>Stream</strong></td>
+<td><code>stream.gap_cycles</code></td>
+<td>int</td>
+<td>No</td>
+<td><code>0</code></td>
+<td>Number of idle cycles between streams (≥ 0).</td>
+</tr>
+</tbody>
+</table>
+<p>The <code>fifo-depth</code> tool composes write and read patterns to trigger the worst-case FIFO occupancy. See the <a href="#how-layers-compose">How Layers Compose</a> section of the Appendix for details.</p>
+<p><strong>Example:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="nt">write_profile</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">cycle</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">max_items_per_cycle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">  </span><span class="nt">transaction</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">valid_cycles</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4</span>
+<span class="w">    </span><span class="nt">gap_cycles</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">  </span><span class="nt">burst</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">transactions_per_burst</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8</span>
+<span class="w">    </span><span class="nt">gap_cycles</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">16</span>
+<span class="w">  </span><span class="nt">stream</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">bursts_per_stream</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<span class="w">    </span><span class="nt">gap_cycles</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">32</span>
+</code></pre></div>
+
+<p>This creates a write pattern where:</p>
+<ul>
+<li>Up to 2 data items can be written per active cycle</li>
+<li>Each transaction has 4 active cycles, then 2 idle cycles (period = 6)</li>
+<li>Each burst has 8 transactions, then 16 idle cycles (period = 8×6 + 16 = 64)</li>
+<li>Each stream has 3 bursts, then 32 idle cycles (period = 3×64 + 32 = 224)</li>
+</ul>
+<hr />
+<h2 id="outputs">Outputs<a class="headerlink" href="#outputs" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>results_scalars.json</code></td>
+<td>Key numeric results (depth, thresholds, margins)</td>
+</tr>
+<tr>
+<td><code>results_witness.csv</code></td>
+<td>Read/write occupancy sequence producing worst-case depth</td>
+</tr>
+<tr>
+<td><code>results_plot.png</code></td>
+<td>Graphical witness visualization</td>
+</tr>
+<tr>
+<td><code>run.log</code></td>
+<td>Log of parameters, solver stats, and final results</td>
+</tr>
+<tr>
+<td><code>cdc_results_scalars.json</code></td>
+<td>Additional results for CDC partitioning</td>
+</tr>
+</tbody>
+</table>
+<p>Example console output:</p>
+<div class="codehilite"><pre><span></span><code><span class="m">2025</span>-11-13<span class="w"> </span><span class="m">07</span>:34:09<span class="w"> </span>-<span class="w"> </span>abe.uarch.fifo_depth_base<span class="w"> </span>-<span class="w"> </span>INFO<span class="w"> </span>-<span class="w"> </span>results:
+<span class="o">{</span>
+<span class="w">  </span><span class="s2">&quot;basic_checks_pass&quot;</span>:<span class="w"> </span>true,
+<span class="w">  </span><span class="s2">&quot;msg&quot;</span>:<span class="w"> </span><span class="s2">&quot;&quot;</span>,
+<span class="w">  </span><span class="s2">&quot;depth&quot;</span>:<span class="w"> </span><span class="m">36</span>,
+<span class="w">  </span><span class="s2">&quot;occ_peak&quot;</span>:<span class="w"> </span><span class="m">32</span>,
+<span class="w">  </span><span class="s2">&quot;xon&quot;</span>:<span class="w"> </span><span class="m">15</span>,
+<span class="w">  </span><span class="s2">&quot;xoff&quot;</span>:<span class="w"> </span><span class="m">31</span>,
+<span class="w">  </span><span class="s2">&quot;t_star&quot;</span>:<span class="w"> </span><span class="m">227</span>
+<span class="o">}</span>
+<span class="m">2025</span>-11-13<span class="w"> </span><span class="m">07</span>:34:10<span class="w"> </span>-<span class="w"> </span>abe.utils<span class="w"> </span>-<span class="w"> </span>INFO<span class="w"> </span>-<span class="w"> </span>XonXoffResults:<span class="w"> </span>results.basic_checks_pass<span class="o">=</span>True
+<span class="m">2025</span>-11-13<span class="w"> </span><span class="m">07</span>:34:10<span class="w"> </span>-<span class="w"> </span>abe.utils<span class="w"> </span>-<span class="w"> </span>INFO<span class="w"> </span>-<span class="w"> </span>Completed<span class="w"> </span>src/abe/uarch/fifo_depth_examples/xon_xoff_layered.yaml<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">0</span>:02:17
+</code></pre></div>
+
+<h3 id="common-results">Common Results<a class="headerlink" href="#common-results" title="Permanent link">&para;</a></h3>
+<p>The Ready / Valid, XON/XOFF, and CBFC solvers produce these common results:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>basic_checks_pass</code></td>
+<td>bool</td>
+<td>Internal validation flag showing whether the solver's self-consistency checks passed. When <code>true</code>, the results are valid. When <code>false</code>, an error occurred (e.g., peak occupancy mismatch in witness sequences) and the tool will raise an exception.</td>
+</tr>
+<tr>
+<td><code>msg</code></td>
+<td>str</td>
+<td>Informational message about the solution method. For CP-SAT solvers, typically empty. For CDC solver, contains <code>"Analytic results."</code> to indicate closed-form calculation was used instead of constraint programming.</td>
+</tr>
+<tr>
+<td><code>depth</code></td>
+<td>int</td>
+<td>Recommended minimum FIFO depth. Starts with <code>occ_peak</code>, then adds: <code>atomic_tail</code> (if applicable), CDC synchronizer depth (if applicable), margin (percentage or absolute), and rounding (power-of-2 if specified). This is the final value for FIFO sizing.</td>
+</tr>
+<tr>
+<td><code>occ_peak</code></td>
+<td>int</td>
+<td>Peak occupancy computed by the CP-SAT solver. This is the worst-case number of data items simultaneously stored in the FIFO before any margins or adjustments are applied.</td>
+</tr>
+<tr>
+<td><code>w_seq</code></td>
+<td>List[int]</td>
+<td>Write sequence witness: the number of data items written to the FIFO at each cycle. This time-series demonstrates the worst-case traffic pattern that produces <code>occ_peak</code>.</td>
+</tr>
+<tr>
+<td><code>r_seq</code></td>
+<td>List[int]</td>
+<td>Read sequence witness: the number of data items read from the FIFO at each cycle. Combined with <code>w_seq</code>, this shows how the FIFO fills and drains over time.</td>
+</tr>
+<tr>
+<td><code>occ_seq</code></td>
+<td>List[int]</td>
+<td>Occupancy sequence witness: the FIFO occupancy (number of stored items) at each cycle boundary. The maximum value in this sequence equals <code>occ_peak</code>. Useful for visualizing worst-case behavior and validating the solution.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="future-enhancements">Future Enhancements<a class="headerlink" href="#future-enhancements" title="Permanent link">&para;</a></h2>
+<h3 id="replay-solver-extensions">Replay Solver Extensions<a class="headerlink" href="#replay-solver-extensions" title="Permanent link">&para;</a></h3>
+<p>As noted in the <a href="#replay-solver">Replay Solver</a> section, the current implementation serves as a reference baseline for more complex future variants including:</p>
+<ul>
+<li>Variable round-trip time (jitter, retry delays)</li>
+<li>Credit windows smaller than bandwidth–delay product</li>
+<li>Multiple senders sharing a replay buffer</li>
+<li>Dynamic flow control and non-uniform transmission rates</li>
+</ul>
+<h3 id="data-quantum-and-units-support">Data Quantum and Units Support<a class="headerlink" href="#data-quantum-and-units-support" title="Permanent link">&para;</a></h3>
+<p>The tool currently has these data-related limitations:</p>
+<ul>
+<li>Assumes interface data quantum matches FIFO storage data quantum</li>
+<li>Treats all data quantities as unitless integers</li>
+<li>Does not automatically scale data values for CP-SAT solver efficiency</li>
+</ul>
+<p><strong>Storage Quantum Mismatch:</strong></p>
+<p>The first limitation can underestimate FIFO depth in certain protocols. For example, consider XON/XOFF flow control for Ethernet where FIFO storage is allocated in 64-byte words. Between when the receiver sends XOFF and the sender receives it, the worst case occurs when the sender bursts 65-byte Ethernet packets (64-byte payload + 1-byte overhead). These 65-byte packets use the most FIFO storage relative to bandwidth, but the tool currently cannot model this interface-to-storage quantum mismatch.</p>
+<p><strong>Units and Autoscaling:</strong></p>
+<p>Supporting units (similar to the <code>pint</code>-based approach used for CDC clock frequencies) would improve specification clarity and reduce user errors from unit inconsistencies.</p>
+<p>Automatic scaling would simultaneously simplify YAML specifications and optimize CP-SAT solver performance by normalizing large or small data values to efficient integer ranges.</p>
+<p><strong>Implementation Approach:</strong></p>
+<p>The recommended enhancement strategy:</p>
+<ol>
+<li>Add preprocessing stage to read user YAML, translate units, autoscale values, and generate normalized YAML for existing solvers</li>
+<li>Keep current solver implementations unchanged</li>
+<li>Add postprocessing stage to reverse scaling and restore units in results</li>
+</ol>
+<p>This approach preserves the existing solver architecture while providing a cleaner user interface.</p>
+<hr />
+<h2 id="ready-valid-solver">Ready / Valid Solver<a class="headerlink" href="#ready-valid-solver" title="Permanent link">&para;</a></h2>
+<h3 id="ready-valid-purpose">Ready / Valid Purpose<a class="headerlink" href="#ready-valid-purpose" title="Permanent link">&para;</a></h3>
+<p>Basic data-valid interface (no explicit feedback).</p>
+<h3 id="ready-valid-parameters">Ready / Valid Parameters<a class="headerlink" href="#ready-valid-parameters" title="Permanent link">&para;</a></h3>
+<p>None beyond <a href="#common-parameters">common parameters</a>.</p>
+<h3 id="ready-valid-results">Ready / Valid Results<a class="headerlink" href="#ready-valid-results" title="Permanent link">&para;</a></h3>
+<p>None beyond <a href="#common-results">common results</a>.</p>
+<h3 id="ready-valid-recommendations">Ready / Valid Recommendations<a class="headerlink" href="#ready-valid-recommendations" title="Permanent link">&para;</a></h3>
+<p><strong>Flat Specifications:</strong></p>
+<p>For flat (non-layered) ready/valid specifications, the FIFO depth will always equal <code>sum_w_max</code>. This happens because:</p>
+<ul>
+<li>In a flat spec, write and read valid masks are constant (all 1s), meaning data can be written or read every cycle</li>
+<li>The worst-case scenario happens when the maximum amount of data (<code>sum_w_max</code>) is written before any reads can complete</li>
+<li>With no temporal structure to use, the FIFO must hold the entire maximum write burst</li>
+</ul>
+<p>For this simple case, a direct calculation would be sufficient. The solver still works correctly but provides no optimization benefit beyond the analytical result.</p>
+<p><strong>Balanced Specifications:</strong></p>
+<p>For balanced specifications (where minimum read density ≥ maximum write density), CP-SAT cannot work effectively because:</p>
+<ul>
+<li>The solver tries to maximize peak occupancy by scheduling writes and reads in the worst way</li>
+<li>In balanced specs, reads can always drain the FIFO faster than writes can fill it</li>
+<li>CP-SAT would explore an infinite solution space trying to delay reads indefinitely</li>
+<li>No meaningful worst-case bound exists in the constraint formulation</li>
+</ul>
+<p>The tool automatically detects balanced specifications using the <code>is_balanced()</code> method and switches to an analytical solver (<code>_get_results_analysis()</code>) instead. This analytical approach:</p>
+<ul>
+<li>Performs a phase-sweep across all possible read/write alignments</li>
+<li>Accounts for write/read latencies in a deterministic way</li>
+<li>Calculates the worst-case occupancy trajectory across all phase shifts</li>
+<li>Returns a meaningful depth based on the temporal interaction of layered traffic patterns</li>
+</ul>
+<p><em>Note:</em> Layered specifications with temporal structure enable the solver to perform meaningful optimization. Flat and balanced specs are handled automatically with appropriate methods.</p>
+<hr />
+<h2 id="xon-xoff-solver">XON / XOFF Solver<a class="headerlink" href="#xon-xoff-solver" title="Permanent link">&para;</a></h2>
+<h3 id="xon-xoff-purpose">XON / XOFF Purpose<a class="headerlink" href="#xon-xoff-purpose" title="Permanent link">&para;</a></h3>
+<p>Models XON/XOFF flow control protocols where the receiver uses threshold-based signaling to control the sender's transmission rate. In XON/XOFF:</p>
+<ul>
+<li>The receiver monitors FIFO occupancy and asserts XOFF when occupancy reaches the <code>xoff</code> threshold, signaling the sender to pause</li>
+<li>The sender reacts to XOFF after a reaction latency (<code>react_latency</code>), then stops or throttles transmission</li>
+<li>When occupancy drains below the <code>xon</code> threshold, the receiver de-asserts XOFF (signals XON)</li>
+<li>The sender resumes transmission after a resume latency (<code>resume_latency</code>)</li>
+<li>Hysteresis between <code>xon</code> and <code>xoff</code> prevents rapid toggling (control chatter) when occupancy stays near a single threshold</li>
+</ul>
+<p>XON/XOFF is commonly used in UARTs, network switches, and storage interfaces where simple threshold-based flow control provides adequate backpressure without per-transaction handshaking.</p>
+<h3 id="xon-xoff-overview">XON / XOFF Overview<a class="headerlink" href="#xon-xoff-overview" title="Permanent link">&para;</a></h3>
+<p>The XON/XOFF solver computes three critical values:</p>
+<ol>
+<li><strong><code>depth</code></strong> - The required FIFO buffer depth</li>
+<li><strong><code>xon</code></strong> - The threshold at which flow control is de-asserted (resume transmission)</li>
+<li><strong><code>xoff</code></strong> - The threshold at which flow control is asserted (pause transmission)</li>
+</ol>
+<p>Both <code>xon</code> and <code>xoff</code> are essential hardware parameters. They determine:</p>
+<ul>
+<li><strong>Hysteresis behavior</strong>: The separation between pause and resume thresholds prevents rapid toggling of flow control</li>
+<li><strong>Throughput vs. depth trade-off</strong>: Lower thresholds reduce buffering but may cause more frequent pauses, reducing effective bandwidth</li>
+<li><strong>Reaction margin</strong>: Sufficient headroom above <code>xoff</code> to accommodate data written during the writer's reaction latency</li>
+</ul>
+<p><strong>Auto Mode vs. Manual Mode:</strong></p>
+<p>The solver supports two modes:</p>
+<ul>
+<li>
+<p><strong>Auto Mode</strong> (<code>thresholds="auto"</code>, default): The solver automatically computes optimal threshold values using constraint programming. It finds threshold configurations that satisfy throughput targets while minimizing FIFO depth, then explores the hysteresis range to balance depth, throughput, and control stability.</p>
+</li>
+<li>
+<p><strong>Manual Mode</strong> (<code>thresholds="manual"</code>): You specify fixed <code>xon</code> and <code>xoff</code> values, and the solver validates whether they provide sufficient flow control and computes the resulting FIFO depth.</p>
+</li>
+</ul>
+<p><strong>How Auto-Optimization Works:</strong></p>
+<p>When <code>thresholds="auto"</code> (default):</p>
+<ol>
+<li>The solver analyzes traffic patterns (write/read caps, latencies, atomic writes, throttle rates)</li>
+<li>It calculates bounds for thresholds based on reaction/resume latencies and sustained throughput requirements</li>
+<li>It explores candidate threshold pairs within the specified <code>hysteresis</code> range</li>
+<li>It optimizes based on preferences: minimize depth (default), minimize hysteresis band (<code>prefer_small_band</code>), or minimize <code>xoff</code> (<code>prefer_low_xoff</code>)</li>
+<li>It validates each candidate against throughput targets and requirements</li>
+<li>It applies any specified margins and rounding to the final depth</li>
+</ol>
+<p><em>Note on adaptive optimization:</em> The solver automatically adjusts threshold search ranges based on traffic burstiness to help ensure adequate margin for reaction latency while avoiding over-provisioning.</p>
+<h3 id="xon-xoff-parameters">XON / XOFF Parameters<a class="headerlink" href="#xon-xoff-parameters" title="Permanent link">&para;</a></h3>
+<p>XON / XOFF parameters include all <a href="#common-parameters">common parameters</a> plus these XON / XOFF-specific parameters:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>atomic_tail</code></td>
+<td>int</td>
+<td>No</td>
+<td><code>0</code></td>
+<td>Number of data items in the final atomic write transaction that cannot be interrupted (non-negative). When the writer begins this tail transaction, it must complete even if XOFF is asserted.</td>
+</tr>
+<tr>
+<td><code>react_latency</code></td>
+<td>int</td>
+<td>No</td>
+<td><code>0</code></td>
+<td>Latency in cycles for the writer to react to XOFF assertion and stop writing (non-negative). Data continues to be written during this reaction period.</td>
+</tr>
+<tr>
+<td><code>resume_latency</code></td>
+<td>int</td>
+<td>No</td>
+<td><code>0</code></td>
+<td>Latency in cycles for the writer to resume writing after XON assertion (non-negative). No data is written during this resume period.</td>
+</tr>
+<tr>
+<td><code>w_throttle_max</code></td>
+<td>int</td>
+<td>No</td>
+<td><code>0</code></td>
+<td>Maximum number of data items that can be written per cycle while paused (non-negative). Default <code>0</code> means hard stop - no writes occur when paused.</td>
+</tr>
+<tr>
+<td><code>thresholds</code></td>
+<td>str</td>
+<td>No</td>
+<td><code>"auto"</code></td>
+<td>Threshold configuration mode: <code>"manual"</code> or <code>"auto"</code>. In manual mode, <code>xon</code> and <code>xoff</code> must be specified. In auto mode, the solver optimizes threshold values.</td>
+</tr>
+<tr>
+<td><code>xon</code></td>
+<td>int or None</td>
+<td>Conditional</td>
+<td><code>None</code></td>
+<td>XON threshold - occupancy level at which flow control is de-asserted and writer resumes (non-negative). Required when <code>thresholds="manual"</code>, ignored in auto mode.</td>
+</tr>
+<tr>
+<td><code>xoff</code></td>
+<td>int or None</td>
+<td>Conditional</td>
+<td><code>None</code></td>
+<td>XOFF threshold - occupancy level at which flow control is asserted to pause the writer (non-negative). Required when <code>thresholds="manual"</code>, ignored in auto mode. Must be ≥ <code>xon</code> to ensure hysteresis.</td>
+</tr>
+<tr>
+<td><code>throughput_target</code></td>
+<td>float or "auto"</td>
+<td>No</td>
+<td><code>"auto"</code></td>
+<td>Target throughput ratio (0.0 to 1.0) for auto mode. When <code>"auto"</code>, defaults to maximum achievable throughput. Lower values allow smaller FIFO depths at the cost of reduced performance.</td>
+</tr>
+<tr>
+<td><code>xon_min</code></td>
+<td>int or "auto"</td>
+<td>No</td>
+<td><code>"auto"</code></td>
+<td>Minimum allowed XON threshold for auto mode (non-negative). When <code>"auto"</code>, solver computes the minimum based on resume latency and traffic patterns. Constrains the search space for threshold optimization.</td>
+</tr>
+<tr>
+<td><code>xoff_range</code></td>
+<td>List[int] or "auto"</td>
+<td>No</td>
+<td><code>"auto"</code></td>
+<td>Range of XOFF values <code>[min, max]</code> to explore in auto mode. When <code>"auto"</code>, solver determines the range based on traffic patterns and throughput target. Allows constraining threshold search space.</td>
+</tr>
+<tr>
+<td><code>hysteresis</code></td>
+<td>List[float or int]</td>
+<td>No</td>
+<td><code>[1.0, 1.5]</code></td>
+<td>Hysteresis range <code>[min, max]</code> as ratio between XOFF and XON thresholds. Used in auto mode to ensure separation between pause and resume levels. Both values must be ≥ 1.0, and <code>min ≤ max</code>. Larger hysteresis reduces control chatter but may increase depth.</td>
+</tr>
+<tr>
+<td><code>prefer_small_band</code></td>
+<td>bool</td>
+<td>No</td>
+<td><code>false</code></td>
+<td>When <code>true</code>, auto mode prioritizes minimizing hysteresis band (XOFF - XON) over other optimization goals. Useful when minimizing control signal transitions is more important than depth.</td>
+</tr>
+<tr>
+<td><code>prefer_low_xoff</code></td>
+<td>bool</td>
+<td>No</td>
+<td><code>false</code></td>
+<td>When <code>true</code>, auto mode prioritizes lower XOFF values over other optimization goals. Useful when minimizing peak occupancy before flow control engages is important.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="xon-xoff-results">XON / XOFF Results<a class="headerlink" href="#xon-xoff-results" title="Permanent link">&para;</a></h3>
+<p>XON / XOFF results include all <a href="#common-results">common results</a> plus these XON / XOFF-specific results:</p>
+<table>
+<thead>
+<tr>
+<th>Result</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>xon</code></td>
+<td>Computed or validated XON threshold - the FIFO occupancy level at which flow control is de-asserted to resume writing</td>
+</tr>
+<tr>
+<td><code>xoff</code></td>
+<td>Computed or validated XOFF threshold - the FIFO occupancy level at which flow control is asserted to pause writing</td>
+</tr>
+<tr>
+<td><code>throughput</code></td>
+<td>Achieved write throughput as a ratio in [0.0, 1.0], normalized to (horizon * w_max). It is populated by the solver after witness extraction.</td>
+</tr>
+<tr>
+<td><code>t_star</code></td>
+<td>Earliest cycle at which peak occupancy occurs. Used as a tiebreaker in auto mode optimization when multiple threshold configurations achieve the same depth. Lower values indicate the peak occurs earlier in the horizon.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="xon-xoff-recommendations">XON / XOFF Recommendations<a class="headerlink" href="#xon-xoff-recommendations" title="Permanent link">&para;</a></h3>
+<p><strong>Auto Mode Benefits:</strong></p>
+<p>Auto mode (<code>thresholds="auto"</code>) is recommended because:</p>
+<ol>
+<li>
+<p><strong>Optimal Threshold Selection</strong>: The solver finds threshold configurations that minimize FIFO depth while meeting your throughput requirements, avoiding over-provisioning of buffer memory.</p>
+</li>
+<li>
+<p><strong>Correct Reaction Margins</strong>: The solver automatically accounts for reaction and resume latencies, ensuring sufficient headroom above <code>xoff</code> to handle data written during the pause reaction period.</p>
+</li>
+<li>
+<p><strong>Adaptive to Traffic Patterns</strong>: The solver analyzes your specific write/read profiles, atomic transactions, and throttle behavior to determine appropriate threshold values, rather than requiring manual calculation.</p>
+</li>
+<li>
+<p><strong>Hysteresis Optimization</strong>: The solver explores the specified hysteresis range to balance control stability (avoiding chatter) against depth minimization.</p>
+</li>
+</ol>
+<p><strong>When to Use Manual Mode:</strong></p>
+<p>Manual mode is useful when:</p>
+<ul>
+<li>You have pre-existing XON/XOFF protocol specifications that must be validated</li>
+<li>Hardware constraints dictate specific threshold values (e.g., register width limitations)</li>
+<li>You want to verify that a proposed threshold configuration is sufficient for your traffic</li>
+</ul>
+<p><strong>Recommendations:</strong></p>
+<ul>
+<li>Consider starting with auto mode to understand the optimal thresholds for your traffic pattern</li>
+<li>Use <code>hysteresis</code> (default: <code>[1.0, 1.5]</code>) to control the minimum and maximum separation between <code>xon</code> and <code>xoff</code></li>
+<li>Set <code>throughput_target</code> below 1.0 if you're willing to trade some bandwidth for reduced FIFO depth</li>
+<li>Use <code>prefer_small_band=true</code> to minimize hysteresis width if reducing control signal transitions is critical</li>
+<li>Use <code>prefer_low_xoff=true</code> to minimize peak occupancy if you want flow control to engage earlier</li>
+<li>Apply standard margin and rounding options to add implementation safety margin to the computed depth</li>
+</ul>
+<hr />
+<h2 id="cbfc-solver">CBFC Solver<a class="headerlink" href="#cbfc-solver" title="Permanent link">&para;</a></h2>
+<h3 id="cbfc-purpose">CBFC Purpose<a class="headerlink" href="#cbfc-purpose" title="Permanent link">&para;</a></h3>
+<p>Models Credit-Based Flow Control (CBFC) protocols where the sender's transmission rate is regulated by credits returned asynchronously from the receiver. In CBFC:</p>
+<ul>
+<li>The sender maintains a credit pool that is decremented with each write and incremented when credits are returned from the receiver</li>
+<li>Credits are returned after the receiver consumes data, subject to a return latency (<code>cred_ret_latency</code>)</li>
+<li>The sender can only transmit when sufficient credits are available</li>
+<li>This provides backpressure without requiring a synchronous ready/valid handshake</li>
+</ul>
+<p>CBFC is commonly used in network protocols and interconnects where asynchronous flow control is preferred over cycle-by-cycle handshaking.</p>
+<h3 id="cbfc-overview">CBFC Overview<a class="headerlink" href="#cbfc-overview" title="Permanent link">&para;</a></h3>
+<p>The CBFC solver computes three critical values:</p>
+<ol>
+<li><strong><code>depth</code></strong> - The required FIFO buffer depth</li>
+<li><strong><code>cred_max</code></strong> - The maximum size of the credit pool</li>
+<li><strong><code>cred_init</code></strong> - The initial number of credits at startup</li>
+</ol>
+<p>Both <code>cred_max</code> and <code>cred_init</code> are essential hardware implementation parameters. They determine:</p>
+<ul>
+<li><strong>Credit pool sizing</strong>: How many credits the sender must track (affects counter width or memory requirements)</li>
+<li><strong>Startup behavior</strong>: How much data can be transmitted before the first credits return from the receiver</li>
+<li><strong>Sustained throughput</strong>: Whether the credit return rate can support the desired bandwidth</li>
+</ul>
+<p><strong>Auto Mode vs. Manual Mode:</strong></p>
+<p>The solver supports two modes:</p>
+<ul>
+<li>
+<p><strong>Auto Mode</strong> (<code>cred_max="auto"</code> and/or <code>cred_init="auto"</code>, default): The solver automatically computes optimal credit values using constraint programming. It finds the minimal feasible credit configuration that satisfies the traffic requirements, then adds adaptive headroom based on read-valid gapiness patterns.</p>
+</li>
+<li>
+<p><strong>Manual Mode</strong> (explicit integer values): You specify fixed credit values, and the solver validates whether they provide sufficient flow control and computes the resulting FIFO depth.</p>
+</li>
+</ul>
+<p><strong>How Auto-Optimization Works:</strong></p>
+<p>When <code>cred_auto_optimize=true</code> (default) with auto mode:</p>
+<ol>
+<li>The solver analyzes traffic patterns (write/read caps, latencies, credit return latency)</li>
+<li>It computes lower bounds for credits based on startup requirements and sustained throughput</li>
+<li>It performs lexicographic minimization: first minimizes <code>cred_init</code>, then minimizes <code>cred_max</code></li>
+<li>It adds adaptive headroom derived from the read-valid pattern's maximum gap between valid slots</li>
+<li>It applies any specified margins and rounding</li>
+</ol>
+<p><em>Note on adaptive headroom:</em> The solver automatically adjusts headroom based on read-valid gapiness to help ensure credits are available even when reads arrive in bursts rather than uniformly.</p>
+<h3 id="cbfc-parameters">CBFC Parameters<a class="headerlink" href="#cbfc-parameters" title="Permanent link">&para;</a></h3>
+<p>CBFC parameters include all <a href="#common-parameters">common parameters</a> plus these CBFC-specific parameters:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cred_max</code></td>
+<td>int or "auto"</td>
+<td>No</td>
+<td><code>"auto"</code></td>
+<td>Maximum credit pool size (non-negative). When <code>"auto"</code>, solver optimizes this value.</td>
+</tr>
+<tr>
+<td><code>cred_init</code></td>
+<td>int or "auto"</td>
+<td>No</td>
+<td><code>"auto"</code></td>
+<td>Initial credit count at start (non-negative). When <code>"auto"</code>, solver optimizes this value. Must be ≤ <code>cred_max</code>.</td>
+</tr>
+<tr>
+<td><code>cred_gran</code></td>
+<td>int</td>
+<td>No</td>
+<td><code>1</code></td>
+<td>Credit granularity - number of data units per credit (non-negative).</td>
+</tr>
+<tr>
+<td><code>cred_ret_latency</code></td>
+<td>int</td>
+<td>No</td>
+<td><code>0</code></td>
+<td>Latency in cycles for credit return from receiver to sender (non-negative).</td>
+</tr>
+<tr>
+<td><code>cred_auto_optimize</code></td>
+<td>bool</td>
+<td>No</td>
+<td><code>true</code></td>
+<td>Enable automatic optimization of credit parameters when set to <code>"auto"</code>.</td>
+</tr>
+<tr>
+<td><code>cred_headroom</code></td>
+<td>int</td>
+<td>No</td>
+<td><code>2</code></td>
+<td>Additional headroom credits beyond computed minimum (non-negative). Used when auto-optimizing credits.</td>
+</tr>
+<tr>
+<td><code>cred_margin_type</code></td>
+<td>str</td>
+<td>No</td>
+<td><code>"absolute"</code></td>
+<td>Type of margin to apply to credit values: <code>"percentage"</code> or <code>"absolute"</code>.</td>
+</tr>
+<tr>
+<td><code>cred_margin_val</code></td>
+<td>int</td>
+<td>No</td>
+<td><code>0</code></td>
+<td>Margin value to add to credit calculations.</td>
+</tr>
+<tr>
+<td><code>cred_rounding</code></td>
+<td>str</td>
+<td>No</td>
+<td><code>"none"</code></td>
+<td>Rounding strategy for credit values: <code>"power2"</code> or <code>"none"</code>.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="cbfc-results">CBFC Results<a class="headerlink" href="#cbfc-results" title="Permanent link">&para;</a></h3>
+<p>CBFC results include all <a href="#common-results">common results</a> plus these CBFC-specific results:</p>
+<table>
+<thead>
+<tr>
+<th>Result</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cred_max</code></td>
+<td>Computed or validated maximum credit pool size</td>
+</tr>
+<tr>
+<td><code>cred_init</code></td>
+<td>Computed or validated initial credit count</td>
+</tr>
+<tr>
+<td><code>throughput</code></td>
+<td>Achieved write throughput as a ratio in [0.0, 1.0], normalized to (horizon * w_max). It is populated by the solver after witness extraction.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="cbfc-recommendations">CBFC Recommendations<a class="headerlink" href="#cbfc-recommendations" title="Permanent link">&para;</a></h3>
+<p><strong>Auto Mode Benefits:</strong></p>
+<p>Auto mode (<code>cred_max="auto"</code> and <code>cred_init="auto"</code>) is recommended because:</p>
+<ol>
+<li>
+<p><strong>Optimal Credit Sizing</strong>: The solver finds the minimal credit configuration that satisfies your traffic requirements, avoiding over-provisioning of credit counters or pools.</p>
+</li>
+<li>
+<p><strong>Correct Startup Credits</strong>: The solver automatically accounts for credit return latency and startup requirements, ensuring sufficient initial credits to achieve desired throughput before the first credits return.</p>
+</li>
+<li>
+<p><strong>Adaptive to Traffic Patterns</strong>: The solver analyzes your specific write/read profiles and latencies to determine appropriate credit values, rather than requiring manual calculation.</p>
+</li>
+<li>
+<p><strong>Built-in Headroom</strong>: Adaptive headroom is automatically added based on read-valid gapiness, providing protection against traffic burstiness.</p>
+</li>
+</ol>
+<p><strong>When to Use Manual Mode:</strong></p>
+<p>Manual mode is useful when:</p>
+<ul>
+<li>You have pre-existing credit protocol specifications that must be validated</li>
+<li>Hardware constraints dictate specific credit pool sizes (e.g., power-of-2 counter widths)</li>
+<li>You want to verify that a proposed credit configuration is sufficient</li>
+</ul>
+<p><strong>Recommendations:</strong></p>
+<ul>
+<li>Consider starting with auto mode to understand the minimal credit requirements for your traffic pattern</li>
+<li>Use <code>cred_headroom</code> (default: 2) to add safety margin beyond the computed minimum</li>
+<li>Apply <code>cred_rounding="power2"</code> if your hardware prefers power-of-2 credit pool sizes</li>
+<li>Use <code>cred_margin_type</code> and <code>cred_margin_val</code> to add implementation margin to credit values</li>
+</ul>
+<hr />
+<h2 id="cdc-solver">CDC Solver<a class="headerlink" href="#cdc-solver" title="Permanent link">&para;</a></h2>
+<h3 id="cdc-purpose">CDC Purpose<a class="headerlink" href="#cdc-purpose" title="Permanent link">&para;</a></h3>
+<p>The CDC solver handles FIFO depth sizing when the write and read interfaces operate in different clock domains. It implements a two-stage approach:</p>
+<ol>
+<li><strong>Small CDC FIFO</strong>: Handles clock domain crossing with Gray-coded pointers and synchronizer latency</li>
+<li><strong>Large synchronous FIFO</strong>: Buffers traffic patterns in a single clock domain</li>
+</ol>
+<p>This separation is preferred over a single asynchronous FIFO because:</p>
+<ul>
+<li>Gray counter logic is simpler for small, power-of-2 depths</li>
+<li>Most buffering depth can use simpler synchronous FIFO logic</li>
+<li>The CDC solver calculates both the small CDC depth and initial conditions for the downstream synchronous solver</li>
+</ul>
+<h3 id="cdc-overview">CDC Overview<a class="headerlink" href="#cdc-overview" title="Permanent link">&para;</a></h3>
+<p>The CDC solver computes three critical values:</p>
+<ol>
+<li><strong><code>depth</code></strong> - The required small CDC FIFO buffer depth</li>
+<li><strong><code>base_sync_fifo_depth</code></strong> - The minimum depth for the large synchronous FIFO based on long-term rate mismatch</li>
+<li><strong><code>rd_sync_cycles_in_wr</code></strong> - Read-domain synchronization latency converted to write-domain cycles</li>
+</ol>
+<p>These values enable a two-stage solution: the small CDC FIFO handles clock domain crossing, while the computed parameters inform stage 2's solution of the large synchronous FIFO.</p>
+<p><strong>Analytic Solution vs. CP-SAT:</strong></p>
+<p>Unlike other solvers (Ready/Valid, XON/XOFF, CBFC, Replay) which use CP-SAT constraint programming, the CDC solver uses closed-form analytical formulas. This works because:</p>
+<ul>
+<li><strong>Well-defined latencies</strong>: Synchronization stages, Gray code delays, and phase relationships have deterministic bounds</li>
+<li><strong>Independent components</strong>: Synchronizer depth, phase margin, and PPM drift can be calculated separately and summed</li>
+<li><strong>No optimization needed</strong>: There are no tunable parameters to optimize (like thresholds or credits) — the physics of clock domain crossing determines the requirements</li>
+<li><strong>Computational efficiency</strong>: Analytic formulas execute instantly, while CP-SAT would add unnecessary overhead for a problem with a unique deterministic solution</li>
+</ul>
+<p>The CDC depth calculation sums three components:</p>
+<ul>
+<li><strong>Synchronizer depth</strong>: Latency for pointer synchronization across clock domains (<code>sync_stages + ptr_gray_extra</code> converted to items)</li>
+<li><strong>Phase margin depth</strong>: One read-cycle worth of items to account for unknown initial phase relationship between clocks</li>
+<li><strong>PPM drift depth</strong>: Accumulated frequency drift over the horizon in both write and read domains</li>
+</ul>
+<h3 id="cdc-parameters">CDC Parameters<a class="headerlink" href="#cdc-parameters" title="Permanent link">&para;</a></h3>
+<p>CDC parameters include all <a href="#common-parameters">common parameters</a> plus these CDC-specific parameters:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>wr_clk_freq</code></td>
+<td>int or str</td>
+<td>Yes</td>
+<td>-</td>
+<td>Write clock frequency. Can be specified as integer Hz (e.g., <code>1000000000</code> for 1 GHz) or string with units (e.g., <code>"1.1 GHz"</code>, <code>"100 MHz"</code>). Must be positive.</td>
+</tr>
+<tr>
+<td><code>rd_clk_freq</code></td>
+<td>int or str</td>
+<td>Yes</td>
+<td>-</td>
+<td>Read clock frequency. Can be specified as integer Hz or string with units. Must be positive.</td>
+</tr>
+<tr>
+<td><code>big_fifo_domain</code></td>
+<td>str</td>
+<td>No</td>
+<td><code>"write"</code></td>
+<td>Clock domain for the large synchronous FIFO in stage 2: <code>"write"</code> or <code>"read"</code>. Determines which domain's cycles are used for the <code>horizon</code> and traffic pattern analysis.</td>
+</tr>
+<tr>
+<td><code>wr_clk_ppm</code></td>
+<td>int</td>
+<td>No</td>
+<td><code>0</code></td>
+<td>Write clock frequency tolerance in parts-per-million (non-negative). Used to calculate worst-case drift over the horizon.</td>
+</tr>
+<tr>
+<td><code>rd_clk_ppm</code></td>
+<td>int</td>
+<td>No</td>
+<td><code>0</code></td>
+<td>Read clock frequency tolerance in parts-per-million (non-negative). Used to calculate worst-case drift over the horizon.</td>
+</tr>
+<tr>
+<td><code>sync_stages</code></td>
+<td>int</td>
+<td>No</td>
+<td><code>2</code></td>
+<td>Number of synchronizer flip-flop stages for pointer crossing (non-negative). Typical values are 2-3 stages for MTBF requirements. Contributes to synchronization latency.</td>
+</tr>
+<tr>
+<td><code>ptr_gray_extra</code></td>
+<td>int</td>
+<td>No</td>
+<td><code>1</code></td>
+<td>Extra Gray code pointer stability margin in cycles (non-negative). Accounts for Gray counter transitions and sampling uncertainty. Typical value is 1.</td>
+</tr>
+<tr>
+<td><code>window_cycles</code></td>
+<td>int or "auto"</td>
+<td>No</td>
+<td><code>"auto"</code></td>
+<td>Horizon size in cycles for the <code>big_fifo_domain</code>. When <code>"auto"</code>, extracted from <code>horizon</code> field or compiled from layered profiles. Must be positive when specified as integer.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="cdc-results">CDC Results<a class="headerlink" href="#cdc-results" title="Permanent link">&para;</a></h3>
+<p>The CDC-specific results are:</p>
+<table>
+<thead>
+<tr>
+<th>Result</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>depth</code></td>
+<td>Required small CDC FIFO buffer depth (after margin and rounding). Sum of <code>synchronizer_depth</code>, <code>phase_margin_depth</code>, and <code>ppm_drift_depth</code>.</td>
+</tr>
+<tr>
+<td><code>synchronizer_depth</code></td>
+<td>Depth component for synchronization latency. Accounts for <code>sync_stages</code> and <code>ptr_gray_extra</code> cycles converted from read domain to write domain and scaled by items per cycle.</td>
+</tr>
+<tr>
+<td><code>phase_margin_depth</code></td>
+<td>Depth component for clock phase uncertainty. Accounts for one read cycle of uncertainty due to unknown relative phase between write and read clocks.</td>
+</tr>
+<tr>
+<td><code>ppm_drift_depth</code></td>
+<td>Depth component for PPM frequency drift. Accumulated worst-case drift over the horizon in both write and read domains (combined).</td>
+</tr>
+<tr>
+<td><code>base_sync_fifo_depth</code></td>
+<td>Minimum depth for the large synchronous FIFO in stage 2. Based on long-term rate mismatch over the window: <code>window_cycles × items_per_cycle × max(0, 1 - f_rd/f_wr)</code>.</td>
+</tr>
+<tr>
+<td><code>rd_sync_cycles_in_wr</code></td>
+<td>Read-domain synchronization cycles converted to write-domain cycles. Used as initial condition parameter for stage 2 synchronous FIFO solver.</td>
+</tr>
+</tbody>
+</table>
+<p>Results are saved in file <code>cdc_results_scalars.json</code> in the output directory.</p>
+<h3 id="cdc-recommendations">CDC Recommendations<a class="headerlink" href="#cdc-recommendations" title="Permanent link">&para;</a></h3>
+<p><strong>Margin and Rounding Strategy:</strong></p>
+<p>CDC FIFOs should typically be small and power-of-2 sized for efficient Gray counter implementation. However, automatic margin and rounding can lead to excessive sizing:</p>
+<ul>
+<li>If the solver computes a depth of 13 and you specify 25% margin with power-of-2 rounding, the result will be 32 (potentially excessive)</li>
+<li><strong>Recommended approach</strong>: Set <code>margin_val=0</code> and <code>rounding="none"</code> initially, review the computed depth, then manually select an appropriate power-of-2 size</li>
+<li>For critical applications, consider adding 1-2 entries of margin, then rounding up to the next power-of-2</li>
+</ul>
+<p><strong>Clock Domain Selection:</strong></p>
+<p>The <code>big_fifo_domain</code> parameter determines which clock domain is used for the large synchronous FIFO in stage 2:</p>
+<ul>
+<li>Set <code>big_fifo_domain="write"</code> (default) when the write clock is faster or when traffic patterns are naturally specified in write-domain cycles</li>
+<li>Set <code>big_fifo_domain="read"</code> when the read clock is faster, as this may reduce the total depth of the large synchronous FIFO</li>
+<li>The CDC FIFO depth is independent of this choice; only the stage 2 synchronous FIFO is affected</li>
+</ul>
+<p><strong>PPM Tolerance Specification:</strong></p>
+<ul>
+<li>Set <code>wr_clk_ppm</code> and <code>rd_clk_ppm</code> to match your oscillator specifications (e.g., 100 ppm for typical crystals)</li>
+<li>Omit or set to 0 if clocks are derived from the same source (frequency-locked)</li>
+<li>PPM drift accumulates over the horizon, so larger windows require proportionally more depth</li>
+<li>Higher PPM values add safety margin but increase CDC FIFO size</li>
+</ul>
+<p><strong>Synchronizer Stage Configuration:</strong></p>
+<ul>
+<li>Default <code>sync_stages=2</code> is standard for most applications and provides sufficient MTBF (Mean Time Between Failures)</li>
+<li>Use <code>sync_stages=3</code> for very high-speed designs or stringent reliability requirements</li>
+<li><code>ptr_gray_extra=1</code> (default) accounts for Gray code sampling uncertainty; typically no need to change</li>
+<li>Increasing these values improves reliability but increases synchronization latency and CDC depth</li>
+</ul>
+<p><strong>Analysis Window:</strong></p>
+<ul>
+<li>Use <code>window_cycles="auto"</code> (default) to inherit from the main <code>horizon</code> or layered profile specification</li>
+<li>Manually specify <code>window_cycles</code> only if you need a different horizon than the synchronous FIFO</li>
+<li>The window should cover the longest traffic burst or congestion period you want to handle</li>
+</ul>
+<hr />
+<h2 id="replay-solver">Replay Solver<a class="headerlink" href="#replay-solver" title="Permanent link">&para;</a></h2>
+<h3 id="replay-purpose">Replay Purpose<a class="headerlink" href="#replay-purpose" title="Permanent link">&para;</a></h3>
+<p>Models replay buffers that hold unacknowledged (in-flight) data until acknowledgements (ACKs) arrive after a round-trip time (RTT). This is needed for protocols that require retransmission capability, where data must be kept until confirmed receipt.</p>
+<h3 id="replay-overview">Replay Overview<a class="headerlink" href="#replay-overview" title="Permanent link">&para;</a></h3>
+<p>The replay FIFO model uses a CP-SAT formulation for consistency with other <code>fifo_depth_*</code> solvers. For the standard deterministic case (fixed RTT, single sender, continuous transmission at <code>w_max</code>), the solution is equivalent to the classic bandwidth–delay product (BDP):</p>
+<div class="codehilite"><pre><span></span><code>peak_inflight = min(rtt, horizon - rtt) × w_max
+</code></pre></div>
+
+<p>The solver enforces that:</p>
+<ul>
+<li>Writes transmit data into the replay buffer</li>
+<li>Acknowledgements arrive exactly <code>rtt</code> cycles after the corresponding write</li>
+<li>No new writes occur in the final <code>rtt</code> cycles (ensuring the buffer drains to zero by the horizon)</li>
+<li>The buffer must accommodate all in-flight (unacknowledged) data</li>
+</ul>
+<p>While the current implementation produces the same result as the analytical BDP formula, the CP-SAT solver serves as a reference implementation and extensibility placeholder for more complex future variants such as:</p>
+<ul>
+<li>Variable <code>rtt[t]</code> (jitter, retry delays)</li>
+<li>Credit windows smaller than BDP</li>
+<li>Multiple senders sharing a replay buffer</li>
+<li>Discrete protocol phases (pause, resume, retry)</li>
+<li>Dynamic flow control rules (<code>w[t]</code> ≤ function of inflight)</li>
+<li>Non-uniform <code>w_max</code> (burst shaping)</li>
+<li>Overlapping atomic tail semantics</li>
+</ul>
+<p>Future extensions will leverage this solver framework to capture those non-trivial dynamics without requiring new analytical derivations.</p>
+<h3 id="replay-parameters">Replay Parameters<a class="headerlink" href="#replay-parameters" title="Permanent link">&para;</a></h3>
+<p>The Replay FIFO is fundamentally different from the previously described Ready / Valid, XON/XOFF, and CBFC FIFOs. It <strong>only supports flat specs</strong> (not layered profiles) and models the transmission/acknowledgement pattern directly. Layered replay is not currently supported because replay buffers inherently depend on temporal ACK structure rather than transaction/burst layering.</p>
+<p>Replay supports the <a href="#common-parameters">common parameters</a> <code>fifo_type</code>, <code>margin_type</code>, <code>margin_val</code>, and <code>rounding</code> and these replay-specific parameters:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>horizon</code></td>
+<td>int</td>
+<td>Yes</td>
+<td>—</td>
+<td>Number of cycles to model (positive integer). Must be ≥ <code>rtt</code>.</td>
+</tr>
+<tr>
+<td><code>w_max</code></td>
+<td>int</td>
+<td>No</td>
+<td><code>1</code></td>
+<td>Maximum write (transmit) data per cycle (non-negative). Represents the maximum bandwidth of the sender.</td>
+</tr>
+<tr>
+<td><code>atomic_tail</code></td>
+<td>int</td>
+<td>No</td>
+<td><code>0</code></td>
+<td>Additional buffer space to reserve beyond the computed in-flight peak (non-negative). Useful for protocol-specific padding or alignment requirements.</td>
+</tr>
+<tr>
+<td><code>rtt</code></td>
+<td>int</td>
+<td>Yes</td>
+<td>—</td>
+<td>Round-trip time in cycles (positive integer). The delay between a data transmission and its corresponding acknowledgement. Must be ≤ <code>horizon</code>.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="replay-results">Replay Results<a class="headerlink" href="#replay-results" title="Permanent link">&para;</a></h3>
+<p>The replay solver results are fundamentally the same as the <a href="#common-results">common FIFO results</a> in principle, but use more precise terminology specific to replay buffers. In a replay buffer context:</p>
+<ul>
+<li><strong>Occupancy</strong> (occ) → <strong>Inflight</strong> (infl): The amount of data that has been transmitted but not yet acknowledged</li>
+<li><strong>Read</strong> (r) → <strong>Acknowledgement</strong> (ack/a): The signal indicating data has been received and can be removed from the replay buffer</li>
+<li><strong>Write</strong> (w) remains <strong>Write</strong> (w): The transmission of new data</li>
+</ul>
+<p>The mapping between common FIFO results and replay-specific results is:</p>
+<table>
+<thead>
+<tr>
+<th>Common Result</th>
+<th>Replay Result</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>depth</code></td>
+<td><code>depth</code></td>
+<td>Required buffer depth</td>
+</tr>
+<tr>
+<td><code>occ_peak</code></td>
+<td><code>infl_peak</code></td>
+<td>Peak inflight data (maximum unacknowledged transmissions)</td>
+</tr>
+<tr>
+<td><code>w_seq</code></td>
+<td><code>w_seq</code></td>
+<td>Write (transmit) sequence over time</td>
+</tr>
+<tr>
+<td><code>r_seq</code></td>
+<td><code>a_seq</code></td>
+<td>Read (acknowledgement) sequence over time</td>
+</tr>
+<tr>
+<td><code>occ_seq</code></td>
+<td><code>infl_seq</code></td>
+<td>Occupancy (inflight) sequence over time</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Why CP-SAT Yields the Same Result as the BDP Equation:</strong></p>
+<p>The CP-SAT solver produces the same result as the analytical bandwidth–delay product (BDP) calculation because of the specific constraints in the current Replay model:</p>
+<ol>
+<li>
+<p><strong>Deterministic Acknowledgements:</strong> Every write at cycle <code>t</code> generates an acknowledgement at cycle <code>t + rtt</code>. This creates a perfectly predictable in-flight pattern.</p>
+</li>
+<li>
+<p><strong>Maximum Transmission Rate:</strong> The solver maximizes the objective (peak in-flight data) by transmitting at <code>w_max</code> continuously during the valid transmission window.</p>
+</li>
+<li>
+<p><strong>Drain Constraint:</strong> The requirement that no writes occur in the final <code>rtt</code> cycles (ensuring <code>inflight[horizon] == 0</code>) creates a symmetric ramp-up and ramp-down pattern.</p>
+</li>
+<li>
+<p><strong>Peak Occurs at Predictable Time:</strong> Under continuous transmission at <code>w_max</code>, in-flight data accumulates linearly until either:</p>
+</li>
+<li>Time <code>rtt</code> (first acknowledgements arrive), or</li>
+<li>Time <code>horizon - rtt</code> (last writes that will be acknowledged before horizon)</li>
+</ol>
+<p>The peak is therefore <code>min(rtt, horizon - rtt) × w_max</code>.</p>
+<ol>
+<li><strong>No Alternative Strategies:</strong> The CP-SAT solver explores the solution space but finds no transmission pattern that exceeds this peak. Any change from continuous transmission at <code>w_max</code> (e.g., pausing or reducing transmission rate) would only reduce the in-flight accumulation.</li>
+</ol>
+<p>The CP-SAT formulation serves as a <strong>reference implementation</strong> that validates the analytical formula and provides a foundation for future extensions where analytical solutions may not exist (variable RTT, multiple senders, flow control, etc.).</p>
+<hr />
+<h2 id="advanced-topics">Advanced Topics<a class="headerlink" href="#advanced-topics" title="Permanent link">&para;</a></h2>
+<h3 id="performance-considerations">Performance Considerations<a class="headerlink" href="#performance-considerations" title="Permanent link">&para;</a></h3>
+<p>Solver runtime depends on several factors:</p>
+<ul>
+<li><strong>Horizon Length:</strong> Longer horizons increase the number of variables and constraints, leading to longer solve times. For layered specs, auto-computed horizons that cover many periods can significantly increase runtime. Layered specs generate multiple periodicities whose least common multiple (LCM) determines the horizon, which directly increases solver variables.</li>
+<li><strong>Layer Complexity:</strong> Each additional layer (cycle, transaction, burst, stream) increases the combinatorial space the solver must explore. Deeply layered profiles with many bursts or streams are more computationally intensive.</li>
+<li><strong>Spec Type:</strong> Flat specs are typically solved in seconds, as they have fewer variables and a simpler structure. Layered specs, especially with large horizons or many periods, may take from seconds to several minutes.</li>
+<li><strong>Traffic Burstiness:</strong> Highly bursty or imbalanced profiles can create more challenging optimization problems, increasing runtime.</li>
+<li><strong>Parameter Choices:</strong> Using <code>"auto"</code> for horizon or specifying a large number of periods can unintentionally create very large problem sizes. Manually limiting the horizon or simplifying profiles can improve performance.</li>
+</ul>
+<p><strong>Recommendations for Efficient Solving:</strong></p>
+<ul>
+<li>Consider starting with flat specs or small horizons to validate basic behavior.</li>
+<li>Use layered specs for detailed analysis, but minimize the number of periods and layers where possible.</li>
+<li>If solve time is excessive, consider reducing the horizon, simplifying the traffic profile, or using fewer bursts/streams.</li>
+<li>Monitor solver logs for warnings about horizon sufficiency or problem size.</li>
+</ul>
+<p>In most practical cases, flat and moderately layered specs solve in under a minute. Only highly complex, deeply layered, or very long-horizon cases should require longer runtimes.</p>
+<h3 id="how-layers-compose">How Layers Compose<a class="headerlink" href="#how-layers-compose" title="Permanent link">&para;</a></h3>
+<p>The tool builds a binary valid pattern (0/1 sequence) by composing layers from innermost (transaction) to outermost (stream):</p>
+<ul>
+<li><strong>Transaction period</strong> = <code>valid_cycles</code> + <code>gap_cycles</code></li>
+<li><strong>Burst</strong> = <code>transactions_per_burst</code> transactions + <code>gap_cycles</code></li>
+<li><strong>Stream</strong> = <code>bursts_per_stream</code> bursts + <code>gap_cycles</code></li>
+<li><strong>Overall period</strong> = LCM of write and read stream periods</li>
+</ul>
+<p><strong>Worst-Case Pattern Generation:</strong></p>
+<p>The tool uses different strategies based on whether the profile has a single burst or multiple bursts, implementing patterns from FIFO depth calculation literature to create maximum congestion:</p>
+<p><strong>For Write Profiles (maximizing FIFO fill):</strong></p>
+<p><em>Single Burst (<code>bursts_per_stream == 1</code>):</em></p>
+<ul>
+<li><strong>Uniform valid-first pattern</strong>: All transactions use valid cycles followed by gap cycles</li>
+<li>Maximizes clustering of valid cycles within the burst for safe depth estimation</li>
+<li>No burst boundaries exist to optimize</li>
+</ul>
+<p><em>Multiple Bursts (<code>bursts_per_stream &gt; 1</code>):</em></p>
+<ul>
+<li><strong>Transaction-level alternation</strong>: Transactions within each burst alternate between gap-first and valid-first patterns to achieve valid clustering at burst boundaries</li>
+<li>Pattern choice depends on burst index parity and <code>transactions_per_burst</code> parity</li>
+<li>Odd-indexed bursts are configured to end with valid cycles</li>
+<li>Even-indexed bursts ≥ 2 are configured to start with valid cycles</li>
+<li><strong>Burst-level alternation</strong>: Bursts place gaps strategically to concentrate data in the middle of the observation window</li>
+<li>First burst (index 0): gap followed by transactions (I,D) - places idle at start</li>
+<li>Last burst: transactions followed by gap (D,I) - places idle at end</li>
+<li>Middle bursts alternate:<ul>
+<li>Odd-indexed middle bursts: transactions followed by gap (D,I)</li>
+<li>Even-indexed middle bursts: gap followed by transactions (I,D)</li>
+</ul>
+</li>
+<li>Creates worst-case patterns by concentrating data centrally:<ul>
+<li>2 bursts: (I,D)(D,I)</li>
+<li>3 bursts: (I,D)(D,I)(D,I)</li>
+<li>4 bursts: (I,D)(D,I)(I,D)(D,I)</li>
+</ul>
+</li>
+</ul>
+<p><strong>For Read Profiles (maximizing FIFO drain delay):</strong></p>
+<p><em>Single Burst (<code>bursts_per_stream == 1</code>):</em></p>
+<ul>
+<li><strong>Uniform gap-first pattern</strong>: All transactions use gap cycles followed by valid cycles</li>
+<li>Maximizes delay by front-loading idle cycles within the burst</li>
+</ul>
+<p><em>Multiple Bursts (<code>bursts_per_stream &gt; 1</code>):</em></p>
+<ul>
+<li><strong>Transaction-level alternation</strong>: Transactions alternate to cluster idle cycles at boundaries</li>
+<li>Alternation pattern based on combined (burst_index + transaction_index) parity</li>
+<li>Even parity: valid-first then gap (boundary with next gap-first forms larger idle)</li>
+<li>Odd parity: gap-first then valid</li>
+<li><strong>Burst-level alternation</strong>: All burst gaps placed at start to maximize read delay</li>
+</ul>
+<p><strong>Causality Preservation:</strong></p>
+<ul>
+<li>Write patterns never start with gaps (first burst begins with transactions)</li>
+<li>Read patterns include warmup rotation based on write latency to ensure reads occur after writes</li>
+<li>Guarantees cumulative writes ≥ cumulative reads at all times</li>
+</ul>
+<p>This hybrid approach (uniform for single burst, alternating for multi-burst) ensures conservative FIFO depth estimates across all configurations.</p>
+<hr />
+<h2 id="faq">FAQ<a class="headerlink" href="#faq" title="Permanent link">&para;</a></h2>
+<p>If you encounter performance issues, the first four questions may be helpful to review first.</p>
+<h3 id="why-does-the-solver-sometimes-take-several-minutes-to-run">Why does the solver sometimes take several minutes to run?<a class="headerlink" href="#why-does-the-solver-sometimes-take-several-minutes-to-run" title="Permanent link">&para;</a></h3>
+<p>Solver runtime is dominated by:</p>
+<ul>
+<li><strong>Horizon length</strong> — longer windows → more variables → longer solve time</li>
+<li><strong>Layer complexity</strong> — cycle + transaction + burst + stream generates deeply nested patterns</li>
+<li><strong>Burstiness / imbalance</strong> — highly adversarial patterns increase the CP-SAT search space</li>
+<li><strong>XON/XOFF auto-threshold search</strong> — exploring multiple <code>(xon, xoff)</code> candidates can multiply solve time</li>
+</ul>
+<p>Flat specifications typically solve in seconds. Layered profiles with multiple streams/periods can take minutes. This is normal and expected based on CP-SAT complexity.</p>
+<hr />
+<h3 id="why-does-horizon-auto-sometimes-produce-very-large-horizons">Why does <code>horizon: auto</code> sometimes produce very large horizons?<a class="headerlink" href="#why-does-horizon-auto-sometimes-produce-very-large-horizons" title="Permanent link">&para;</a></h3>
+<p>Because the tool must ensure it covers <em>all</em> worst-case alignments between the write and read patterns. The auto logic includes:</p>
+<ul>
+<li>multiple full pattern periods (<code>kmin_blocks</code>)</li>
+<li>blind window coverage (<code>blind_window_cycles</code>)</li>
+<li>LCM of read/write stream periods</li>
+<li>safety padding</li>
+</ul>
+<p>This produces a horizon long enough to ensure correctness. If runtime is too long, you may manually set a smaller horizon—but note that making it too small may underestimate FIFO depth.</p>
+<hr />
+<h3 id="why-does-the-depth-equal-sum_w_max-for-flat-readyvalid">Why does the depth equal <code>sum_w_max</code> for flat ready/valid?<a class="headerlink" href="#why-does-the-depth-equal-sum_w_max-for-flat-readyvalid" title="Permanent link">&para;</a></h3>
+<p>Flat ready/valid has:</p>
+<ul>
+<li>constant write-valid = 1</li>
+<li>constant read-valid = 1</li>
+<li>no temporal structure to exploit</li>
+</ul>
+<p>The worst case is:</p>
+<div class="codehilite"><pre><span></span><code>depth = sum_w_max
+</code></pre></div>
+
+<p>Because all writes can occur before any reads.</p>
+<hr />
+<h3 id="why-does-the-solver-switch-from-cp-sat-to-analytic-mode-for-balanced-specs">Why does the solver switch from CP-SAT to analytic mode for balanced specs?<a class="headerlink" href="#why-does-the-solver-switch-from-cp-sat-to-analytic-mode-for-balanced-specs" title="Permanent link">&para;</a></h3>
+<p>A spec is <em>balanced</em> when:</p>
+<div class="codehilite"><pre><span></span><code>(min read density) ≥ (max write density)
+</code></pre></div>
+
+<p>In this case:</p>
+<ul>
+<li>reads can always drain faster than writes can fill</li>
+<li>CP-SAT can delay reads arbitrarily → problem becomes poorly defined</li>
+</ul>
+<p>So the solver automatically switches to a deterministic analytic solver that:</p>
+<ul>
+<li>sweeps phase alignment</li>
+<li>includes latencies</li>
+<li>calculates worst-case occupancy deterministically</li>
+</ul>
+<p>This produces a stable, meaningful result.</p>
+<hr />
+<h3 id="why-does-the-xonxoff-solver-choose-a-higher-xoff-than-expected">Why does the XON/XOFF solver choose a higher <code>xoff</code> than expected?<a class="headerlink" href="#why-does-the-xonxoff-solver-choose-a-higher-xoff-than-expected" title="Permanent link">&para;</a></h3>
+<p>Usually because:</p>
+<ul>
+<li><code>react_latency</code> &gt; 0</li>
+<li><code>atomic_tail</code> &gt; 0</li>
+<li>the write pattern is very bursty</li>
+<li>throughput target must be met</li>
+<li>hysteresis constraints limit low values</li>
+<li>low <code>xoff</code> would not be feasible</li>
+</ul>
+<p>The solver must leave <em>headroom above xoff</em> to absorb data written during the reaction latency.</p>
+<p>So <code>xoff</code> increases when mathematically required for correctness.</p>
+<hr />
+<h3 id="why-are-thresholds-or-credits-ignored-when-using-auto-mode">Why are thresholds or credits ignored when using auto mode?<a class="headerlink" href="#why-are-thresholds-or-credits-ignored-when-using-auto-mode" title="Permanent link">&para;</a></h3>
+<p>In auto mode:</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">thresholds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">auto</span>
+<span class="nt">cred_max</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">auto</span>
+<span class="nt">cred_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">auto</span>
+</code></pre></div>
+
+<p>the solver intentionally ignores user-specified values and computes optimal ones.</p>
+<p>To force manual values:</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">thresholds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">manual</span>
+<span class="nt">xon</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;value&gt;</span>
+<span class="nt">xoff</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;value&gt;</span>
+</code></pre></div>
+
+<p>or for CBFC:</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">cred_auto_optimize</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="nt">cred_max</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;value&gt;</span>
+<span class="nt">cred_init</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;value&gt;</span>
+</code></pre></div>
+
+<hr />
+<h3 id="why-is-peak-occupancy-lower-than-expected">Why is peak occupancy lower than expected?<a class="headerlink" href="#why-is-peak-occupancy-lower-than-expected" title="Permanent link">&para;</a></h3>
+<p>Common reasons:</p>
+<ul>
+<li>burst/gap structure limits congestion</li>
+<li>XON/XOFF throttling reduces peaks</li>
+<li>CBFC credit return naturally controls writes</li>
+<li>CDC FIFO is limited by synchronizer depth</li>
+</ul>
+<p>Many spreadsheet estimates are pessimistic; CP-SAT often finds a tighter true bound.</p>
+<hr />
+<h3 id="why-is-peak-occupancy-higher-than-expected">Why is peak occupancy higher than expected?<a class="headerlink" href="#why-is-peak-occupancy-higher-than-expected" title="Permanent link">&para;</a></h3>
+<p>Often due to:</p>
+<ul>
+<li>adversarial phase alignment</li>
+<li>large blind window</li>
+<li>write/read latency asymmetry</li>
+<li>clustered burst boundaries</li>
+<li>XON/XOFF reaction overshoot</li>
+<li>CBFC credit-return latency</li>
+</ul>
+<p>The solver explores worst-case timing that may not be immediately intuitive.</p>
+<hr />
+<h3 id="why-does-xonxoff-auto-mode-take-longer-than-other-solvers">Why does XON/XOFF auto mode take longer than other solvers?<a class="headerlink" href="#why-does-xonxoff-auto-mode-take-longer-than-other-solvers" title="Permanent link">&para;</a></h3>
+<p>Because auto mode must:</p>
+<ol>
+<li>Compute feasible <code>xon_min</code></li>
+<li>Compute feasible <code>xoff</code> range</li>
+<li>Sweep hysteresis space</li>
+<li>Solve CP-SAT per candidate</li>
+<li>Choose the lexicographically optimal configuration</li>
+</ol>
+<p>Manual threshold mode is much faster.</p>
+<hr />
+<h3 id="why-is-replay-modeled-with-cp-sat-if-the-result-is-just-bdp">Why is replay modeled with CP-SAT if the result is just BDP?<a class="headerlink" href="#why-is-replay-modeled-with-cp-sat-if-the-result-is-just-bdp" title="Permanent link">&para;</a></h3>
+<p>Replay currently follows deterministically from:</p>
+<div class="codehilite"><pre><span></span><code>peak_inflight = min(rtt, horizon - rtt) × w_max
+</code></pre></div>
+
+<p>But CP-SAT is used for:</p>
+<ul>
+<li>consistency with other solvers</li>
+<li>reuse of infrastructure</li>
+<li>future support of jitter, retries, multi-sender cases</li>
+</ul>
+<p>BDP is just the simplest member of a larger family of replay behaviors.</p>
+<hr />
+<h3 id="why-does-cdc-always-use-closed-form-math-instead-of-cp-sat">Why does CDC always use closed-form math instead of CP-SAT?<a class="headerlink" href="#why-does-cdc-always-use-closed-form-math-instead-of-cp-sat" title="Permanent link">&para;</a></h3>
+<p>CDC behavior is governed by:</p>
+<ul>
+<li>synchronizer latency</li>
+<li>Gray code pointer stability</li>
+<li>phase uncertainty</li>
+<li>PPM drift</li>
+</ul>
+<p>These have strict analytic bounds and no adversarial scheduling. Closed-form computation is exact and instantaneous.</p>
+<hr />
+<h3 id="why-does-rounding-sometimes-jump-depth-by-a-large-factor">Why does rounding sometimes jump depth by a large factor?<a class="headerlink" href="#why-does-rounding-sometimes-jump-depth-by-a-large-factor" title="Permanent link">&para;</a></h3>
+<p>Two features cause this:</p>
+<ol>
+<li><strong>Margin</strong> (percentage or absolute)</li>
+<li><strong>Rounding</strong> (<code>power2</code>)</li>
+</ol>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><code>depth_raw = 13
+25% margin → 16.25 → 17
+round to power of 2 → 32
+</code></pre></div>
+
+<p>The tool prioritizes safety and hardware alignment.</p>
+<p>To avoid over-sizing:</p>
+<ul>
+<li>disable rounding</li>
+<li>or apply zero margin</li>
+<li>inspect raw depth first</li>
+<li>then manually choose rounding</li>
+</ul>
+<hr />
+<h3 id="why-does-the-tool-warn-that-the-horizon-may-be-too-small">Why does the tool warn that the horizon may be too small?<a class="headerlink" href="#why-does-the-tool-warn-that-the-horizon-may-be-too-small" title="Permanent link">&para;</a></h3>
+<p>Because true peak occupancy might occur beyond the examined window.</p>
+<p>The heuristic check:</p>
+<div class="codehilite"><pre><span></span><code>horizon &gt;= (sum_w_max / w_max) + (sum_r_max / r_max)
+</code></pre></div>
+
+<p>warns when the user-specified horizon may miss the true worst case.</p>
+<hr />
+<h3 id="why-are-witness-traces-sometimes-non-intuitive">Why are witness traces sometimes non-intuitive?<a class="headerlink" href="#why-are-witness-traces-sometimes-non-intuitive" title="Permanent link">&para;</a></h3>
+<p>Because the solver:</p>
+<ol>
+<li>Builds deterministic worst-case valid masks</li>
+<li>Then schedules writes/reads adversarially within those masks</li>
+<li>Maximizes occupancy</li>
+</ol>
+<p>This leads to witness patterns that are mathematically valid but may not always follow expected patterns. The witness ensures correctness for the computed FIFO depth.</p>
+<hr />
+<h2 id="appendix">Appendix<a class="headerlink" href="#appendix" title="Permanent link">&para;</a></h2>
+<h3 id="key-classes">Key Classes<a class="headerlink" href="#key-classes" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Class</th>
+<th>Defined In</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>FifoSolver</code></td>
+<td><code>fifo_depth_base.py</code></td>
+<td>Abstract base class for all solvers</td>
+</tr>
+<tr>
+<td><code>FifoParams</code></td>
+<td><code>fifo_depth_base.py</code></td>
+<td>Parameter model validated from YAML</td>
+</tr>
+<tr>
+<td><code>FifoResults</code></td>
+<td><code>fifo_depth_base.py</code></td>
+<td>Container for solver results</td>
+</tr>
+<tr>
+<td><code>CdcSolver</code></td>
+<td><code>fifo_depth_cdc.py</code></td>
+<td>CDC partition computation</td>
+</tr>
+<tr>
+<td><code>CbfcSolver</code></td>
+<td><code>fifo_depth_cbfc.py</code></td>
+<td>Credit-based FIFO solver</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
+<ul>
+<li>W. Dally and B. Towles, <a href="https://www.amazon.com/Principles-Practices-Interconnection-Networks-Architecture/dp/0122007514">Principles and Practices of Interconnection Networks</a>. San Francisco, CA, USA. Morgan Kaufmann Publishers, 2004.</li>
+<li>A. DeJans Jr,  <a href="https://www.amazon.com/dp/B0FPDHVN7T?ref=ppx_yo2ov_dt_b_fed_digi_asin_title_351">The MILP Optimization Handbook: An Introduction to Linear and Integer Programming for Practitioners</a>. Bit Bros LLC, 2025.</li>
+<li><a href="https://developers.google.com/optimization/cp/cp_solver">Google OR-Tools CP-SAT Solver</a></li>
+<li><a href="https://hardwaregeeksblog.wordpress.com/wp-content/uploads/2016/12/fifodepthcalculationmadeeasy2.pdf">Calculation of FIFO Depth - Made Easy</a></li>
+</ul>
+<hr />
+<h2 id="licensing">Licensing<a class="headerlink" href="#licensing" title="Permanent link">&para;</a></h2>
+<p>See the <code>LICENSES</code> directory at the repository root.</p>
+<hr />
+<h2 id="author">Author<a class="headerlink" href="#author" title="Permanent link">&para;</a></h2>
+<p><a href="https://linkedin.com/in/hughwalsh">Hugh Walsh</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.top", "content.code.copy", "toc.integrate"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  </body>
+</html>

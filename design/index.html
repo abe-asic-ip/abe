@@ -1,0 +1,1705 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="ABE ("A Better Environment") is a lightweight, modern environment for developing reusable ASIC IP. It combines microarchitecture tools, reusable RTL designs, synthesis, formal verification, and Python‑based design verification (DV). ABE runs on free and open‑source tools.">
+      
+      
+      
+        <link rel="canonical" href="https://abe-asic-ip.github.io/abe/design/">
+      
+      
+        <link rel="prev" href="../pkt_quantize/">
+      
+      
+        <link rel="next" href="../formal/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>RAD Design - ABE - A Better Environment for Developing ASIC IP</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#reusable-asic-designs-rad-design" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="ABE - A Better Environment for Developing ASIC IP" class="md-header__button md-logo" aria-label="ABE - A Better Environment for Developing ASIC IP" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ABE - A Better Environment for Developing ASIC IP
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              RAD Design
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/abe-asic-ip/abe" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    abe-asic-ip/abe
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="ABE - A Better Environment for Developing ASIC IP" class="md-nav__button md-logo" aria-label="ABE - A Better Environment for Developing ASIC IP" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ABE - A Better Environment for Developing ASIC IP
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/abe-asic-ip/abe" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    abe-asic-ip/abe
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Development
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../python_dev/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python Development
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Microarchitecture Tools
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Microarchitecture Tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fifo_depth/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FIFO Depth Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pkt_quantize/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Packet Quantization Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reusable ASIC Designs (RAD) Flow
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reusable ASIC Designs (RAD) Flow
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD Design
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#audience" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audience
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#getting-started" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Getting Started
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Getting Started">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#set-up-and-install-the-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Set Up and Install the Environment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#install-required-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Install Required Tools
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#outputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Outputs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#relevant-directory-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Relevant Directory Layout
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#makefiles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Makefiles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#guidelines-for-creating-new-rad-rtl-designs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Guidelines for Creating New RAD RTL Designs
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Guidelines for Creating New RAD RTL Designs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#directory-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Directory Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-naming" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File Naming
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#source-list-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Source List File
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#timescale-and-shared-headers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Timescale And Shared Headers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clock-and-reset-naming" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clock and Reset Naming
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reference-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference Design
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#static-rtl-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Static RTL Tools
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Static RTL Tools">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rtl-formatting-with-verible" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RTL Formatting With Verible
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rtl-linting-with-verible" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RTL Linting With Verible
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rtl-linting-with-verilator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RTL Linting With Verilator
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#synthesis-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Synthesis Flow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Synthesis Flow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#endtoend-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        End‑to‑End Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#invoke-synthesis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Invoke Synthesis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examine-synthesis-outputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examine Synthesis Outputs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#view-statistics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        View Statistics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#graph-visualization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Graph Visualization
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FAQ
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="FAQ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#should-i-run-verible-before-checking-in-rtl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Should I run Verible before checking in RTL?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-does-verilator-catch-errors-that-verible-misses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why does Verilator catch errors that Verible misses?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#should-every-rad-design-go-through-synthesis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Should every RAD design go through synthesis?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-does-synthesis-use-sv2v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why does synthesis use sv2v?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-if-my-module-needs-vendor-specific-cells" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What if my module needs vendor-specific cells?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#can-i-add-custom-lint-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Can I add custom lint rules?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-separate-design-formal-and-dv-directories" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why separate design, formal, and DV directories?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#licensing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Licensing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#author" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Author
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../formal/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD Formal
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dv/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD DV
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rad_template_dv_readme/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD DV Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rad_new_design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Creating a New RAD Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reusable ASIC Designs (RAD) Library DV Overviews
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reusable ASIC Designs (RAD) Library DV Overviews
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rad_async_fifo_dv_readme/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD ASYNC FIFO DV Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rad_cdc_mcp_dv_readme/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD CDC MCP DV Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rad_cdc_sync_dv_readme/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD CDC SYNC DV Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<!--
+SPDX-FileCopyrightText: 2025 Hugh Walsh
+
+SPDX-License-Identifier: MIT
+-->
+
+<!--- This file: docs/design.md -->
+
+<h1 id="reusable-asic-designs-rad-design">Reusable ASIC Designs (RAD) – Design<a class="headerlink" href="#reusable-asic-designs-rad-design" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>The <strong>Reusable ASIC Designs (RAD)</strong> environment provides a consistent, high‑quality foundation for building reusable SystemVerilog IP within the <strong>ABE</strong> project. <strong>RAD focuses on RTL quality</strong>. RAD helps designs achieve:</p>
+<ul>
+<li><strong>Consistency</strong> across modules</li>
+<li><strong>Clean structure</strong> for simulation, lint, formal, and synthesis</li>
+<li><strong>Compatibility</strong> with open‑source tools</li>
+<li><strong>Readiness</strong> for verification</li>
+</ul>
+<p>This document describes the <strong>design workflow</strong>. It covers what happens <em>after writing RTL</em> and <em>before <a href="../formal/">formal verification</a> and <a href="../dv/">DV</a></em>.</p>
+<h3 id="audience">Audience<a class="headerlink" href="#audience" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>ASIC architects and RTL designers</strong> producing reusable IP</li>
+</ul>
+<h3 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Establish consistent design conventions</li>
+<li>Ensure RTL correctness before formal verification or DV</li>
+<li>Provide standard flows for formatting, linting, and synthesis</li>
+<li>Speed up adding new designs to the RAD library</li>
+</ul>
+<h3 id="key-features">Key Features<a class="headerlink" href="#key-features" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Unified Make targets for <a href="#rtl-formatting-with-verible">RTL formatting</a>, <a href="#rtl-linting-with-verible">linting</a>, and <a href="#synthesis-flow">synthesis</a></li>
+<li><a href="https://github.com/chipsalliance/verible">Verible</a>‑based SystemVerilog formatting and linting</li>
+<li><a href="https://verilator.org">Verilator</a>‑based SystemVerilog linting</li>
+<li><a href="https://github.com/YosysHQ/yosys">Yosys</a>‑based synthesis flow (via <a href="https://github.com/zachjs/sv2v">sv2v</a>)</li>
+<li>Standardized <a href="#directory-structure">directory structure</a> and naming</li>
+<li>Reusable <a href="#timescale-and-shared-headers">shared components</a> under <code>rad/shared</code></li>
+</ul>
+<hr />
+<h2 id="getting-started">Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
+<h3 id="set-up-and-install-the-environment">Set Up and Install the Environment<a class="headerlink" href="#set-up-and-install-the-environment" title="Permanent link">&para;</a></h3>
+<p>See <a href="../python_dev/">ABE Python Development</a> for Python environment setup details.</p>
+<div class="codehilite"><pre><span></span><code>make<span class="w"> </span>py-venv-all
+<span class="nb">source</span><span class="w"> </span>.venv/bin/activate
+make<span class="w"> </span>py-install-all
+</code></pre></div>
+
+<h3 id="install-required-tools">Install Required Tools<a class="headerlink" href="#install-required-tools" title="Permanent link">&para;</a></h3>
+<p>Run:</p>
+<div class="codehilite"><pre><span></span><code>make<span class="w"> </span>deps-design
+</code></pre></div>
+
+<p>This prints any missing host‑side tools. Installation is platform‑specific and outside the scope of this document.</p>
+<h3 id="run-examples">Run Examples<a class="headerlink" href="#run-examples" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code>make<span class="w"> </span><span class="nv">DESIGN</span><span class="o">=</span>rad_async_fifo<span class="w"> </span>rtl-format
+make<span class="w"> </span><span class="nv">DESIGN</span><span class="o">=</span>rad_async_fifo<span class="w"> </span>rtl-lint-verible
+make<span class="w"> </span><span class="nv">DESIGN</span><span class="o">=</span>rad_async_fifo<span class="w"> </span>rtl-lint-verilator
+make<span class="w"> </span><span class="nv">DESIGN</span><span class="o">=</span>rad_async_fifo<span class="w"> </span>synth
+make<span class="w"> </span><span class="nv">DESIGN</span><span class="o">=</span>rad_async_fifo<span class="w"> </span>synth-report
+</code></pre></div>
+
+<h3 id="outputs">Outputs<a class="headerlink" href="#outputs" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>rtl-*</code> targets print to the console</li>
+<li><code>synth</code> writes results to <code>out_synth/&lt;design&gt;/</code></li>
+</ul>
+<h3 id="relevant-directory-layout">Relevant Directory Layout<a class="headerlink" href="#relevant-directory-layout" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code>.
+├── mk
+│   ├── 00-vars.mk
+│   ├── 10-helpers.mk
+│   ├── 20-python.mk
+│   ├── 30-rtl.mk
+│   ├── 40-synth.mk
+├── src
+│   └── abe
+│       ├── rad
+│       │   ├── rad_async_fifo
+│       │   │   ├── rtl
+│       │   │   │   ├── rad_async_fifo_mem.sv
+│       │   │   │   ├── rad_async_fifo_rptr.sv
+│       │   │   │   ├── rad_async_fifo_sync.sv
+│       │   │   │   ├── rad_async_fifo_wptr.sv
+│       │   │   │   ├── rad_async_fifo.sv
+│       │   │   │   └── srclist.f
+│       │   ├── shared
+│       │   │   ├── rtl
+│       │   │   │   ├── rad_pulse_gen.sv
+│       │   │   │   └── rad_timescale.svh
+├── Makefile
+</code></pre></div>
+
+<hr />
+<h2 id="makefiles">Makefiles<a class="headerlink" href="#makefiles" title="Permanent link">&para;</a></h2>
+<p>Makefiles are in directory <code>mk</code></p>
+<ul>
+<li>Common flags come from <code>00-vars.mk</code>.</li>
+<li>RTL commands are in <code>30-rtl.mk</code>.</li>
+<li><a href="#synthesis-flow">Synthesis</a> commands are in <code>40-synth.mk</code>.</li>
+</ul>
+<p>Common commands:</p>
+<div class="codehilite"><pre><span></span><code>make<span class="w"> </span>rtl-help
+make<span class="w"> </span>synth-help
+</code></pre></div>
+
+<hr />
+<h2 id="guidelines-for-creating-new-rad-rtl-designs">Guidelines for Creating New RAD RTL Designs<a class="headerlink" href="#guidelines-for-creating-new-rad-rtl-designs" title="Permanent link">&para;</a></h2>
+<p>These guidelines help maintain consistency and tooling compatibility across the RAD library:</p>
+<h3 id="directory-structure">Directory Structure<a class="headerlink" href="#directory-structure" title="Permanent link">&para;</a></h3>
+<p>Create designs under:</p>
+<div class="codehilite"><pre><span></span><code>src/abe/rad/rad_&lt;design&gt;/rtl/
+</code></pre></div>
+
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><code>src/abe/rad/rad_async_fifo/rtl/
+</code></pre></div>
+
+<h3 id="file-naming">File Naming<a class="headerlink" href="#file-naming" title="Permanent link">&para;</a></h3>
+<p>RTL filenames should begin with:</p>
+<div class="codehilite"><pre><span></span><code>rad_&lt;design&gt;*
+</code></pre></div>
+
+<p>This naming pattern helps tools find files automatically and keeps designs organized.</p>
+<h3 id="source-list-file">Source List File<a class="headerlink" href="#source-list-file" title="Permanent link">&para;</a></h3>
+<p>Each design includes:</p>
+<div class="codehilite"><pre><span></span><code>src/abe/rad/rad_&lt;design&gt;/rtl/srclist.f
+</code></pre></div>
+
+<p>This file lists:</p>
+<ul>
+<li>SystemVerilog source files</li>
+<li>Include directories</li>
+<li>Compile-time defines</li>
+</ul>
+<p>Every tool (<a href="https://verilator.org">Verilator</a>, <a href="https://github.com/chipsalliance/verible">Verible</a>, <a href="https://github.com/zachjs/sv2v">sv2v</a>, <a href="https://github.com/YosysHQ/yosys">Yosys</a>, DV) uses the same <code>srclist.f</code>.</p>
+<h3 id="timescale-and-shared-headers">Timescale And Shared Headers<a class="headerlink" href="#timescale-and-shared-headers" title="Permanent link">&para;</a></h3>
+<p>RTL should include the shared timescale:</p>
+<div class="codehilite"><pre><span></span><code><span class="no">`include</span><span class="w"> </span><span class="s">&quot;rad_timescale.svh&quot;</span>
+</code></pre></div>
+
+<p>Consider using reusable components from:</p>
+<div class="codehilite"><pre><span></span><code>src/abe/rad/shared/rtl
+</code></pre></div>
+
+<p>This avoids reimplementing utilities such as:</p>
+<ul>
+<li>Pulse generators</li>
+<li>Synchronizers</li>
+<li>Common CDC helpers</li>
+</ul>
+<h3 id="clock-and-reset-naming">Clock and Reset Naming<a class="headerlink" href="#clock-and-reset-naming" title="Permanent link">&para;</a></h3>
+<p>For designs with a single clock and reset:</p>
+<ul>
+<li>Name the clock <code>clk</code></li>
+<li>Use an active-low reset named <code>rst_n</code></li>
+</ul>
+<p>The DV base classes assume these names, minimizing verification effort. This convention also maintains consistency across all RAD IP.</p>
+<h3 id="reference-design">Reference Design<a class="headerlink" href="#reference-design" title="Permanent link">&para;</a></h3>
+<p><code>rad_async_fifo</code> is a complete example. It shows the recommended <a href="#directory-structure">directory structure</a>, conventions, and Make integration.</p>
+<hr />
+<h2 id="static-rtl-tools">Static RTL Tools<a class="headerlink" href="#static-rtl-tools" title="Permanent link">&para;</a></h2>
+<h3 id="rtl-formatting-with-verible">RTL Formatting With Verible<a class="headerlink" href="#rtl-formatting-with-verible" title="Permanent link">&para;</a></h3>
+<p>Formatting makes code uniform and easy to read.</p>
+<ul>
+<li>Uses <strong><a href="https://github.com/chipsalliance/verible">Verible</a></strong></li>
+<li>Configured in <code>.verible-format</code></li>
+</ul>
+<p>Run:</p>
+<div class="codehilite"><pre><span></span><code>make<span class="w"> </span><span class="nv">DESIGN</span><span class="o">=</span>&lt;design&gt;<span class="w"> </span>rtl-format
+</code></pre></div>
+
+<h3 id="rtl-linting-with-verible">RTL Linting With Verible<a class="headerlink" href="#rtl-linting-with-verible" title="Permanent link">&para;</a></h3>
+<p><a href="https://github.com/chipsalliance/verible">Verible</a> catches:</p>
+<ul>
+<li>Style and naming issues</li>
+<li>Structural problems</li>
+<li>Common SystemVerilog pitfalls</li>
+</ul>
+<p>Run:</p>
+<div class="codehilite"><pre><span></span><code>make<span class="w"> </span><span class="nv">DESIGN</span><span class="o">=</span>&lt;design&gt;<span class="w"> </span>rtl-lint-verible
+</code></pre></div>
+
+<h3 id="rtl-linting-with-verilator">RTL Linting With Verilator<a class="headerlink" href="#rtl-linting-with-verilator" title="Permanent link">&para;</a></h3>
+<p><a href="https://verilator.org">Verilator</a> checks for deeper issues:</p>
+<ul>
+<li>Type mismatches</li>
+<li>Unsupported constructs</li>
+<li>Missing signals</li>
+<li>Simulation readiness</li>
+</ul>
+<p>Run:</p>
+<div class="codehilite"><pre><span></span><code>make<span class="w"> </span><span class="nv">DESIGN</span><span class="o">=</span>&lt;design&gt;<span class="w"> </span>rtl-lint-verilator
+</code></pre></div>
+
+<p><a href="https://verilator.org">Verilator</a> linting is important because RAD DV uses <a href="https://verilator.org">Verilator</a> as the default simulator.</p>
+<hr />
+<h2 id="synthesis-flow">Synthesis Flow<a class="headerlink" href="#synthesis-flow" title="Permanent link">&para;</a></h2>
+<p><a href="https://github.com/YosysHQ/yosys">Yosys</a> synthesis checks that designs can be synthesized and provides statistics.</p>
+<h3 id="endtoend-flow">End‑to‑End Flow<a class="headerlink" href="#endtoend-flow" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong><a href="https://github.com/zachjs/sv2v">sv2v</a></strong> converts SystemVerilog → Verilog</li>
+<li><strong><a href="https://github.com/YosysHQ/yosys">Yosys</a></strong> synthesizes the Verilog</li>
+<li>Reports are written to:</li>
+</ol>
+<div class="codehilite"><pre><span></span><code>out_synth/&lt;design&gt;/
+</code></pre></div>
+
+<h3 id="invoke-synthesis">Invoke Synthesis<a class="headerlink" href="#invoke-synthesis" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code>make<span class="w"> </span><span class="nv">DESIGN</span><span class="o">=</span>&lt;design&gt;<span class="w"> </span>synth
+</code></pre></div>
+
+<h3 id="examine-synthesis-outputs">Examine Synthesis Outputs<a class="headerlink" href="#examine-synthesis-outputs" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;design&gt;.v</code></td>
+<td>sv2v converted Verilog</td>
+</tr>
+<tr>
+<td><code>&lt;design&gt;_net.v</code></td>
+<td>Gate-level netlist</td>
+</tr>
+<tr>
+<td><code>&lt;design&gt;_net.json</code></td>
+<td>Structural JSON netlist</td>
+</tr>
+<tr>
+<td><code>stat_width.txt</code></td>
+<td>Wire/port/cell counts</td>
+</tr>
+<tr>
+<td><code>yosys.log</code></td>
+<td>Full synthesis log</td>
+</tr>
+</tbody>
+</table>
+<h3 id="view-statistics">View Statistics<a class="headerlink" href="#view-statistics" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code>make<span class="w"> </span><span class="nv">DESIGN</span><span class="o">=</span>&lt;design&gt;<span class="w"> </span>synth-report
+</code></pre></div>
+
+<h3 id="graph-visualization">Graph Visualization<a class="headerlink" href="#graph-visualization" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code>make<span class="w"> </span><span class="nv">DESIGN</span><span class="o">=</span>&lt;design&gt;<span class="w"> </span>synth-dot
+</code></pre></div>
+
+<p>Creates:</p>
+<div class="codehilite"><pre><span></span><code>out_synth/&lt;design&gt;/&lt;design&gt;.dot
+</code></pre></div>
+
+<p>This graph helps you understand how modules connect.</p>
+<hr />
+<h2 id="faq">FAQ<a class="headerlink" href="#faq" title="Permanent link">&para;</a></h2>
+<h3 id="should-i-run-verible-before-checking-in-rtl">Should I run <a href="https://github.com/chipsalliance/verible">Verible</a> before checking in RTL?<a class="headerlink" href="#should-i-run-verible-before-checking-in-rtl" title="Permanent link">&para;</a></h3>
+<p><strong>Yes.</strong> RAD uses consistent formatting across all designs. Run:</p>
+<div class="codehilite"><pre><span></span><code>make<span class="w"> </span><span class="nv">DESIGN</span><span class="o">=</span>&lt;design&gt;<span class="w"> </span>rtl-format
+</code></pre></div>
+
+<p>See <a href="#rtl-formatting-with-verible">RTL Formatting</a> for details.</p>
+<hr />
+<h3 id="why-does-verilator-catch-errors-that-verible-misses">Why does <a href="https://verilator.org">Verilator</a> catch errors that <a href="https://github.com/chipsalliance/verible">Verible</a> misses?<a class="headerlink" href="#why-does-verilator-catch-errors-that-verible-misses" title="Permanent link">&para;</a></h3>
+<p><a href="https://verilator.org">Verilator</a> checks <strong>meaning</strong> (like a compiler).
+<a href="https://github.com/chipsalliance/verible">Verible</a> checks <strong>structure and style</strong>.
+They work together to find different types of errors.</p>
+<p>See <a href="#rtl-linting-with-verible">RTL Linting – Verible</a> and <a href="#rtl-linting-with-verilator">RTL Linting – Verilator</a> for details.</p>
+<hr />
+<h3 id="should-every-rad-design-go-through-synthesis">Should every RAD design go through synthesis?<a class="headerlink" href="#should-every-rad-design-go-through-synthesis" title="Permanent link">&para;</a></h3>
+<p>Yes. Running synthesis early has several benefits:</p>
+<ul>
+<li>Verifies the design can be synthesized</li>
+<li>Catches issues linters may miss</li>
+<li>Helps avoid problems later in <a href="../formal/">formal verification</a> or <a href="../dv/">DV</a></li>
+</ul>
+<p>See <a href="#synthesis-flow">Synthesis Flow</a> for details.</p>
+<hr />
+<h3 id="why-does-synthesis-use-sv2v">Why does synthesis use <a href="https://github.com/zachjs/sv2v">sv2v</a>?<a class="headerlink" href="#why-does-synthesis-use-sv2v" title="Permanent link">&para;</a></h3>
+<p><a href="https://github.com/YosysHQ/yosys">Yosys</a> provides excellent Verilog support. <code>sv2v</code> enables consistent conversion from SystemVerilog to Verilog, allowing us to use <a href="https://github.com/YosysHQ/yosys">Yosys</a> effectively.</p>
+<p>See <a href="#endtoend-flow">End‑to‑End Flow</a> for details.</p>
+<hr />
+<h3 id="what-if-my-module-needs-vendor-specific-cells">What if my module needs vendor-specific cells?<a class="headerlink" href="#what-if-my-module-needs-vendor-specific-cells" title="Permanent link">&para;</a></h3>
+<p>Wrap vendor cells in SystemVerilog wrappers.
+This keeps the RAD synthesis flow open‑source and portable.</p>
+<hr />
+<h3 id="can-i-add-custom-lint-rules">Can I add custom lint rules?<a class="headerlink" href="#can-i-add-custom-lint-rules" title="Permanent link">&para;</a></h3>
+<p>Yes. Edit:</p>
+<ul>
+<li><code>.rules.verible_lint</code> for <a href="https://github.com/chipsalliance/verible">Verible</a></li>
+<li><code>00-vars.mk</code> for <a href="https://verilator.org">Verilator</a> flags</li>
+</ul>
+<hr />
+<h3 id="why-separate-design-formal-and-dv-directories">Why separate design, formal, and DV directories?<a class="headerlink" href="#why-separate-design-formal-and-dv-directories" title="Permanent link">&para;</a></h3>
+<p>Separate directories provide:</p>
+<ul>
+<li>Independent Make flows</li>
+<li>Reproducible builds</li>
+<li>Clean organization</li>
+</ul>
+<p>See <a href="../formal/">RAD Formal</a> and <a href="../dv/">RAD DV</a> for details on those flows.</p>
+<hr />
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://github.com/chipsalliance/verible">Verible</a></li>
+<li><a href="https://verilator.org">Verilator</a></li>
+<li><a href="https://github.com/YosysHQ/yosys">Yosys</a></li>
+<li><a href="https://github.com/zachjs/sv2v">sv2v</a></li>
+</ul>
+<hr />
+<h2 id="licensing">Licensing<a class="headerlink" href="#licensing" title="Permanent link">&para;</a></h2>
+<p>See the <code>LICENSES</code> directory at the repository root.</p>
+<hr />
+<h2 id="author">Author<a class="headerlink" href="#author" title="Permanent link">&para;</a></h2>
+<p><a href="https://linkedin.com/in/hughwalsh">Hugh Walsh</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.top", "content.code.copy", "toc.integrate"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  </body>
+</html>

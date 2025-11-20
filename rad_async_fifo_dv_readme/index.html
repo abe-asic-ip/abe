@@ -1,0 +1,1575 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="ABE ("A Better Environment") is a lightweight, modern environment for developing reusable ASIC IP. It combines microarchitecture tools, reusable RTL designs, synthesis, formal verification, and Python‑based design verification (DV). ABE runs on free and open‑source tools.">
+      
+      
+      
+        <link rel="canonical" href="https://abe-asic-ip.github.io/abe/rad_async_fifo_dv_readme/">
+      
+      
+        <link rel="prev" href="../rad_new_design/">
+      
+      
+        <link rel="next" href="../rad_cdc_mcp_dv_readme/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>RAD ASYNC FIFO DV Overview - ABE - A Better Environment for Developing ASIC IP</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#rad_async_fifo-dv-guide" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="ABE - A Better Environment for Developing ASIC IP" class="md-header__button md-logo" aria-label="ABE - A Better Environment for Developing ASIC IP" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ABE - A Better Environment for Developing ASIC IP
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              RAD ASYNC FIFO DV Overview
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/abe-asic-ip/abe" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    abe-asic-ip/abe
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="ABE - A Better Environment for Developing ASIC IP" class="md-nav__button md-logo" aria-label="ABE - A Better Environment for Developing ASIC IP" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ABE - A Better Environment for Developing ASIC IP
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/abe-asic-ip/abe" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    abe-asic-ip/abe
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Development
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../python_dev/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python Development
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Microarchitecture Tools
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Microarchitecture Tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fifo_depth/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FIFO Depth Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pkt_quantize/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Packet Quantization Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reusable ASIC Designs (RAD) Flow
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reusable ASIC Designs (RAD) Flow
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../formal/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD Formal
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dv/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD DV
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rad_template_dv_readme/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD DV Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rad_new_design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Creating a New RAD Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reusable ASIC Designs (RAD) Library DV Overviews
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reusable ASIC Designs (RAD) Library DV Overviews
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD ASYNC FIFO DV Overview
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD ASYNC FIFO DV Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#design-rationale" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Rationale
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dual-agent-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dual-Agent Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Dual-Agent Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#agent-0-write-domain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent 0: Write Domain
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agent-1-read-domain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent 1: Read Domain
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#component-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Component Structure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-execution-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Execution Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#protocol-enforcement-backpressure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protocol Enforcement (Backpressure)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Protocol Enforcement (Backpressure)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#write-driver-backpressure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Write Driver Backpressure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#read-driver-backpressure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Read Driver Backpressure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sequence-generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sequence Generation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reset-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reset Handling
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-design-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Design Decisions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Key Design Decisions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-dual-agents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Dual Agents?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-backpressure-in-drivers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Backpressure in Drivers?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-cocotbstart_soon" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why cocotb.start_soon?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Files
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#transaction-items" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Transaction Items
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#drivers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Drivers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sequences
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#monitors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#environment-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment &amp; Test
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shared-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shared Components
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#clock-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clock Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reset-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reset Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sequence-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sequence Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fifo-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FIFO Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#future-enhancements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Future Enhancements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#licensing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Licensing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#author" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Author
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rad_cdc_mcp_dv_readme/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD CDC MCP DV Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rad_cdc_sync_dv_readme/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD CDC SYNC DV Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<!--
+SPDX-FileCopyrightText: 2025 Hugh Walsh
+
+SPDX-License-Identifier: MIT
+-->
+
+<!--- This file: src/abe/rad/rad_async_fifo/dv/README.md -->
+
+<h1 id="rad_async_fifo-dv-guide"><code>rad_async_fifo</code> — DV Guide<a class="headerlink" href="#rad_async_fifo-dv-guide" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>This verification environment implements a <strong>dual-agent architecture</strong> to properly model the independent write and read clock domains of the rad_async_fifo dual-clock asynchronous FIFO.</p>
+<hr />
+<h2 id="design-rationale">Design Rationale<a class="headerlink" href="#design-rationale" title="Permanent link">&para;</a></h2>
+<p>The rad_async_fifo RTL has:</p>
+<ul>
+<li><strong>Write domain</strong>: Operates on <code>wclk</code>, uses <code>wrst_n</code>, controls <code>winc</code> and <code>wdata</code>, observes <code>wfull</code></li>
+<li><strong>Read domain</strong>: Operates on <code>rclk</code>, uses <code>rrst_n</code>, controls <code>rinc</code>, observes <code>rdata</code> and <code>rempty</code></li>
+</ul>
+<p>These domains are <strong>independent</strong> - in a real system, they would be controlled by separate blocks that only see their respective interface signals. This fundamental architectural constraint led to the dual-agent design.</p>
+<h2 id="dual-agent-architecture">Dual-Agent Architecture<a class="headerlink" href="#dual-agent-architecture" title="Permanent link">&para;</a></h2>
+<h3 id="agent-0-write-domain">Agent 0: Write Domain<a class="headerlink" href="#agent-0-write-domain" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Clock</strong>: <code>wclk</code> (default 1000ps period)</li>
+<li><strong>Reset</strong>: <code>wrst_n</code></li>
+<li><strong>Driver</strong>: <code>RadAsyncFifoWriteDriver</code> - Drives <code>winc</code>, <code>wdata</code> on <code>wclk</code> edges</li>
+<li><strong>Monitors</strong>:</li>
+<li><code>RadAsyncFifoWriteMonitorIn</code> - Samples <code>winc</code>, <code>wdata</code> on <code>wclk</code></li>
+<li><code>RadAsyncFifoWriteMonitorOut</code> - Samples <code>wfull</code> on <code>wclk</code></li>
+<li><strong>Item</strong>: <code>RadAsyncFifoWriteItem</code></li>
+<li>Inputs: <code>winc</code>, <code>wdata</code></li>
+<li>Outputs: <code>wfull</code> (feedback from DUT)</li>
+<li><strong>Sequence</strong>: <code>RadAsyncFifoWriteSequence</code></li>
+<li>Generates random write transactions with configurable probability (default 0.7)</li>
+<li>Protocol enforcement handled by driver, not sequence</li>
+<li>Generates random <code>wdata</code> values within configured data width</li>
+</ul>
+<h3 id="agent-1-read-domain">Agent 1: Read Domain<a class="headerlink" href="#agent-1-read-domain" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Clock</strong>: <code>rclk</code> (default 1200ps period)</li>
+<li><strong>Reset</strong>: <code>rrst_n</code></li>
+<li><strong>Driver</strong>: <code>RadAsyncFifoReadDriver</code> - Drives <code>rinc</code> on <code>rclk</code> edges</li>
+<li><strong>Monitors</strong>:</li>
+<li><code>RadAsyncFifoReadMonitorIn</code> - Samples <code>rinc</code> on <code>rclk</code></li>
+<li><code>RadAsyncFifoReadMonitorOut</code> - Samples <code>rdata</code>, <code>rempty</code> on <code>rclk</code></li>
+<li><strong>Item</strong>: <code>RadAsyncFifoReadItem</code></li>
+<li>Inputs: <code>rinc</code></li>
+<li>Outputs: <code>rdata</code>, <code>rempty</code> (feedback from DUT)</li>
+<li><strong>Sequence</strong>: <code>RadAsyncFifoReadSequence</code></li>
+<li>Generates random read transactions with configurable probability (default 0.7)</li>
+<li>Protocol enforcement handled by driver, not sequence</li>
+</ul>
+<hr />
+<h2 id="component-structure">Component Structure<a class="headerlink" href="#component-structure" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code>RadAsyncFifoEnv (num_agents=2)
+├── agent0 (write domain)
+│   ├── drv: RadAsyncFifoWriteDriver
+│   ├── sqr: BaseSequencer[RadAsyncFifoWriteItem]
+│   ├── mon_in: RadAsyncFifoWriteMonitorIn
+│   └── mon_out: RadAsyncFifoWriteMonitorOut
+├── agent1 (read domain)
+│   ├── drv: RadAsyncFifoReadDriver
+│   ├── sqr: BaseSequencer[RadAsyncFifoReadItem]
+│   ├── mon_in: RadAsyncFifoReadMonitorIn
+│   └── mon_out: RadAsyncFifoReadMonitorOut
+├── mon_rst: BaseResetMonitor (wrst_n, configured but not used)
+├── reset_sink: BaseResetSink (configured but not used)
+├── mon_wrst: BaseResetMonitor (wrst_n) → wrst_sink
+├── mon_rrst: BaseResetMonitor (rrst_n) → rrst_sink
+├── wrst_sink: RadAsyncFifoResetSink → routes to ref_model.wrst_change()
+├── rrst_sink: RadAsyncFifoResetSink → routes to ref_model.rrst_change()
+├── sb: RadAsyncFifoSb
+│   ├── prd: RadAsyncFifoSbPredictor[RadAsyncFifoRefModel]
+│   └── cmp: BaseSbComparator
+└── cov: RadAsyncFifoCoverage
+</code></pre></div>
+
+<hr />
+<h2 id="test-execution-flow">Test Execution Flow<a class="headerlink" href="#test-execution-flow" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Clock Setup</strong>: Test creates independent <code>wclk_driver</code> and <code>rclk_driver</code></li>
+<li><strong>Reset Setup</strong>: Test creates independent <code>wrst_driver</code> and <code>rrst_driver</code></li>
+<li><strong>Factory Overrides</strong>: Instance-specific overrides for each agent</li>
+<li><code>*.agent0.*</code> → Write components</li>
+<li><code>*.agent1.*</code> → Read components</li>
+<li><strong>Run Phase</strong>: Sequences run <strong>concurrently</strong> using <code>cocotb.start_soon()</code></li>
+</ol>
+<p>```python
+   write_task = cocotb.start_soon(write_seq.start(self.env.agents[0].sqr))
+   read_task = cocotb.start_soon(read_seq.start(self.env.agents[1].sqr))</p>
+<p>await write_task
+   await read_task
+   ```</p>
+<hr />
+<h2 id="protocol-enforcement-backpressure">Protocol Enforcement (Backpressure)<a class="headerlink" href="#protocol-enforcement-backpressure" title="Permanent link">&para;</a></h2>
+<p>Backpressure is handled in the <strong>drivers</strong>, not the sequences. This separation allows:</p>
+<ul>
+<li>Sequences to focus on stimulus generation (probabilities, patterns)</li>
+<li>Drivers to enforce protocol correctness (respecting full/empty flags)</li>
+</ul>
+<h3 id="write-driver-backpressure">Write Driver Backpressure<a class="headerlink" href="#write-driver-backpressure" title="Permanent link">&para;</a></h3>
+<p>The write driver samples <code>wfull</code> at each drive edge and stalls if necessary:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">clock_drive_edge</span><span class="p">()</span>  <span class="c1"># Advance to negedge of wclk</span>
+
+    <span class="n">wfull_now</span> <span class="o">=</span> <span class="n">utils_dv</span><span class="o">.</span><span class="n">get_signal_value_int</span><span class="p">(</span><span class="n">dut</span><span class="o">.</span><span class="n">wfull</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">tr</span><span class="o">.</span><span class="n">winc</span> <span class="ow">and</span> <span class="n">wfull_now</span><span class="p">:</span>
+        <span class="c1"># Backpressure: FIFO is full, stall this write</span>
+        <span class="n">dut</span><span class="o">.</span><span class="n">winc</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># Loop to next cycle and re-check wfull</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Either no write requested, or FIFO is not full</span>
+        <span class="n">dut</span><span class="o">.</span><span class="n">winc</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="n">winc</span>
+        <span class="n">dut</span><span class="o">.</span><span class="n">wdata</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="n">wdata</span>
+        <span class="k">break</span>  <span class="c1"># Exit after successful drive</span>
+</code></pre></div>
+
+<h3 id="read-driver-backpressure">Read Driver Backpressure<a class="headerlink" href="#read-driver-backpressure" title="Permanent link">&para;</a></h3>
+<p>The read driver samples <code>rempty</code> at each drive edge and stalls if necessary:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">clock_drive_edge</span><span class="p">()</span>  <span class="c1"># Advance to negedge of rclk</span>
+
+    <span class="n">rempty_now</span> <span class="o">=</span> <span class="n">utils_dv</span><span class="o">.</span><span class="n">get_signal_value_int</span><span class="p">(</span><span class="n">dut</span><span class="o">.</span><span class="n">rempty</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">tr</span><span class="o">.</span><span class="n">rinc</span> <span class="ow">and</span> <span class="n">rempty_now</span><span class="p">:</span>
+        <span class="c1"># Backpressure: FIFO is empty, stall this read</span>
+        <span class="n">dut</span><span class="o">.</span><span class="n">rinc</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># Loop to next cycle and re-check rempty</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Either no read requested, or FIFO is not empty</span>
+        <span class="n">dut</span><span class="o">.</span><span class="n">rinc</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="n">rinc</span>
+        <span class="k">break</span>  <span class="c1"># Exit after successful drive</span>
+</code></pre></div>
+
+<h3 id="sequence-generation">Sequence Generation<a class="headerlink" href="#sequence-generation" title="Permanent link">&para;</a></h3>
+<p>Sequences generate transactions based on probability, independent of FIFO state:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Write sequence</span>
+<span class="n">item</span><span class="o">.</span><span class="n">winc</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">write_prob</span> <span class="k">else</span> <span class="mi">0</span>
+<span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">winc</span><span class="p">:</span>
+    <span class="n">item</span><span class="o">.</span><span class="n">wdata</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">dsize</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># Read sequence</span>
+<span class="n">item</span><span class="o">.</span><span class="n">rinc</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_prob</span> <span class="k">else</span> <span class="mi">0</span>
+</code></pre></div>
+
+<p>This design ensures protocol correctness while allowing flexible stimulus patterns.</p>
+<hr />
+<h2 id="reset-handling">Reset Handling<a class="headerlink" href="#reset-handling" title="Permanent link">&para;</a></h2>
+<p>The environment supports <strong>independent reset domains</strong> with domain-specific routing:</p>
+<ul>
+<li><strong>Write Reset Path</strong>: <code>mon_wrst</code> → <code>wrst_sink</code> → <code>ref_model.wrst_change()</code></li>
+<li><strong>Read Reset Path</strong>: <code>mon_rrst</code> → <code>rrst_sink</code> → <code>ref_model.rrst_change()</code></li>
+</ul>
+<p>Each reset sink (<code>RadAsyncFifoResetSink</code>) routes reset events to:</p>
+<ol>
+<li>The corresponding driver (agent0.drv or agent1.drv) via <code>drv.reset_change()</code></li>
+<li>The reference model's domain-specific method (<code>wrst_change</code> or <code>rrst_change</code>)</li>
+</ol>
+<p>The reference model (<code>RadAsyncFifoRefModel</code>) implements:</p>
+<ul>
+<li><code>wrst_change(value, active)</code>: Clears write-domain state when active</li>
+<li><code>rrst_change(value, active)</code>: Clears read-domain state when active</li>
+<li><code>reset_change(value, active)</code>: Legacy single-reset method (clears both domains)</li>
+</ul>
+<hr />
+<h2 id="key-design-decisions">Key Design Decisions<a class="headerlink" href="#key-design-decisions" title="Permanent link">&para;</a></h2>
+<h3 id="why-dual-agents">Why Dual Agents?<a class="headerlink" href="#why-dual-agents" title="Permanent link">&para;</a></h3>
+<p>Rejected alternatives:</p>
+<ol>
+<li>❌ Single sequence controlling both domains - unrealistic, violates clock domain separation</li>
+<li>❌ Dual sequences with single agent - complexity in driver/sequencer routing</li>
+<li>❌ Single sequence with dual clock driver - doesn't model real system behavior</li>
+<li>✅ <strong>Dual agents</strong> - clean separation, matches real system architecture</li>
+</ol>
+<h3 id="why-backpressure-in-drivers">Why Backpressure in Drivers?<a class="headerlink" href="#why-backpressure-in-drivers" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Protocol enforcement</strong> separate from <strong>stimulus generation</strong></li>
+<li>Sequences focus on test patterns (random, burst, corner cases)</li>
+<li>Drivers ensure protocol correctness (never write when full, never read when empty)</li>
+<li>Allows reuse of driver logic across different sequence types</li>
+<li>Models real hardware behavior: protocol is enforced at interface level</li>
+</ul>
+<h3 id="why-cocotbstart_soon">Why cocotb.start_soon?<a class="headerlink" href="#why-cocotbstart_soon" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Both sequences must run <strong>concurrently</strong> (not sequentially)</li>
+<li>Write and read operations happen simultaneously in different clock domains</li>
+<li><code>cocotb.start_soon()</code> is the cocotb-native way to launch concurrent tasks</li>
+<li>Unlike <code>asyncio.gather()</code>, it works properly with cocotb's scheduler</li>
+</ul>
+<hr />
+<h2 id="files">Files<a class="headerlink" href="#files" title="Permanent link">&para;</a></h2>
+<h3 id="transaction-items">Transaction Items<a class="headerlink" href="#transaction-items" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>rad_async_fifo_item.py</code> - Contains both transaction classes:</li>
+<li><code>RadAsyncFifoWriteItem</code> - Write domain (winc, wdata, wfull)</li>
+<li><code>RadAsyncFifoReadItem</code> - Read domain (rinc, rdata, rempty)</li>
+</ul>
+<h3 id="drivers">Drivers<a class="headerlink" href="#drivers" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>rad_async_fifo_driver.py</code> - Contains both driver classes:</li>
+<li><code>RadAsyncFifoWriteDriver</code> - Drives write inputs on wclk</li>
+<li><code>RadAsyncFifoReadDriver</code> - Drives read inputs on rclk</li>
+</ul>
+<h3 id="sequences">Sequences<a class="headerlink" href="#sequences" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>rad_async_fifo_sequence.py</code> - Contains both sequence classes:</li>
+<li><code>RadAsyncFifoWriteSequence</code> - Generates write transactions</li>
+<li><code>RadAsyncFifoReadSequence</code> - Generates read transactions</li>
+</ul>
+<h3 id="monitors">Monitors<a class="headerlink" href="#monitors" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>rad_async_fifo_monitor_in.py</code> - Contains both input monitor classes:</li>
+<li><code>RadAsyncFifoWriteMonitorIn</code> - Samples winc, wdata on wclk</li>
+<li><code>RadAsyncFifoReadMonitorIn</code> - Samples rinc on rclk</li>
+<li><code>rad_async_fifo_monitor_out.py</code> - Contains both output monitor classes:</li>
+<li><code>RadAsyncFifoWriteMonitorOut</code> - Samples wfull on wclk</li>
+<li><code>RadAsyncFifoReadMonitorOut</code> - Samples rdata, rempty on rclk</li>
+</ul>
+<h3 id="environment-test">Environment &amp; Test<a class="headerlink" href="#environment-test" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>rad_async_fifo_env.py</code> - Environment with <code>num_agents=2</code> and dual reset monitors</li>
+<li><code>test_rad_async_fifo.py</code> - Test with dual clocks/resets/sequences</li>
+</ul>
+<h3 id="shared-components">Shared Components<a class="headerlink" href="#shared-components" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>rad_async_fifo_ref_model.py</code> - Golden model with dual-reset support</li>
+<li><code>rad_async_fifo_coverage.py</code> - Functional coverage for both domains</li>
+<li><code>rad_async_fifo_reset_sink.py</code> - Reset event router with configurable method names</li>
+</ul>
+<hr />
+<h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
+<h3 id="clock-configuration">Clock Configuration<a class="headerlink" href="#clock-configuration" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Write clock (default 1000ps)</span>
+<span class="nv">WCLK_PERIOD_PS</span><span class="o">=</span><span class="m">1000</span><span class="w"> </span><span class="nv">WCLK_ENABLE</span><span class="o">=</span><span class="m">1</span>
+
+<span class="c1"># Read clock (default 1200ps, shows async behavior)</span>
+<span class="nv">RCLK_PERIOD_PS</span><span class="o">=</span><span class="m">1200</span><span class="w"> </span><span class="nv">RCLK_ENABLE</span><span class="o">=</span><span class="m">1</span>
+</code></pre></div>
+
+<h3 id="reset-configuration">Reset Configuration<a class="headerlink" href="#reset-configuration" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Write reset</span>
+<span class="nv">WRST_ENABLE</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="nv">WRST_ACTIVE_LOW</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="nv">WRST_CYCLES</span><span class="o">=</span><span class="m">10</span>
+
+<span class="c1"># Read reset</span>
+<span class="nv">RRST_ENABLE</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="nv">RRST_ACTIVE_LOW</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="nv">RRST_CYCLES</span><span class="o">=</span><span class="m">10</span>
+</code></pre></div>
+
+<h3 id="sequence-configuration">Sequence Configuration<a class="headerlink" href="#sequence-configuration" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Write sequence length (number of transactions)</span>
+<span class="nv">RAD_ASYNC_FIFO_WRITE_SEQ_LEN</span><span class="o">=</span><span class="m">100</span>
+
+<span class="c1"># Read sequence length (number of transactions)</span>
+<span class="nv">RAD_ASYNC_FIFO_READ_SEQ_LEN</span><span class="o">=</span><span class="m">100</span>
+</code></pre></div>
+
+<h3 id="fifo-configuration">FIFO Configuration<a class="headerlink" href="#fifo-configuration" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Data width (default 8 bits)</span>
+<span class="nv">RAD_ASYNC_FIFO_DSIZE</span><span class="o">=</span><span class="m">8</span>
+
+<span class="c1"># Address width determines depth = 2^ASIZE (default 3 → depth=8)</span>
+<span class="nv">RAD_ASYNC_FIFO_ASIZE</span><span class="o">=</span><span class="m">3</span>
+</code></pre></div>
+
+<hr />
+<h2 id="future-enhancements">Future Enhancements<a class="headerlink" href="#future-enhancements" title="Permanent link">&para;</a></h2>
+<p>Potential improvements:</p>
+<ol>
+<li><strong>Variable timing sequences</strong>: Add random delays between transactions</li>
+<li><strong>Burst sequences</strong>: Write/read bursts until full/empty</li>
+<li><strong>Stress sequences</strong>: Maximum rate writes and reads</li>
+<li><strong>Corner case sequences</strong>: Single item, wrap-around, simultaneous full/empty</li>
+<li><strong>Protocol violations</strong>: Intentionally violate timing constraints</li>
+<li><strong>Coverage-driven</strong>: Use coverage feedback to guide sequence generation</li>
+</ol>
+<hr />
+<h2 id="licensing">Licensing<a class="headerlink" href="#licensing" title="Permanent link">&para;</a></h2>
+<p>See the <code>LICENSES</code> directory at the repository root.</p>
+<hr />
+<h2 id="author">Author<a class="headerlink" href="#author" title="Permanent link">&para;</a></h2>
+<p><a href="https://linkedin.com/in/hughwalsh">Hugh Walsh</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.top", "content.code.copy", "toc.integrate"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  </body>
+</html>

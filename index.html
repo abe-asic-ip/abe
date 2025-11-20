@@ -1,0 +1,1395 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="ABE ("A Better Environment") is a lightweight, modern environment for developing reusable ASIC IP. It combines microarchitecture tools, reusable RTL designs, synthesis, formal verification, and Python‑based design verification (DV). ABE runs on free and open‑source tools.">
+      
+      
+      
+        <link rel="canonical" href="https://abe-asic-ip.github.io/abe/">
+      
+      
+      
+        <link rel="next" href="python_dev/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>ABE - A Better Environment for Developing ASIC IP</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.618322db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#abe-a-better-environment-for-developing-asic-ip" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="." title="ABE - A Better Environment for Developing ASIC IP" class="md-header__button md-logo" aria-label="ABE - A Better Environment for Developing ASIC IP" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ABE - A Better Environment for Developing ASIC IP
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Home
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/abe-asic-ip/abe" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    abe-asic-ip/abe
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="." title="ABE - A Better Environment for Developing ASIC IP" class="md-nav__button md-logo" aria-label="ABE - A Better Environment for Developing ASIC IP" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ABE - A Better Environment for Developing ASIC IP
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/abe-asic-ip/abe" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    abe-asic-ip/abe
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="." class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-abe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is ABE?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#who-is-abe-for" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Who is ABE for?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-was-abe-created" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why was ABE created?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-does-abe-fit-in-the-opensource-ecosystem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where does ABE fit in the open‑source ecosystem?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Where does ABE fit in the open‑source ecosystem?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#abe-and-eda-playgrounds-ai-copilots" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ABE and EDA playgrounds / AI copilots
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#abe-and-svunit-vunit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ABE and SVUnit / VUnit
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#abe-and-verilators-new-uvm-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ABE and Verilator's new UVM support
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#abe-and-opentitan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ABE and OpenTitan
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-can-i-get-started" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How Can I Get Started?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-abe-toolkit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The ABE Toolkit
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#microarchitecture-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Microarchitecture Tools
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Microarchitecture Tools">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fifo-depth-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FIFO Depth Tool
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="FIFO Depth Tool">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#packet-quantization-calculator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Packet Quantization Calculator
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#developer-tooling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Developer Tooling
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reusable-asic-designs-rad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reusable ASIC Designs (RAD)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#explore-the-abe-universe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Explore the ABE Universe
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FAQ
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="FAQ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#is-abe-good-for-beginners" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Is ABE good for beginners?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#is-abe-an-soc-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Is ABE an SoC framework?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#does-abe-replace-uvm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Does ABE replace UVM?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#can-i-use-abe-with-commercial-simulators" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Can I use ABE with commercial simulators?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#is-the-fifo-depth-tool-a-simulator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Is the fifo-depth tool a simulator?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#licensing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Licensing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#author" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Author
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Development
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="python_dev/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python Development
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Microarchitecture Tools
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Microarchitecture Tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="fifo_depth/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FIFO Depth Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="pkt_quantize/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Packet Quantization Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reusable ASIC Designs (RAD) Flow
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reusable ASIC Designs (RAD) Flow
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="formal/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD Formal
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="dv/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD DV
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="rad_template_dv_readme/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD DV Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="rad_new_design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Creating a New RAD Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reusable ASIC Designs (RAD) Library DV Overviews
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reusable ASIC Designs (RAD) Library DV Overviews
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="rad_async_fifo_dv_readme/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD ASYNC FIFO DV Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="rad_cdc_mcp_dv_readme/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD CDC MCP DV Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="rad_cdc_sync_dv_readme/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD CDC SYNC DV Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<!--
+SPDX-FileCopyrightText: 2025 Hugh Walsh
+
+SPDX-License-Identifier: MIT
+-->
+
+<!--- This file: docs/index.md -->
+
+<h1 id="abe-a-better-environment-for-developing-asic-ip">ABE: A Better Environment for Developing ASIC IP<a class="headerlink" href="#abe-a-better-environment-for-developing-asic-ip" title="Permanent link">&para;</a></h1>
+<p><a href="https://www.python.org/downloads/"><img alt="Python 3.13+" src="https://img.shields.io/badge/python-3.13+-blue.svg" /></a>
+<a href="https://opensource.org/licenses/MIT"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" /></a>
+<a href="https://github.com/psf/black"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg" /></a>
+<a href="https://github.com/abe-asic-ip/abe"><img alt="GitHub" src="https://img.shields.io/badge/github-abe-asic-ip%2Fabe-blue.svg" /></a>
+<a href="https://reuse.software/"><img alt="REUSE Compliance" src="https://img.shields.io/badge/REUSE-compliant-green.svg" /></a></p>
+<p>ABE ("A Better Environment") is a lightweight, modern environment for developing reusable ASIC IP. It combines microarchitecture tools, reusable RTL designs, synthesis, formal verification, and Python‑based design verification (DV). ABE runs on free and open‑source tools.</p>
+<p>The goal is simple: <strong>make block‑level ASIC development easier, clearer, and more productive</strong> for professional engineers, students, researchers, and enthusiasts.</p>
+<p>Welcome to ABE — a better environment for developing ASIC IP.</p>
+<hr />
+<h2 id="what-is-abe">What is ABE?<a class="headerlink" href="#what-is-abe" title="Permanent link">&para;</a></h2>
+<p>ABE provides tools and resources for digital design and verification:</p>
+<ul>
+<li><a href="#microarchitecture-tools">Microarchitecture tools</a>: Including <a href="fifo_depth/">fifo-depth</a>, a CP-SAT (Constraint Programming - Satisfiability) based tool that computes provably minimal FIFO depths and flow-control parameters for complex traffic profiles.</li>
+<li><a href="dv/">Python-based DV environment</a>: A complete verification methodology using <a href="https://www.cocotb.org">cocotb</a> and <a href="https://github.com/pyuvm/pyuvm">pyuvm</a>.</li>
+<li><a href="#developer-tooling">Developer workflow and tooling</a>: Make-based workflows, synthesis scripts, and code management tools.</li>
+<li><a href="#reusable-asic-designs-rad">Reusable ASIC Designs (RAD)</a>: A library of RTL designs fully validated with ABE's flows for synthesis, formal verification, and DV.</li>
+</ul>
+<p>These components work together to support the full development cycle from microarchitecture to verification.</p>
+<hr />
+<h2 id="who-is-abe-for">Who is ABE for?<a class="headerlink" href="#who-is-abe-for" title="Permanent link">&para;</a></h2>
+<p>ABE is designed for anyone who wants to build ASIC modules with a modern, open‑source workflow:</p>
+<ul>
+<li><strong>Professional engineers</strong> who prefer Python for modeling and verification</li>
+<li><strong>Professional engineers</strong> who want license‑free tools</li>
+<li><strong>Students</strong> learning microarchitecture, design, formal, or verification</li>
+<li><strong>Researchers</strong> building prototypes and publishing reproducible results</li>
+<li><strong>Enthusiasts</strong> exploring ASIC IP development with free tools</li>
+</ul>
+<p>ABE works well if you want a workflow that is clear, repeatable, and Python‑friendly.</p>
+<hr />
+<h2 id="why-was-abe-created">Why was ABE created?<a class="headerlink" href="#why-was-abe-created" title="Permanent link">&para;</a></h2>
+<p>ASIC IP development often involves creating microarchitecture tools, scripts, and testbenches for each new project. ABE's philosophy is practical: provide solid, reusable infrastructure so designers can focus on building designs rather than recreating validation frameworks.</p>
+<p>ABE was created to address these common challenges:</p>
+<ul>
+<li><strong>Analytical FIFO sizing.</strong> ABE provides <a href="fifo_depth/">fifo-depth</a>, a CP-SAT based analytical tool that complements simulation and spreadsheet approaches by computing provably minimal FIFO depths and flow-control parameters for complex, multi-layered traffic profiles across various flow-control protocols.</li>
+<li><strong>Comprehensive DV infrastructure.</strong> Many open‑source projects provide RTL. ABE adds complete Python-based verification environments with agents, scoreboards, reference models, functional coverage, and randomization.</li>
+<li><strong>Python modeling and RTL simulation are often separate.</strong> ABE connects them using <a href="https://www.cocotb.org">cocotb</a>, <a href="https://github.com/pyuvm/pyuvm">pyuvm</a>, and Python reference models.</li>
+<li><strong>Workflow and structure around open‑source tools.</strong> ABE provides Makefiles, directory conventions, naming patterns, and tooling to complement powerful open‑source simulators with consistent project organization.</li>
+</ul>
+<hr />
+<h2 id="where-does-abe-fit-in-the-opensource-ecosystem">Where does ABE fit in the open‑source ecosystem?<a class="headerlink" href="#where-does-abe-fit-in-the-opensource-ecosystem" title="Permanent link">&para;</a></h2>
+<p>ABE sits between lightweight code‑writing tools and complete SoC frameworks. ABE is designed to work together with other open‑source projects and complement existing workflows.</p>
+<h3 id="abe-and-eda-playgrounds-ai-copilots">ABE and EDA playgrounds / AI copilots<a class="headerlink" href="#abe-and-eda-playgrounds-ai-copilots" title="Permanent link">&para;</a></h3>
+<p>These tools are excellent for writing SystemVerilog code and interactive experimentation. ABE complements them by providing infrastructure for <strong>complete, reusable ASIC IP</strong> development with synthesis, formal verification, Python‑based DV, and structured workflows.</p>
+<h3 id="abe-and-svunit-vunit">ABE and <a href="https://github.com/svunit/svunit">SVUnit</a> / <a href="https://vunit.github.io">VUnit</a><a class="headerlink" href="#abe-and-svunit-vunit" title="Permanent link">&para;</a></h3>
+<p>These are excellent testing frameworks for VHDL/SystemVerilog. <a href="https://github.com/svunit/svunit">SVUnit</a> focuses on unit testing, while <a href="https://vunit.github.io">VUnit</a> provides verification components and block‑level testing in VHDL/SystemVerilog. ABE complements them by providing <strong>Python‑based verification</strong> (<a href="https://www.cocotb.org">cocotb</a> + <a href="https://github.com/pyuvm/pyuvm">pyuvm</a>) with reusable agents, scoreboards, reference models, and functional coverage.</p>
+<h3 id="abe-and-verilators-new-uvm-support">ABE and <a href="https://verilator.org">Verilator</a>'s new UVM support<a class="headerlink" href="#abe-and-verilators-new-uvm-support" title="Permanent link">&para;</a></h3>
+<p><a href="https://verilator.org">Verilator</a> now supports UVM. This is great progress for open‑source SystemVerilog verification. ABE offers a different approach with <strong>Python‑based UVM</strong> (<a href="https://www.cocotb.org">cocotb</a> + <a href="https://github.com/pyuvm/pyuvm">pyuvm</a>). This provides easier integration with Python reference models, Python workflows, and Python ecosystem tools (e.g. data analysis).</p>
+<h3 id="abe-and-opentitan">ABE and <a href="https://opentitan.org">OpenTitan</a><a class="headerlink" href="#abe-and-opentitan" title="Permanent link">&para;</a></h3>
+<p><a href="https://opentitan.org">OpenTitan</a> is an open‑source silicon Root of Trust project. It provides a complete SoC design, reusable ASIC IP, and production‑grade SystemVerilog UVM verification. ABE has a different scope, focusing on <strong>general‑purpose ASIC blocks</strong> with <strong>microarchitecture tools</strong> and <strong>Python‑based verification</strong> for developing ASIC IP.</p>
+<hr />
+<h2 id="how-can-i-get-started">How Can I Get Started?<a class="headerlink" href="#how-can-i-get-started" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Clone the repository</strong></li>
+<li><strong>Set up the Python environment</strong> (<a href="python_dev/#set-up-and-install-the-environment">see details</a>)</li>
+<li><strong>Try <a href="fifo_depth/">fifo-depth</a></strong> on an example YAML spec to see CP-SAT based FIFO optimization in action</li>
+<li><strong>Install free tools</strong>: see <a href="design/#install-required-tools">RAD Design</a>, <a href="formal/#install-required-tools">RAD Formal</a>, and <a href="dv/#install-required-tools">RAD DV</a> for details.</li>
+<li><strong>Explore a <a href="#reusable-asic-designs-rad">RAD</a> design</strong> to experience <a href="design/">RTL</a>, <a href="design/">synthesis</a>, <a href="formal/">formal</a>, and <a href="dv/">DV</a> flows firsthand</li>
+<li><strong><a href="dv/#run-examples">Run a test</a></strong> with <a href="dv/#1-dv-main-front-end-runs-a-single-test"><code>dv</code></a> and a (<a href="https://www.cocotb.org">cocotb</a> + <a href="https://github.com/pyuvm/pyuvm">pyuvm</a>) bench</li>
+</ol>
+<hr />
+<h2 id="the-abe-toolkit">The ABE Toolkit<a class="headerlink" href="#the-abe-toolkit" title="Permanent link">&para;</a></h2>
+<p>ABE provides three main categories of tools and resources:</p>
+<hr />
+<h2 id="microarchitecture-tools">Microarchitecture Tools<a class="headerlink" href="#microarchitecture-tools" title="Permanent link">&para;</a></h2>
+<p>ABE's microarchitecture tools help you make informed decisions before writing RTL.</p>
+<h3 id="fifo-depth-tool"><a href="fifo_depth/">FIFO Depth Tool</a><a class="headerlink" href="#fifo-depth-tool" title="Permanent link">&para;</a></h3>
+<p>The <a href="fifo_depth/">fifo-depth</a> tool is a CP-SAT based optimization tool that addresses an important challenge in ASIC microarchitecture: determining the minimal FIFO depth and flow-control parameters required to prevent underflow or overflow under complex traffic conditions.</p>
+<h4 id="key-features">Key Features<a class="headerlink" href="#key-features" title="Permanent link">&para;</a></h4>
+<p>The <a href="fifo_depth/">fifo-depth</a> tool offers several advantages through its CP-SAT based approach:</p>
+<ul>
+<li><strong>Provably minimal:</strong> Uses CP-SAT optimization to find the smallest FIFO depth that satisfies all constraints, and computes appropriate flow-control parameters (such as thresholds for XON/XOFF or credits for CBFC) when applicable.</li>
+<li><strong>Complex traffic profiles:</strong> Handles layered, hierarchical traffic specifications (cycle, transaction, burst, stream levels) that are difficult to analyze manually.</li>
+<li><strong>Multiple flow-control protocols:</strong> Supports Ready/Valid, XON/XOFF, Credit-Based Flow Control (CBFC), and replay buffers.</li>
+<li><strong>CDC optimization:</strong> For multi-clock FIFOs, proposes optimal partitioning between asynchronous and synchronous storage.</li>
+<li><strong>Witness sequences:</strong> Generates the exact read/write patterns that cause the worst-case occupancy.</li>
+</ul>
+<p>This analytical approach complements spreadsheet and simulation-based methods and can help identify corner cases and optimize FIFO provisioning in complex scenarios.</p>
+<h3 id="packet-quantization-calculator"><a href="pkt_quantize/">Packet Quantization Calculator</a><a class="headerlink" href="#packet-quantization-calculator" title="Permanent link">&para;</a></h3>
+<p>Calculates packet processing performance metrics (cycles, latency, bandwidth, PPS) for packet quantization given packet sizes, bus width, and clock frequency.</p>
+<hr />
+<h2 id="developer-tooling">Developer Tooling<a class="headerlink" href="#developer-tooling" title="Permanent link">&para;</a></h2>
+<p>ABE includes:</p>
+<ul>
+<li>Standard directory layout</li>
+<li><a href="python_dev/">Python environment setup</a></li>
+<li><a href="python_dev/">Python static analysis</a> with <a href="https://pycqa.github.io/isort">isort</a>, <a href="https://github.com/psf/black">black</a>, <a href="https://pylint.org">pylint</a>, and <a href="https://mypy-lang.org">mypy</a></li>
+<li>Make targets for RTL development, synthesis, formal, and DV</li>
+<li>Documentation conventions</li>
+</ul>
+<p>All designed to help you build ASIC IP quickly and consistently.</p>
+<hr />
+<h2 id="reusable-asic-designs-rad">Reusable ASIC Designs (RAD)<a class="headerlink" href="#reusable-asic-designs-rad" title="Permanent link">&para;</a></h2>
+<p>RAD provides production-quality RTL designs that have been fully validated using ABE's synthesis, formal verification, and DV flows.</p>
+<p>Each RAD design includes:</p>
+<ul>
+<li><a href="design/">RTL implementation</a></li>
+<li><a href="design/">Synthesis</a></li>
+<li><a href="formal/">Formal</a> verification and coverage</li>
+<li>A Python reference model</li>
+<li>A complete <a href="dv/">DV environment</a> with agents, scoreboards, functional coverage, and randomization</li>
+<li>Documentation</li>
+</ul>
+<p>Current RAD designs include core CDC building blocks: synchronizers, Multi-Cycle Path formulations, and asynchronous FIFOs.</p>
+<hr />
+<h2 id="explore-the-abe-universe">Explore the ABE Universe<a class="headerlink" href="#explore-the-abe-universe" title="Permanent link">&para;</a></h2>
+<p>Ready to dive deeper? Here's your map to everything ABE has to offer:</p>
+<table>
+<thead>
+<tr>
+<th>Document</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="fifo_depth/">FIFO Depth Tool</a></td>
+<td>CP-SAT based tool for computing minimal FIFO depths and flow-control parameters</td>
+</tr>
+<tr>
+<td><a href="pkt_quantize/">Packet Quantization Calculator</a></td>
+<td>Packet quantization calculator for performance metrics and bus analysis</td>
+</tr>
+<tr>
+<td><a href="python_dev/">ABE Python Development</a></td>
+<td>Python development environment setup and tooling</td>
+</tr>
+<tr>
+<td><a href="design/">RAD Design</a></td>
+<td>RAD design support for RTL quality, linting, and synthesis</td>
+</tr>
+<tr>
+<td><a href="formal/">RAD Formal</a></td>
+<td>RAD formal verification flow and methodology</td>
+</tr>
+<tr>
+<td><a href="dv/">RAD DV</a></td>
+<td>RAD design verification using <a href="https://www.cocotb.org">cocotb</a> and <a href="https://github.com/pyuvm/pyuvm">pyuvm</a></td>
+</tr>
+<tr>
+<td><a href="rad_new_design/">Creating a New RAD Design</a></td>
+<td>Guide for creating new RAD designs</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="faq">FAQ<a class="headerlink" href="#faq" title="Permanent link">&para;</a></h2>
+<h3 id="is-abe-good-for-beginners"><strong>Is ABE good for beginners?</strong><a class="headerlink" href="#is-abe-good-for-beginners" title="Permanent link">&para;</a></h3>
+<p>Yes. ABE was designed to be clear and easy to learn. It is friendly to people who are new to developing ASIC IP.</p>
+<hr />
+<h3 id="is-abe-an-soc-framework"><strong>Is ABE an SoC framework?</strong><a class="headerlink" href="#is-abe-an-soc-framework" title="Permanent link">&para;</a></h3>
+<p>ABE focuses on microarchitecture analysis, reusable ASIC IP, and DV patterns rather than full SoC integration.</p>
+<hr />
+<h3 id="does-abe-replace-uvm"><strong>Does ABE replace UVM?</strong><a class="headerlink" href="#does-abe-replace-uvm" title="Permanent link">&para;</a></h3>
+<p>ABE uses <a href="https://github.com/pyuvm/pyuvm">pyuvm</a>, a Python implementation of UVM. Some users may prefer Python UVM. Others may prefer SystemVerilog UVM. Both approaches have advantages and disadvantages.</p>
+<hr />
+<h3 id="can-i-use-abe-with-commercial-simulators"><strong>Can I use ABE with commercial simulators?</strong><a class="headerlink" href="#can-i-use-abe-with-commercial-simulators" title="Permanent link">&para;</a></h3>
+<p>ABE currently supports <a href="https://verilator.org">Verilator</a> and <a href="https://steveicarus.github.io/iverilog">Icarus Verilog</a>. While <a href="https://www.cocotb.org">cocotb</a> works with commercial simulators, ABE's test infrastructure would need updates to support them. Contributors with simulator access can extend the <a href="dv/#1-dv-main-front-end-runs-a-single-test"><code>dv</code></a> tool and submit changes to the repository.</p>
+<hr />
+<h3 id="is-the-fifo-depth-tool-a-simulator"><strong>Is the <a href="fifo_depth/">fifo-depth</a> tool a simulator?</strong><a class="headerlink" href="#is-the-fifo-depth-tool-a-simulator" title="Permanent link">&para;</a></h3>
+<p>No. It is an analytical tool that uses deterministic traffic analysis and a CP‑SAT solver to determine worst‑case depths and flow-control parameters.</p>
+<hr />
+<h2 id="licensing">Licensing<a class="headerlink" href="#licensing" title="Permanent link">&para;</a></h2>
+<p>See the <code>LICENSES</code> directory at the repository root.</p>
+<hr />
+<h2 id="author">Author<a class="headerlink" href="#author" title="Permanent link">&para;</a></h2>
+<p><a href="https://linkedin.com/in/hughwalsh">Hugh Walsh</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.sections", "navigation.top", "content.code.copy", "toc.integrate"], "search": "assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  </body>
+</html>

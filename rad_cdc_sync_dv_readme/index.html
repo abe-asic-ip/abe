@@ -1,0 +1,1354 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="ABE ("A Better Environment") is a lightweight, modern environment for developing reusable ASIC IP. It combines microarchitecture tools, reusable RTL designs, synthesis, formal verification, and Python‑based design verification (DV). ABE runs on free and open‑source tools.">
+      
+      
+      
+        <link rel="canonical" href="https://abe-asic-ip.github.io/abe/rad_cdc_sync_dv_readme/">
+      
+      
+        <link rel="prev" href="../rad_cdc_mcp_dv_readme/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>RAD CDC SYNC DV Overview - ABE - A Better Environment for Developing ASIC IP</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#rad_cdc_sync-dv-guide" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="ABE - A Better Environment for Developing ASIC IP" class="md-header__button md-logo" aria-label="ABE - A Better Environment for Developing ASIC IP" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ABE - A Better Environment for Developing ASIC IP
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              RAD CDC SYNC DV Overview
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/abe-asic-ip/abe" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    abe-asic-ip/abe
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="ABE - A Better Environment for Developing ASIC IP" class="md-nav__button md-logo" aria-label="ABE - A Better Environment for Developing ASIC IP" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    ABE - A Better Environment for Developing ASIC IP
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/abe-asic-ip/abe" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    abe-asic-ip/abe
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Development
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../python_dev/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python Development
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Microarchitecture Tools
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Microarchitecture Tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fifo_depth/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FIFO Depth Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pkt_quantize/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Packet Quantization Tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reusable ASIC Designs (RAD) Flow
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reusable ASIC Designs (RAD) Flow
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../formal/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD Formal
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dv/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD DV
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rad_template_dv_readme/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD DV Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rad_new_design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Creating a New RAD Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reusable ASIC Designs (RAD) Library DV Overviews
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reusable ASIC Designs (RAD) Library DV Overviews
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rad_async_fifo_dv_readme/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD ASYNC FIFO DV Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rad_cdc_mcp_dv_readme/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD CDC MCP DV Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD CDC SYNC DV Overview
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAD CDC SYNC DV Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#design-rationale" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Rationale
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#single-agent-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Single-Agent Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Single-Agent Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#agent-0-synchronous-domain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent 0: Synchronous Domain
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#component-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Component Structure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-execution-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Execution Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#timing-and-jitter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Timing and Jitter
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Timing and Jitter">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#driver-timing-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Driver Timing Strategy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sequence-jitter-generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sequence Jitter Generation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#toggle-enforcement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Toggle Enforcement
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reference-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reset-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reset Handling
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#metastability-simulation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metastability Simulation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-design-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Design Decisions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Key Design Decisions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-single-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Single Agent?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-timing-jitter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Timing Jitter?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-toggle-enforcement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Toggle Enforcement?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#licensing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Licensing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#author" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Author
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<!--
+SPDX-FileCopyrightText: 2025 Hugh Walsh
+
+SPDX-License-Identifier: MIT
+-->
+
+<!--- This file: src/abe/rad/rad_cdc_sync/dv/README.md -->
+
+<h1 id="rad_cdc_sync-dv-guide"><code>rad_cdc_sync</code> — DV Guide<a class="headerlink" href="#rad_cdc_sync-dv-guide" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>This verification environment implements a <strong>single-agent architecture</strong> to verify the rad_cdc_sync multi-stage clock domain crossing synchronizer. The DUT is a simple pipeline of flip-flops that synchronizes an asynchronous input signal to the destination clock domain.</p>
+<h2 id="design-rationale">Design Rationale<a class="headerlink" href="#design-rationale" title="Permanent link">&para;</a></h2>
+<p>The rad_cdc_sync RTL has:</p>
+<ul>
+<li><strong>Synchronous domain</strong>: Operates on <code>clk</code>, uses <code>rst_n</code>, observes <code>sync_o</code></li>
+<li><strong>Asynchronous input</strong>: <code>async_i</code> can toggle at arbitrary times relative to <code>clk</code></li>
+<li><strong>Parameterizable stages</strong>: <code>STAGES</code> (default 2) determines synchronizer depth</li>
+<li><strong>Optional metastability simulation</strong>: When <code>SIMULATE_METASTABILITY</code> is defined, models metastability injection</li>
+</ul>
+<p>The DUT performs a single function: synchronizing an asynchronous signal into the clock domain. This straightforward architecture requires only a single agent to drive the async input and monitor the synchronized output.</p>
+<h2 id="single-agent-architecture">Single-Agent Architecture<a class="headerlink" href="#single-agent-architecture" title="Permanent link">&para;</a></h2>
+<h3 id="agent-0-synchronous-domain">Agent 0: Synchronous Domain<a class="headerlink" href="#agent-0-synchronous-domain" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Clock</strong>: <code>clk</code> (default 1000ps period)</li>
+<li><strong>Reset</strong>: <code>rst_n</code></li>
+<li><strong>Driver</strong>: <code>RadCdcSyncDriver</code> - Drives <code>async_i</code> with timing jitter relative to <code>clk</code> edges</li>
+<li><strong>Monitors</strong>:</li>
+<li><code>RadCdcSyncMonitorIn</code> - Samples <code>async_i</code> on <code>clk</code> (for reference model input)</li>
+<li><code>RadCdcSyncMonitorOut</code> - Samples <code>sync_o</code> on <code>clk</code> (synchronized output)</li>
+<li><strong>Item</strong>: <code>RadCdcSyncItem</code></li>
+<li>Inputs: <code>async_i</code>, <code>delay_ps</code> (pre-toggle jitter)</li>
+<li>Outputs: <code>sync_o</code> (synchronized output from DUT)</li>
+<li><strong>Sequence</strong>: <code>RadCdcSyncSequence</code></li>
+<li>Generates toggling pattern with timing jitter to stress metastability</li>
+<li>Enforces visible transitions (state alternates 0 → 1 → 0 → 1)</li>
+<li>Applies random delay in ±20% window around half clock period</li>
+</ul>
+<hr />
+<h2 id="component-structure">Component Structure<a class="headerlink" href="#component-structure" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code>RadCdcSyncEnv (num_agents=1)
+├── agent0 (synchronous domain)
+│   ├── drv: RadCdcSyncDriver
+│   ├── sqr: BaseSequencer[RadCdcSyncItem]
+│   ├── mon_in: RadCdcSyncMonitorIn
+│   └── mon_out: RadCdcSyncMonitorOut
+├── mon_rst: BaseResetMonitor (rst_n)
+├── reset_sink: BaseResetSink → routes to ref_model.reset_change()
+├── sb: RadCdcSyncSb
+│   ├── prd: RadCdcSyncSbPredictor[RadCdcSyncRefModel]
+│   └── cmp: BaseSbComparator
+└── cov: RadCdcSyncCoverage
+</code></pre></div>
+
+<hr />
+<h2 id="test-execution-flow">Test Execution Flow<a class="headerlink" href="#test-execution-flow" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Clock Setup</strong>: Test creates single <code>clk_driver</code></li>
+<li><strong>Reset Setup</strong>: Test creates single <code>rst_driver</code></li>
+<li><strong>Factory Overrides</strong>: Type-level overrides for all components</li>
+<li><strong>Run Phase</strong>: Single sequence runs on agent0.sqr</li>
+</ol>
+<p><code>python
+   seq = RadCdcSyncSequence.create()
+   await seq.start(self.env.agents[0].sqr)</code></p>
+<hr />
+<h2 id="timing-and-jitter">Timing and Jitter<a class="headerlink" href="#timing-and-jitter" title="Permanent link">&para;</a></h2>
+<p>The verification strategy focuses on stressing the synchronizer's metastability handling by varying the timing relationship between <code>async_i</code> transitions and the <code>clk</code> edge.</p>
+<h3 id="driver-timing-strategy">Driver Timing Strategy<a class="headerlink" href="#driver-timing-strategy" title="Permanent link">&para;</a></h3>
+<p>The driver applies each transaction with configurable jitter:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">drive_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dut</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">tr</span><span class="p">:</span> <span class="n">RadCdcSyncItem</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">clock_drive_edge</span><span class="p">()</span>  <span class="c1"># Align to clock edge</span>
+    <span class="k">await</span> <span class="n">Timer</span><span class="p">(</span><span class="n">tr</span><span class="o">.</span><span class="n">delay_ps</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;ps&quot;</span><span class="p">)</span>  <span class="c1"># Apply jitter</span>
+    <span class="n">dut</span><span class="o">.</span><span class="n">async_i</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="n">async_i</span>  <span class="c1"># Toggle the async input</span>
+</code></pre></div>
+
+<h3 id="sequence-jitter-generation">Sequence Jitter Generation<a class="headerlink" href="#sequence-jitter-generation" title="Permanent link">&para;</a></h3>
+<p>The sequence generates jitter within ±20% of the clock period around the half-period point:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># For 1000ps clock: setup=400ps, hold=600ps</span>
+<span class="c1"># Jitter range: 400ps to 600ps after drive edge</span>
+<span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">clock_period_ps</span>
+<span class="n">win</span> <span class="o">=</span> <span class="n">t</span> <span class="o">//</span> <span class="mi">5</span>  <span class="c1"># 20% window</span>
+<span class="n">setup</span> <span class="o">=</span> <span class="p">(</span><span class="n">t</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="n">win</span>  <span class="c1"># Half period minus window</span>
+<span class="n">hold</span> <span class="o">=</span> <span class="p">(</span><span class="n">t</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">win</span>   <span class="c1"># Half period plus window</span>
+<span class="n">item</span><span class="o">.</span><span class="n">delay_ps</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="n">setup</span><span class="p">,</span> <span class="n">hold</span><span class="p">)</span>
+</code></pre></div>
+
+<p>This creates transitions that occur near the sampling edge of the destination clock, maximizing the likelihood of metastability in RTL simulations with metastability modeling enabled.</p>
+<h3 id="toggle-enforcement">Toggle Enforcement<a class="headerlink" href="#toggle-enforcement" title="Permanent link">&para;</a></h3>
+<p>To ensure observable behavior, the sequence enforces alternating values:</p>
+<div class="codehilite"><pre><span></span><code><span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">^=</span> <span class="mi">1</span>  <span class="c1"># Toggle internal state</span>
+<span class="n">item</span><span class="o">.</span><span class="n">async_i</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span>  <span class="c1"># Always produces visible transitions</span>
+</code></pre></div>
+
+<p>This prevents repeated same-value "toggles" that would be invisible to the synchronizer.</p>
+<hr />
+<h2 id="reference-model">Reference Model<a class="headerlink" href="#reference-model" title="Permanent link">&para;</a></h2>
+<p>The <code>RadCdcSyncRefModel</code> implements a shift register matching the RTL's synchronizer chain:</p>
+<ul>
+<li><strong>Configuration</strong>: Reads <code>RAD_CDC_STAGES</code> (default 2) and <code>RAD_CDC_VAL_ON_RESET</code> (default 0)</li>
+<li><strong>Internal state</strong>: <code>_shreg</code> - deque of length <code>STAGES</code> representing the synchronizer pipeline</li>
+<li><strong>Operation</strong>:</li>
+<li>On each input transaction, shift <code>async_i</code> into the front of the deque</li>
+<li>The last element of the deque represents the synchronized output</li>
+<li>During reset, all stages are initialized to <code>val_on_reset</code></li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">calc_exp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tr</span><span class="p">:</span> <span class="n">RadCdcSyncItem</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RadCdcSyncItem</span><span class="p">:</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reset_active</span><span class="p">:</span>
+        <span class="n">tr</span><span class="o">.</span><span class="n">sync_o</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">val_on_reset</span>
+        <span class="k">return</span> <span class="n">tr</span>
+    <span class="n">async_i</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">tr</span><span class="o">.</span><span class="n">async_i</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_shreg</span><span class="o">.</span><span class="n">appendleft</span><span class="p">(</span><span class="n">async_i</span><span class="p">)</span>  <span class="c1"># Shift in new value</span>
+    <span class="n">tr</span><span class="o">.</span><span class="n">sync_o</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shreg</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>      <span class="c1"># Output is last stage</span>
+    <span class="k">return</span> <span class="n">tr</span>
+</code></pre></div>
+
+<hr />
+<h2 id="reset-handling">Reset Handling<a class="headerlink" href="#reset-handling" title="Permanent link">&para;</a></h2>
+<p>The environment supports single-domain reset with standard routing:</p>
+<ul>
+<li><strong>Reset Path</strong>: <code>mon_rst</code> → <code>reset_sink</code> → <code>ref_model.reset_change()</code></li>
+</ul>
+<p>The reset sink routes reset events to:</p>
+<ol>
+<li>The driver via <code>drv.reset_change()</code> to handle drive-edge waiting</li>
+<li>The reference model to clear internal state</li>
+</ol>
+<hr />
+<h2 id="metastability-simulation">Metastability Simulation<a class="headerlink" href="#metastability-simulation" title="Permanent link">&para;</a></h2>
+<p>When the RTL is compiled with <code>SIMULATE_METASTABILITY</code> defined:</p>
+<ul>
+<li>The DUT can inject metastable values (X) on setup/hold violations</li>
+<li>The injection window is configurable via <code>rad_cdc_meta_cfg_pkg</code></li>
+<li>Random seed control: <code>+RAD_CDC_RAND_SEED=&lt;value&gt;</code></li>
+<li>Injection messages: Controlled by <code>PRINT_INJECTION_MESSAGES</code> parameter</li>
+</ul>
+<p>The testbench handles metastability:</p>
+<ul>
+<li>Reference model ignores X values (treats as previous stable value)</li>
+<li>Comparator waits for resolution before checking</li>
+<li>Coverage tracks metastability events when enabled</li>
+</ul>
+<hr />
+<h2 id="key-design-decisions">Key Design Decisions<a class="headerlink" href="#key-design-decisions" title="Permanent link">&para;</a></h2>
+<h3 id="why-single-agent">Why Single Agent?<a class="headerlink" href="#why-single-agent" title="Permanent link">&para;</a></h3>
+<p>The rad_cdc_sync DUT has no clock domain crossing in the traditional multi-clock sense:</p>
+<ul>
+<li>Only one clock domain (<code>clk</code>) drives the synchronous logic</li>
+<li>The <code>async_i</code> input is truly asynchronous (no associated clock)</li>
+<li>No protocol or handshaking between domains</li>
+<li>Simple pipeline structure</li>
+</ul>
+<p>Therefore:</p>
+<ul>
+<li>✅ <strong>Single agent</strong> - matches the single synchronous clock domain</li>
+<li>❌ Dual agents would be unnecessary complexity for this simple DUT</li>
+</ul>
+<h3 id="why-timing-jitter">Why Timing Jitter?<a class="headerlink" href="#why-timing-jitter" title="Permanent link">&para;</a></h3>
+<p>The critical verification challenge for synchronizers is metastability:</p>
+<ul>
+<li>Transitions near the clock edge can cause metastable states</li>
+<li>Varying the timing relationship stresses the synchronizer</li>
+<li>Jitter creates setup/hold violations when metastability simulation is enabled</li>
+<li>Deterministic timing patterns would miss corner cases</li>
+</ul>
+<h3 id="why-toggle-enforcement">Why Toggle Enforcement?<a class="headerlink" href="#why-toggle-enforcement" title="Permanent link">&para;</a></h3>
+<p>Observable verification requires visible signal changes:</p>
+<ul>
+<li>Random values might accidentally repeat (e.g., 1 → 1)</li>
+<li>Repeated values don't propagate through the synchronizer</li>
+<li>Alternating pattern guarantees every transaction creates observable behavior</li>
+<li>Simplifies debug and coverage analysis</li>
+</ul>
+<hr />
+<h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
+<p>Configure via environment variables or plusargs:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Synchronizer stages (must be &gt;= 2)</span>
++RAD_CDC_STAGES<span class="o">=</span><span class="m">3</span>
+
+<span class="c1"># Reset value for all stages</span>
++RAD_CDC_VAL_ON_RESET<span class="o">=</span><span class="m">1</span>
+
+<span class="c1"># Sequence length</span>
++RAD_CDC_SYNC_SEQ_LEN<span class="o">=</span><span class="m">200</span>
+
+<span class="c1"># Random seed (for metastability injection when enabled)</span>
++RAD_CDC_RAND_SEED<span class="o">=</span><span class="m">42</span>
+</code></pre></div>
+
+<hr />
+<h2 id="licensing">Licensing<a class="headerlink" href="#licensing" title="Permanent link">&para;</a></h2>
+<p>See the <code>LICENSES</code> directory at the repository root.</p>
+<hr />
+<h2 id="author">Author<a class="headerlink" href="#author" title="Permanent link">&para;</a></h2>
+<p><a href="https://linkedin.com/in/hughwalsh">Hugh Walsh</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.top", "content.code.copy", "toc.integrate"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  </body>
+</html>
