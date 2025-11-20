@@ -11,12 +11,15 @@ SPDX-License-Identifier: MIT
 [![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![GitHub](https://img.shields.io/badge/github-abe-asic-ip%2Fabe-blue.svg)](https://github.com/abe-asic-ip/abe)
+[![GitHub](https://img.shields.io/badge/github-abe--asic--ip%2Fabe-blue.svg)](https://github.com/abe-asic-ip/abe)
+[![Documentation](https://img.shields.io/badge/docs-github%20pages-blue.svg)](https://abe-asic-ip.github.io/abe/)
 [![REUSE Compliance](https://img.shields.io/badge/REUSE-compliant-green.svg)](https://reuse.software/)
 
 ABE ("A Better Environment") is a lightweight, modern environment for developing reusable ASIC IP. It combines microarchitecture tools, reusable RTL designs, synthesis, formal verification, and Python‑based design verification (DV). ABE runs on free and open‑source tools.
 
 The goal is simple: **make block‑level ASIC development easier, clearer, and more productive** for professional engineers, students, researchers, and enthusiasts.
+
+📚 **[Read the full documentation](https://abe-asic-ip.github.io/abe/)**
 
 Welcome to ABE — a better environment for developing ASIC IP.
 
@@ -26,8 +29,8 @@ Welcome to ABE — a better environment for developing ASIC IP.
 
 ABE provides tools and resources for digital design and verification:
 
-- [Microarchitecture tools](#microarchitecture-tools): Including [fifo-depth](fifo_depth.md), a CP-SAT (Constraint Programming - Satisfiability) based tool that computes provably minimal FIFO depths and flow-control parameters for complex traffic profiles.
-- [Python-based DV environment](dv.md): A complete verification methodology using [cocotb](https://www.cocotb.org) and [pyuvm](https://github.com/pyuvm/pyuvm).
+- [Microarchitecture tools](#microarchitecture-tools): Including [fifo-depth](docs/fifo_depth.md), a CP-SAT (Constraint Programming - Satisfiability) based tool that computes provably minimal FIFO depths and flow-control parameters for complex traffic profiles.
+- [Python-based DV environment](docs/dv.md): A complete verification methodology using [cocotb](https://www.cocotb.org) and [pyuvm](https://github.com/pyuvm/pyuvm).
 - [Developer workflow and tooling](#developer-tooling): Make-based workflows, synthesis scripts, and code management tools.
 - [Reusable ASIC Designs (RAD)](#reusable-asic-designs-rad): A library of RTL designs fully validated with ABE's flows for synthesis, formal verification, and DV.
 
@@ -55,7 +58,7 @@ ASIC IP development often involves creating microarchitecture tools, scripts, an
 
 ABE was created to address these common challenges:
 
-- **Analytical FIFO sizing.** ABE provides [fifo-depth](fifo_depth.md), a CP-SAT based analytical tool that complements simulation and spreadsheet approaches by computing provably minimal FIFO depths and flow-control parameters for complex, multi-layered traffic profiles across various flow-control protocols.
+- **Analytical FIFO sizing.** ABE provides [fifo-depth](docs/fifo_depth.md), a CP-SAT based analytical tool that complements simulation and spreadsheet approaches by computing provably minimal FIFO depths and flow-control parameters for complex, multi-layered traffic profiles across various flow-control protocols.
 - **Comprehensive DV infrastructure.** Many open‑source projects provide RTL. ABE adds complete Python-based verification environments with agents, scoreboards, reference models, functional coverage, and randomization.
 - **Python modeling and RTL simulation are often separate.** ABE connects them using [cocotb](https://www.cocotb.org), [pyuvm](https://github.com/pyuvm/pyuvm), and Python reference models.
 - **Workflow and structure around open‑source tools.** ABE provides Makefiles, directory conventions, naming patterns, and tooling to complement powerful open‑source simulators with consistent project organization.
@@ -87,11 +90,11 @@ These are excellent testing frameworks for VHDL/SystemVerilog. [SVUnit](https://
 ## How Can I Get Started?
 
 1. **Clone the repository**
-2. **Set up the Python environment** ([see details](python_dev.md#set-up-and-install-the-environment))
-3. **Try [fifo-depth](fifo_depth.md)** on an example YAML spec to see CP-SAT based FIFO optimization in action
-4. **Install free tools**: see [RAD Design](design.md#install-required-tools), [RAD Formal](formal.md#install-required-tools), and [RAD DV](dv.md#install-required-tools) for details.
-5. **Explore a [RAD](#reusable-asic-designs-rad) design** to experience [RTL](design.md), [synthesis](design.md), [formal](formal.md), and [DV](dv.md) flows firsthand
-6. **[Run a test](dv.md#run-examples)** with [`dv`](dv.md#1-dv-main-front-end-runs-a-single-test) and a ([cocotb](https://www.cocotb.org) + [pyuvm](https://github.com/pyuvm/pyuvm)) bench
+2. **Set up the Python environment** ([see details](docs/python_dev.md#set-up-and-install-the-environment))
+3. **Try [fifo-depth](docs/fifo_depth.md)** on an example YAML spec to see CP-SAT based FIFO optimization in action
+4. **Install free tools**: see [RAD Design](docs/design.md#install-required-tools), [RAD Formal](docs/formal.md#install-required-tools), and [RAD DV](docs/dv.md#install-required-tools) for details.
+5. **Explore a [RAD](#reusable-asic-designs-rad) design** to experience [RTL](docs/design.md), [synthesis](docs/design.md), [formal](docs/formal.md), and [DV](docs/dv.md) flows firsthand
+6. **[Run a test](docs/dv.md#run-examples)** with [`dv`](docs/dv.md#1-dv-main-front-end-runs-a-single-test) and a ([cocotb](https://www.cocotb.org) + [pyuvm](https://github.com/pyuvm/pyuvm)) bench
 
 ---
 
@@ -105,13 +108,13 @@ ABE provides three main categories of tools and resources:
 
 ABE's microarchitecture tools help you make informed decisions before writing RTL.
 
-### [FIFO Depth Tool](fifo_depth.md)
+### [FIFO Depth Tool](docs/fifo_depth.md)
 
-The [fifo-depth](fifo_depth.md) tool is a CP-SAT based optimization tool that addresses an important challenge in ASIC microarchitecture: determining the minimal FIFO depth and flow-control parameters required to prevent underflow or overflow under complex traffic conditions.
+The [fifo-depth](docs/fifo_depth.md) tool is a CP-SAT based optimization tool that addresses an important challenge in ASIC microarchitecture: determining the minimal FIFO depth and flow-control parameters required to prevent underflow or overflow under complex traffic conditions.
 
 #### Key Features
 
-The [fifo-depth](fifo_depth.md) tool offers several advantages through its CP-SAT based approach:
+The [fifo-depth](docs/fifo_depth.md) tool offers several advantages through its CP-SAT based approach:
 
 - **Provably minimal:** Uses CP-SAT optimization to find the smallest FIFO depth that satisfies all constraints, and computes appropriate flow-control parameters (such as thresholds for XON/XOFF or credits for CBFC) when applicable.
 - **Complex traffic profiles:** Handles layered, hierarchical traffic specifications (cycle, transaction, burst, stream levels) that are difficult to analyze manually.
@@ -121,7 +124,7 @@ The [fifo-depth](fifo_depth.md) tool offers several advantages through its CP-SA
 
 This analytical approach complements spreadsheet and simulation-based methods and can help identify corner cases and optimize FIFO provisioning in complex scenarios.
 
-### [Packet Quantization Calculator](pkt_quantize.md)
+### [Packet Quantization Calculator](docs/pkt_quantize.md)
 
 Calculates packet processing performance metrics (cycles, latency, bandwidth, PPS) for packet quantization given packet sizes, bus width, and clock frequency.
 
@@ -132,8 +135,8 @@ Calculates packet processing performance metrics (cycles, latency, bandwidth, PP
 ABE includes:
 
 - Standard directory layout
-- [Python environment setup](python_dev.md)
-- [Python static analysis](python_dev.md) with [isort](https://pycqa.github.io/isort), [black](https://github.com/psf/black), [pylint](https://pylint.org), and [mypy](https://mypy-lang.org)
+- [Python environment setup](docs/python_dev.md)
+- [Python static analysis](docs/python_dev.md) with [isort](https://pycqa.github.io/isort), [black](https://github.com/psf/black), [pylint](https://pylint.org), and [mypy](https://mypy-lang.org)
 - Make targets for RTL development, synthesis, formal, and DV
 - Documentation conventions
 
@@ -147,11 +150,11 @@ RAD provides production-quality RTL designs that have been fully validated using
 
 Each RAD design includes:
 
-- [RTL implementation](design.md)
-- [Synthesis](design.md)
-- [Formal](formal.md) verification and coverage
+- [RTL implementation](docs/design.md)
+- [Synthesis](docs/design.md)
+- [Formal](docs/formal.md) verification and coverage
 - A Python reference model
-- A complete [DV environment](dv.md) with agents, scoreboards, functional coverage, and randomization
+- A complete [DV environment](docs/dv.md) with agents, scoreboards, functional coverage, and randomization
 - Documentation
 
 Current RAD designs include core CDC building blocks: synchronizers, Multi-Cycle Path formulations, and asynchronous FIFOs.
@@ -164,13 +167,13 @@ Ready to dive deeper? Here's your map to everything ABE has to offer:
 
 | Document | Description |
 |----------|-------------|
-| [FIFO Depth Tool](fifo_depth.md) | CP-SAT based tool for computing minimal FIFO depths and flow-control parameters |
-| [Packet Quantization Calculator](pkt_quantize.md) | Packet quantization calculator for performance metrics and bus analysis |
-| [ABE Python Development](python_dev.md) | Python development environment setup and tooling |
-| [RAD Design](design.md) | RAD design support for RTL quality, linting, and synthesis |
-| [RAD Formal](formal.md) | RAD formal verification flow and methodology |
-| [RAD DV](dv.md) | RAD design verification using [cocotb](https://www.cocotb.org) and [pyuvm](https://github.com/pyuvm/pyuvm) |
-| [Creating a New RAD Design](rad_new_design.md) | Guide for creating new RAD designs |
+| [FIFO Depth Tool](docs/fifo_depth.md) | CP-SAT based tool for computing minimal FIFO depths and flow-control parameters |
+| [Packet Quantization Calculator](docs/pkt_quantize.md) | Packet quantization calculator for performance metrics and bus analysis |
+| [ABE Python Development](docs/python_dev.md) | Python development environment setup and tooling |
+| [RAD Design](docs/design.md) | RAD design support for RTL quality, linting, and synthesis |
+| [RAD Formal](docs/formal.md) | RAD formal verification flow and methodology |
+| [RAD DV](docs/dv.md) | RAD design verification using [cocotb](https://www.cocotb.org) and [pyuvm](https://github.com/pyuvm/pyuvm) |
+| [Creating a New RAD Design](docs/rad_new_design.md) | Guide for creating new RAD designs |
 
 ---
 

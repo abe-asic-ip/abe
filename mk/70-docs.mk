@@ -18,14 +18,17 @@ docs-sync-readme:
 	@echo "Syncing docs/index.md to README.md"
 	@cp docs/index.md README.md
 
+# Create at http://127.0.0.1:8000/abe/
 .PHONY: docs-serve
 docs-serve: py-ensure-venv
 	$(MKDOCS) serve
 
+# Build to ./site
 .PHONY: docs-build
 docs-build: py-ensure-venv
 	$(MKDOCS) build
 
+# Deploy to GitHub Pages
 .PHONY: docs-deploy
 docs-deploy: py-ensure-venv
 	$(MKDOCS) gh-deploy --force
