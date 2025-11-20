@@ -577,10 +577,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#look-at-the-outputs" class="md-nav__link">
+  <a href="#examine-outputs" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Look at the Outputs
+        Examine Outputs
       
     </span>
   </a>
@@ -588,10 +588,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#examine-the-relevant-directory-layout" class="md-nav__link">
+  <a href="#explore-relevant-directory-layout" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Examine the Relevant Directory Layout
+        Explore Relevant Directory Layout
       
     </span>
   </a>
@@ -2086,12 +2086,12 @@ make<span class="w"> </span>py-install-all
 fifo-depth<span class="w"> </span>src/abe/uarch/fifo_depth_examples/cbfc_cdc.yaml
 </code></pre></div>
 
-<h3 id="look-at-the-outputs">Look at the Outputs<a class="headerlink" href="#look-at-the-outputs" title="Permanent link">&para;</a></h3>
+<h3 id="examine-outputs">Examine Outputs<a class="headerlink" href="#examine-outputs" title="Permanent link">&para;</a></h3>
 <div class="codehilite"><pre><span></span><code>ls<span class="w"> </span>out_uarch_fd*
 cat<span class="w"> </span>out_uarch_fd_rv_layered/results_scalars.json
 </code></pre></div>
 
-<h3 id="examine-the-relevant-directory-layout">Examine the Relevant Directory Layout<a class="headerlink" href="#examine-the-relevant-directory-layout" title="Permanent link">&para;</a></h3>
+<h3 id="explore-relevant-directory-layout">Explore Relevant Directory Layout<a class="headerlink" href="#explore-relevant-directory-layout" title="Permanent link">&para;</a></h3>
 <div class="codehilite"><pre><span></span><code>.
 ├──<span class="w"> </span>src
 │<span class="w">   </span>└──<span class="w"> </span>abe
@@ -2231,7 +2231,7 @@ CP-SAT solvers                |
       JSON / CSV / PNG / log outputs
 </code></pre></div>
 
-<p>Each solver (<a href="#ready-valid-solver">Ready/Valid</a>, <a href="#xon-xoff-solver">XON/XOFF</a>, <a href="#cbfc-solver">CBFC</a>, <a href="#replay-solver">Replay</a>, <a href="#cdc-solver">CDC</a>) extends <code>FifoSolver</code>. Common data structures are defined in <code>fifo_depth_base.py</code>.</p>
+<p>Each solver (Ready/Valid, XON/XOFF, CBFC, Replay, CDC) extends <code>FifoSolver</code>. Common data structures are defined in <code>fifo_depth_base.py</code>.</p>
 <h3 id="typical-workflow">Typical Workflow<a class="headerlink" href="#typical-workflow" title="Permanent link">&para;</a></h3>
 <ol>
 <li>Start with a layered write/read spec</li>
@@ -2796,36 +2796,70 @@ fifo-depth<span class="w"> </span>my_spec.yaml<span class="w"> </span>--verbosit
 <hr />
 <h2 id="ready-valid-solver">Ready / Valid Solver<a class="headerlink" href="#ready-valid-solver" title="Permanent link">&para;</a></h2>
 <h3 id="ready-valid-purpose">Ready / Valid Purpose<a class="headerlink" href="#ready-valid-purpose" title="Permanent link">&para;</a></h3>
-<p>Basic data-valid interface (no explicit feedback).</p>
+<p>In ABE, “Ready / Valid” is a shorthand name for a generic producer/consumer FIFO with no explicit flow-control protocol modeled inside the solver.</p>
+<p>This mode applies to two common architectural situations:</p>
+<ul>
+<li>Backpressured systems (e.g., actual Ready/Valid handshake)</li>
+<li>Overflow is prevented by deasserting ready.</li>
+<li>If the traffic pattern would overflow the FIFO, that means the design will be forced to stall the producer and miss performance goals.</li>
+<li>Drop-tolerant systems (no backpressure)</li>
+<li>Overflow results in dropped data.</li>
+<li>If the traffic pattern would overflow the FIFO, that means the system will drop data that should not be dropped.</li>
+</ul>
+<p>Despite these architectural differences, the FIFO depth requirement is the same:</p>
+<div class="codehilite"><pre><span></span><code>The FIFO must be sized so that it never overflows under the worst-case write/read schedule within the analysis horizon.
+</code></pre></div>
+
+<p>The solver therefore focuses entirely on worst-case occupancy, not on a specific handshake protocol.</p>
 <h3 id="ready-valid-parameters">Ready / Valid Parameters<a class="headerlink" href="#ready-valid-parameters" title="Permanent link">&para;</a></h3>
 <p>None beyond <a href="#common-parameters">common parameters</a>.</p>
+<p>This mode assumes:</p>
+<ul>
+<li>A known write-valid mask and read-valid mask over the horizon</li>
+<li>A known write and read bandwidth</li>
+<li>No explicit credit, pause, or replay mechanism</li>
+</ul>
 <h3 id="ready-valid-results">Ready / Valid Results<a class="headerlink" href="#ready-valid-results" title="Permanent link">&para;</a></h3>
 <p>None beyond <a href="#common-results">common results</a>.</p>
+<p>The depth returned guarantees:</p>
+<ul>
+<li>No overflow over the horizon</li>
+<li>Independent of whether the surrounding system uses Ready/Valid backpressure or allows drops</li>
+</ul>
 <h3 id="ready-valid-recommendations">Ready / Valid Recommendations<a class="headerlink" href="#ready-valid-recommendations" title="Permanent link">&para;</a></h3>
 <p><strong>Flat Specifications:</strong></p>
-<p>For flat (non-layered) ready/valid specifications, the FIFO depth will always equal <code>sum_w_max</code>. This happens because:</p>
+<p>For flat (non-layered) specifications, the FIFO depth will always equal sum_w_max, because:</p>
 <ul>
-<li>In a flat spec, write and read valid masks are constant (all 1s), meaning data can be written or read every cycle</li>
-<li>The worst-case scenario happens when the maximum amount of data (<code>sum_w_max</code>) is written before any reads can complete</li>
-<li>With no temporal structure to use, the FIFO must hold the entire maximum write burst</li>
+<li>The write-valid and read-valid masks are constant (all 1s)</li>
+<li>The producer can write every cycle</li>
+<li>Without temporal structure, the worst case is “write the maximum burst before any reads”</li>
+<li>Therefore the FIFO must buffer all writes in the horizon</li>
 </ul>
-<p>For this simple case, a direct calculation would be sufficient. The solver still works correctly but provides no optimization benefit beyond the analytical result.</p>
+<p>In this simple case, an analytical calculation is sufficient. The CP-SAT solver yields the same result but provides no optimization benefit.</p>
 <p><strong>Balanced Specifications:</strong></p>
-<p>For balanced specifications (where minimum read density ≥ maximum write density), CP-SAT cannot work effectively because:</p>
+<p>When the specification is balanced (minimum read density ≥ maximum write density), CP-SAT cannot produce a meaningful worst-case value:</p>
 <ul>
-<li>The solver tries to maximize peak occupancy by scheduling writes and reads in the worst way</li>
-<li>In balanced specs, reads can always drain the FIFO faster than writes can fill it</li>
-<li>CP-SAT would explore an infinite solution space trying to delay reads indefinitely</li>
-<li>No meaningful worst-case bound exists in the constraint formulation</li>
+<li>The solver attempts to delay reads indefinitely to maximize occupancy</li>
+<li>But in a balanced spec, reads can always catch up faster than writes</li>
+<li>This leads to an unbounded or overly large search space</li>
 </ul>
-<p>The tool automatically detects balanced specifications using the <code>is_balanced()</code> method and switches to an analytical solver (<code>_get_results_analysis()</code>) instead. This analytical approach:</p>
+<p>To avoid this, the tool automatically:</p>
 <ul>
-<li>Performs a phase-sweep across all possible read/write alignments</li>
-<li>Accounts for write/read latencies in a deterministic way</li>
-<li>Calculates the worst-case occupancy trajectory across all phase shifts</li>
-<li>Returns a meaningful depth based on the temporal interaction of layered traffic patterns</li>
+<li>Detects balance using <code>is_balanced()</code></li>
+<li>Switches to a deterministic analytical solver (<code>_get_results_analysis()</code>)</li>
 </ul>
-<p><em>Note:</em> Layered specifications with temporal structure enable the solver to perform meaningful optimization. Flat and balanced specs are handled automatically with appropriate methods.</p>
+<p>This analytical method:</p>
+<ul>
+<li>Sweeps all possible write/read phase offsets</li>
+<li>Accounts for write and read latency</li>
+<li>Computes the true worst-case occupancy over the horizon</li>
+<li>Produces a finite, meaningful required depth</li>
+</ul>
+<p><em>Note:</em></p>
+<ul>
+<li>Layered specifications with temporal structure (bursts, gaps, cycles) provide a richer worst-case analysis space where CP-SAT does provide benefit.</li>
+<li>Flat and balanced cases are automatically handled using the appropriate analytical paths.</li>
+</ul>
 <hr />
 <h2 id="xon-xoff-solver">XON / XOFF Solver<a class="headerlink" href="#xon-xoff-solver" title="Permanent link">&para;</a></h2>
 <h3 id="xon-xoff-purpose">XON / XOFF Purpose<a class="headerlink" href="#xon-xoff-purpose" title="Permanent link">&para;</a></h3>
@@ -2837,7 +2871,6 @@ fifo-depth<span class="w"> </span>my_spec.yaml<span class="w"> </span>--verbosit
 <li>The sender resumes transmission after a resume latency (<code>resume_latency</code>)</li>
 <li>Hysteresis between <code>xon</code> and <code>xoff</code> prevents rapid toggling (control chatter) when occupancy stays near a single threshold</li>
 </ul>
-<p>XON/XOFF is commonly used in UARTs, network switches, and storage interfaces where simple threshold-based flow control provides adequate backpressure without per-transaction handshaking.</p>
 <h3 id="xon-xoff-overview">XON / XOFF Overview<a class="headerlink" href="#xon-xoff-overview" title="Permanent link">&para;</a></h3>
 <p>The XON/XOFF solver computes three critical values:</p>
 <ol>
@@ -3049,7 +3082,6 @@ fifo-depth<span class="w"> </span>my_spec.yaml<span class="w"> </span>--verbosit
 <li>The sender can only transmit when sufficient credits are available</li>
 <li>This provides backpressure without requiring a synchronous ready/valid handshake</li>
 </ul>
-<p>CBFC is commonly used in network protocols and interconnects where asynchronous flow control is preferred over cycle-by-cycle handshaking.</p>
 <h3 id="cbfc-overview">CBFC Overview<a class="headerlink" href="#cbfc-overview" title="Permanent link">&para;</a></h3>
 <p>The CBFC solver computes three critical values:</p>
 <ol>

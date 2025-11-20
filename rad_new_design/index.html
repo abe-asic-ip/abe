@@ -1048,18 +1048,23 @@ SPDX-License-Identifier: MIT
 <hr />
 <h2 id="directory-structure">Directory Structure<a class="headerlink" href="#directory-structure" title="Permanent link">&para;</a></h2>
 <p>RAD designs follow a consistent structure:</p>
-<div class="codehilite"><pre><span></span><code>src/abe/rad/rad_&lt;design&gt;/
-├── rtl/
-│   ├── rad_&lt;design&gt;.sv
-│   └── srclist.f
-├── dv/
-│   ├── test_rad_&lt;design&gt;.py
-│   └── dv_regress.yaml
-├── formal/
-│   ├── rad_&lt;design&gt;_formal_top.sv
-│   ├── rad_&lt;design&gt;.sby
-│   └── rad_&lt;design&gt;_cover.sby
-└── README.md
+<div class="codehilite"><pre><span></span><code>├── src
+│   └── abe
+│       ├── rad
+│       │   ├── rad_&lt;design&gt;
+│       │   │   ├── dv
+│       │   │   │   ├── __init__.py
+│       │   │   │   ├── dv_regress.yaml
+│       │   │   │   ├── rad_&lt;design&gt;*.py
+│       │   │   │   ├── README.md
+│       │   │   │   └── test_rad_&lt;design&gt;.py
+│       │   │   ├── formal
+│       │   │   │   ├── rad_&lt;design&gt;_cover.sby
+│       │   │   │   ├── rad_&lt;design&gt;_formal_top.sv
+│       │   │   │   └── rad_&lt;design&gt;.sby
+│       │   │   ├── rtl
+│       │   │   │   ├── rad_&lt;design&gt;*.sv
+│       │   │   │   └── srclist.f
 </code></pre></div>
 
 <p>This structure ensures compatibility with all Makeflows, DV tools, and templates in the ABE environment.</p>

@@ -482,33 +482,44 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#project-structure" class="md-nav__link">
+  <a href="#getting-started" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Project Structure
+        Getting Started
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Getting Started">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#set-up-and-install-the-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Set Up and Install the Environment
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#command-line-usage" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#run-examples" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Command-Line Usage
+        Run Examples
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Command-Line Usage">
-      <ul class="md-nav__list">
+</li>
         
           <li class="md-nav__item">
-  <a href="#configuration-options" class="md-nav__link">
+  <a href="#examine-outputs" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Configuration Options
+        Examine Outputs
       
     </span>
   </a>
@@ -517,6 +528,28 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#explore-relevant-directory-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Explore Relevant Directory Layout
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#command-line-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command Line Options
+      
+    </span>
+  </a>
   
 </li>
       
@@ -536,17 +569,6 @@
     <span class="md-ellipsis">
       
         Import as a Library
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#example" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Example
       
     </span>
   </a>
@@ -962,23 +984,37 @@ SPDX-License-Identifier: MIT
 <!--- This file: docs/pkt_quantize.md -->
 
 <h1 id="packet-quantization-calculator">Packet Quantization Calculator<a class="headerlink" href="#packet-quantization-calculator" title="Permanent link">&para;</a></h1>
-<p>This tool calculates packet processing performance metrics—<strong>cycles</strong>, <strong>latency</strong>, <strong>bandwidth</strong>, and <strong>packets per second (PPS)</strong>—for packet quantization given a range of packet sizes, bus width, and clock frequency. It also generates output tables, CSV files, and plots. It assumes two packets cannot share a beat of the bus (e.g. AXI-Stream).</p>
-<p>See also: <a href="../python_dev/">ABE Python Development</a> for development tools.</p>
+<p>The <code>pkt-quantize</code> tool calculates bandwidth and packet rate metrics for packet-based interfaces where packets are quantized to bus beats. Given bus width, clock frequency, and minimum processing cycles, it computes performance across a range of packet sizes and generates tables, CSV files, and plots. The tool assumes packets cannot share a bus beat (e.g., AXI-Stream).</p>
 <hr />
-<h2 id="project-structure">Project Structure<a class="headerlink" href="#project-structure" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code>abe/
-├──<span class="w"> </span>src/abe/uarch/pkt_quantize.py<span class="w">   </span><span class="c1"># Main script</span>
-├──<span class="w"> </span>src/abe/utils.py<span class="w">                </span><span class="c1"># Utilities</span>
-└──<span class="w"> </span>out_uarch_pkt_quantize/<span class="w">         </span><span class="c1"># Output directory (created automatically)</span>
+<h2 id="getting-started">Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
+<h3 id="set-up-and-install-the-environment">Set Up and Install the Environment<a class="headerlink" href="#set-up-and-install-the-environment" title="Permanent link">&para;</a></h3>
+<p>See <a href="../python_dev/">ABE Python Development</a> for Python environment setup details.</p>
+<div class="codehilite"><pre><span></span><code>make<span class="w"> </span>py-venv-all
+<span class="nb">source</span><span class="w"> </span>.venv/bin/activate
+make<span class="w"> </span>py-install-all
+</code></pre></div>
+
+<h3 id="run-examples">Run Examples<a class="headerlink" href="#run-examples" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code>pkt-quantize
+pkt-quantize<span class="w"> </span>--bus-width<span class="w"> </span><span class="m">64</span><span class="w"> </span>--clk-freq<span class="w"> </span><span class="m">1</span>.5e9<span class="w"> </span>--min-cycles<span class="w"> </span><span class="m">2</span><span class="w"> </span>--min-size<span class="w"> </span><span class="m">64</span><span class="w"> </span>--max-size<span class="w"> </span><span class="m">512</span>
+</code></pre></div>
+
+<h3 id="examine-outputs">Examine Outputs<a class="headerlink" href="#examine-outputs" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code>out_arch_pkt_quantize/*
+</code></pre></div>
+
+<h2 id="explore-relevant-directory-layout">Explore Relevant Directory Layout<a class="headerlink" href="#explore-relevant-directory-layout" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code>├── mk
+│   ├── 80-uarch-pq.mk
+├── src
+│   └── abe
+│       ├── uarch
+│       │   └── pkt_quantize.py
+│       └── utils.py
 </code></pre></div>
 
 <hr />
-<h2 id="command-line-usage">Command-Line Usage<a class="headerlink" href="#command-line-usage" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code>pkt-quantize<span class="w"> </span><span class="o">[</span>options<span class="o">]</span>
-</code></pre></div>
-
-<hr />
-<h3 id="configuration-options">Configuration Options<a class="headerlink" href="#configuration-options" title="Permanent link">&para;</a></h3>
+<h2 id="command-line-options">Command Line Options<a class="headerlink" href="#command-line-options" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -1037,14 +1073,36 @@ SPDX-License-Identifier: MIT
 </table>
 <hr />
 <h2 id="outputs">Outputs<a class="headerlink" href="#outputs" title="Permanent link">&para;</a></h2>
-<p>Files are written to the <code>--outdir</code> directory:</p>
-<ul>
-<li><code>table_&lt;config&gt;_abbrev.txt</code> — Abbreviated table of results (Markdown-style)</li>
-<li><code>table_&lt;config&gt;_full.txt</code> — Full table of results (Markdown-style)</li>
-<li><code>table_&lt;config&gt;.csv</code> — CSV-formatted results</li>
-<li><code>plot_bw_&lt;config&gt;.png</code> — Bandwidth vs packet size plot</li>
-<li><code>plot_pps_&lt;config&gt;.png</code> — PPS vs packet size plot</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>table_&lt;config&gt;_abbrev.txt</code></td>
+<td>Abbreviated table of results (Markdown-style)</td>
+</tr>
+<tr>
+<td><code>table_&lt;config&gt;_full.txt</code></td>
+<td>Full table of results (Markdown-style)</td>
+</tr>
+<tr>
+<td><code>table_&lt;config&gt;.csv</code></td>
+<td>CSV-formatted results</td>
+</tr>
+<tr>
+<td><code>plot_bw_&lt;config&gt;.png</code></td>
+<td>Bandwidth vs packet size plot</td>
+</tr>
+<tr>
+<td><code>plot_pps_&lt;config&gt;.png</code></td>
+<td>PPS vs packet size plot</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2 id="import-as-a-library">Import as a Library<a class="headerlink" href="#import-as-a-library" title="Permanent link">&para;</a></h2>
 <p>You can import the <code>PktQuantize</code> class into another Python program.</p>
@@ -1065,11 +1123,6 @@ SPDX-License-Identifier: MIT
 <span class="c1"># Access results</span>
 <span class="k">for</span> <span class="n">size</span><span class="p">,</span> <span class="n">stats</span> <span class="ow">in</span> <span class="n">pq</span><span class="o">.</span><span class="n">pkt</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Size: </span><span class="si">{</span><span class="n">size</span><span class="si">}</span><span class="s2">, BW: </span><span class="si">{</span><span class="n">stats</span><span class="o">.</span><span class="n">bw</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">1e9</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> Gbps&quot;</span><span class="p">)</span>
-</code></pre></div>
-
-<hr />
-<h2 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code>pkt-quantize<span class="w"> </span>--bus-width<span class="w"> </span><span class="m">64</span><span class="w"> </span>--clk-freq<span class="w"> </span><span class="m">1</span>.5e9<span class="w"> </span>--min-cycles<span class="w"> </span><span class="m">2</span><span class="w"> </span>--min-size<span class="w"> </span><span class="m">64</span><span class="w"> </span>--max-size<span class="w"> </span><span class="m">512</span>
 </code></pre></div>
 
 <hr />

@@ -478,10 +478,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#explore-the-abe-universe" class="md-nav__link">
+  <a href="#explore-abe" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Explore the ABE Universe
+        Explore ABE
       
     </span>
   </a>
@@ -1179,7 +1179,7 @@ SPDX-License-Identifier: MIT
 <li><a href="#microarchitecture-tools">Microarchitecture tools</a>: Including <a href="fifo_depth/">fifo-depth</a>, a CP-SAT (Constraint Programming - Satisfiability) based tool that computes provably minimal FIFO depths and flow-control parameters for complex traffic profiles.</li>
 <li><a href="dv/">Python-based DV environment</a>: A complete verification methodology using <a href="https://www.cocotb.org">cocotb</a> and <a href="https://github.com/pyuvm/pyuvm">pyuvm</a>.</li>
 <li><a href="#developer-tooling">Developer workflow and tooling</a>: Make-based workflows, synthesis scripts, and code management tools.</li>
-<li><a href="#reusable-asic-designs-rad">Reusable ASIC Designs (RAD)</a>: A library of RTL designs fully validated with ABE's flows for synthesis, formal verification, and DV.</li>
+<li><a href="#reusable-asic-designs-rad">Reusable ASIC Designs (RAD)</a>: A library of RTL designs validated with ABE's synthesis, formal verification, and DV flows.</li>
 </ul>
 <p>These components work together to support the full development cycle from microarchitecture to verification.</p>
 <hr />
@@ -1243,7 +1243,7 @@ SPDX-License-Identifier: MIT
 </ul>
 <p>This analytical approach complements spreadsheet and simulation-based methods and can help identify corner cases and optimize FIFO provisioning in complex scenarios.</p>
 <h3 id="packet-quantization-calculator"><a href="pkt_quantize/">Packet Quantization Calculator</a><a class="headerlink" href="#packet-quantization-calculator" title="Permanent link">&para;</a></h3>
-<p>Calculates packet processing performance metrics (cycles, latency, bandwidth, PPS) for packet quantization given packet sizes, bus width, and clock frequency.</p>
+<p>The <a href="pkt_quantize/">pkt-quantize</a> tool calculates bandwidth and packet rate metrics for packet-based interfaces where packets are quantized to bus beats.</p>
 <hr />
 <h2 id="developer-tooling">Developer Tooling<a class="headerlink" href="#developer-tooling" title="Permanent link">&para;</a></h2>
 <p>ABE includes:</p>
@@ -1257,7 +1257,7 @@ SPDX-License-Identifier: MIT
 <p>All designed to help you build ASIC IP quickly and consistently.</p>
 <hr />
 <h2 id="reusable-asic-designs-rad">Reusable ASIC Designs (RAD)<a class="headerlink" href="#reusable-asic-designs-rad" title="Permanent link">&para;</a></h2>
-<p>RAD provides production-quality RTL designs that have been fully validated using ABE's synthesis, formal verification, and DV flows.</p>
+<p>RAD provides production-quality RTL designs that have been validated using ABE's synthesis, formal verification, and DV flows.</p>
 <p>Each RAD design includes:</p>
 <ul>
 <li><a href="design/">RTL implementation</a></li>
@@ -1269,7 +1269,7 @@ SPDX-License-Identifier: MIT
 </ul>
 <p>Current RAD designs include core CDC building blocks: synchronizers, Multi-Cycle Path formulations, and asynchronous FIFOs.</p>
 <hr />
-<h2 id="explore-the-abe-universe">Explore the ABE Universe<a class="headerlink" href="#explore-the-abe-universe" title="Permanent link">&para;</a></h2>
+<h2 id="explore-abe">Explore ABE<a class="headerlink" href="#explore-abe" title="Permanent link">&para;</a></h2>
 <p>Ready to dive deeper? Here's your map to everything ABE has to offer:</p>
 <table>
 <thead>
