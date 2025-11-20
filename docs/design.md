@@ -73,12 +73,12 @@ make DESIGN=rad_async_fifo synth
 make DESIGN=rad_async_fifo synth-report
 ```
 
-### Outputs
+### Examine Outputs
 
 - `rtl-*` targets print to the console
 - `synth` writes results to `out_synth/<design>/`
 
-### Relevant Directory Layout
+### Explore Relevant Directory Layout
 
 ```text
 .

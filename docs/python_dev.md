@@ -41,11 +41,11 @@ make PY_SRCS=ALL py-static-fix
 
 See [FAQ](#faq) for more usage examples.
 
-### Outputs
+### Examine Outputs
 
 Outputs appear at the console.
 
-### Examine the Relevant Directory Layout
+### Explore Relevant Directory Layout
 
 ```text
 .

@@ -6,7 +6,7 @@
 
 """rad_cdc_mcp reference model (single-word CDC transfer).
 
-This model implements the expected behavior of a multi-cycle pulse (MCP) CDC:
+This model implements the expected behavior of a Multi-Cycle Path (MCP) CDC:
 
 * Sends (a-domain):
   - When asend == 1 and the MCP is ready (aready == 1), capture adatain

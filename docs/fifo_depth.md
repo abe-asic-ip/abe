@@ -82,14 +82,14 @@ fifo-depth src/abe/uarch/fifo_depth_examples/rv_layered.yaml
 fifo-depth src/abe/uarch/fifo_depth_examples/cbfc_cdc.yaml
 ```
 
-### Look at the Outputs
+### Examine Outputs
 
 ```bash
 ls out_uarch_fd*
 cat out_uarch_fd_rv_layered/results_scalars.json
 ```
 
-### Examine the Relevant Directory Layout
+### Explore Relevant Directory Layout
 
 ```bash
 .
@@ -242,7 +242,7 @@ CP-SAT solvers                |
       JSON / CSV / PNG / log outputs
 ```
 
-Each solver ([Ready/Valid](#ready-valid-solver), [XON/XOFF](#xon-xoff-solver), [CBFC](#cbfc-solver), [Replay](#replay-solver), [CDC](#cdc-solver)) extends `FifoSolver`. Common data structures are defined in `fifo_depth_base.py`.
+Each solver (Ready/Valid, XON/XOFF, CBFC, Replay, CDC) extends `FifoSolver`. Common data structures are defined in `fifo_depth_base.py`.
 
 ### Typical Workflow
 
@@ -345,7 +345,7 @@ horizon >= (sum_w_max / w_max) + (sum_r_max / r_max)
 
 This check ensures there are enough cycles to write the maximum write traffic (`sum_w_max` at rate `w_max`) and read the maximum read traffic (`sum_r_max` at rate `r_max`). If the horizon is shorter than this threshold, a warning is issued showing that the computed FIFO depth may be underestimated. This check is most important for protocols without flow control (e.g., `ready_valid`) where occupancy can reach `sum_w_max`. Protocols with flow control (e.g., `xon_xoff`, `cbfc`) typically have lower occupancy limits because of their flow control mechanisms.
 
-### Common Parameters {#common-parameters}
+### Common Parameters
 
 All solvers use these YAML parameters:
 
@@ -356,7 +356,7 @@ All solvers use these YAML parameters:
 | `margin_val` | int | No | `0` | Margin value (non-negative). Interpreted based on `margin_type`. |
 | `rounding` | string | No | `"none"` | Rounding strategy for final depth. Choices: `power2`, `none`. |
 
-### Flat Spec Parameters {#flat-spec-parameters}
+### Flat Spec Parameters
 
 The Ready / Valid, XON / XOFF, and CBFC solvers use these YAML parameters for flat specs:
 
@@ -372,7 +372,7 @@ The Ready / Valid, XON / XOFF, and CBFC solvers use these YAML parameters for fl
 | `sum_r_min` | int | Yes | — | Minimum total read data over horizon (non-negative). |
 | `sum_r_max` | int | Yes | — | Maximum total read data over horizon (non-negative, ≥ `sum_r_min`). |
 
-### Layered Spec Parameters {#layered-spec-parameters}
+### Layered Spec Parameters
 
 The Ready / Valid, XON / XOFF, and CBFC solvers use these YAML parameters for layered specs:
 
@@ -464,7 +464,7 @@ Example console output:
 2025-11-13 07:34:10 - abe.utils - INFO - Completed src/abe/uarch/fifo_depth_examples/xon_xoff_layered.yaml in 0:02:17
 ```
 
-### Common Results {#common-results}
+### Common Results
 
 The Ready / Valid, XON/XOFF, and CBFC solvers produce these common results:
 
@@ -482,7 +482,7 @@ The Ready / Valid, XON/XOFF, and CBFC solvers produce these common results:
 
 ## Future Enhancements
 
-### Replay Solver Extensions {#replay-solver-extensions}
+### Replay Solver Extensions
 
 As noted in the [Replay Solver](#replay-solver) section, the current implementation serves as a reference baseline for more complex future variants including:
 
@@ -521,53 +521,89 @@ This approach preserves the existing solver architecture while providing a clean
 
 ---
 
-## Ready / Valid Solver {#ready-valid-solver}
+## Ready / Valid Solver
 
 ### Ready / Valid Purpose
 
-Basic data-valid interface (no explicit feedback).
+In ABE, “Ready / Valid” is a shorthand name for a generic producer/consumer FIFO with no explicit flow-control protocol modeled inside the solver.
+
+This mode applies to two common architectural situations:
+
+- Backpressured systems (e.g., actual Ready/Valid handshake)
+  - Overflow is prevented by deasserting ready.
+  - If the traffic pattern would overflow the FIFO, that means the design will be forced to stall the producer and miss performance goals.
+- Drop-tolerant systems (no backpressure)
+  - Overflow results in dropped data.
+  - If the traffic pattern would overflow the FIFO, that means the system will drop data that should not be dropped.
+
+Despite these architectural differences, the FIFO depth requirement is the same:
+
+```text
+The FIFO must be sized so that it never overflows under the worst-case write/read schedule within the analysis horizon.
+```
+
+The solver therefore focuses entirely on worst-case occupancy, not on a specific handshake protocol.
 
 ### Ready / Valid Parameters
 
 None beyond [common parameters](#common-parameters).
 
+This mode assumes:
+
+- A known write-valid mask and read-valid mask over the horizon
+- A known write and read bandwidth
+- No explicit credit, pause, or replay mechanism
+
 ### Ready / Valid Results
 
 None beyond [common results](#common-results).
+
+The depth returned guarantees:
+
+- No overflow over the horizon
+- Independent of whether the surrounding system uses Ready/Valid backpressure or allows drops
 
 ### Ready / Valid Recommendations
 
 **Flat Specifications:**
 
-For flat (non-layered) ready/valid specifications, the FIFO depth will always equal `sum_w_max`. This happens because:
+For flat (non-layered) specifications, the FIFO depth will always equal sum_w_max, because:
 
-- In a flat spec, write and read valid masks are constant (all 1s), meaning data can be written or read every cycle
-- The worst-case scenario happens when the maximum amount of data (`sum_w_max`) is written before any reads can complete
-- With no temporal structure to use, the FIFO must hold the entire maximum write burst
+- The write-valid and read-valid masks are constant (all 1s)
+- The producer can write every cycle
+- Without temporal structure, the worst case is “write the maximum burst before any reads”
+- Therefore the FIFO must buffer all writes in the horizon
 
-For this simple case, a direct calculation would be sufficient. The solver still works correctly but provides no optimization benefit beyond the analytical result.
+In this simple case, an analytical calculation is sufficient. The CP-SAT solver yields the same result but provides no optimization benefit.
 
 **Balanced Specifications:**
 
-For balanced specifications (where minimum read density ≥ maximum write density), CP-SAT cannot work effectively because:
+When the specification is balanced (minimum read density ≥ maximum write density), CP-SAT cannot produce a meaningful worst-case value:
 
-- The solver tries to maximize peak occupancy by scheduling writes and reads in the worst way
-- In balanced specs, reads can always drain the FIFO faster than writes can fill it
-- CP-SAT would explore an infinite solution space trying to delay reads indefinitely
-- No meaningful worst-case bound exists in the constraint formulation
+- The solver attempts to delay reads indefinitely to maximize occupancy
+- But in a balanced spec, reads can always catch up faster than writes
+- This leads to an unbounded or overly large search space
 
-The tool automatically detects balanced specifications using the `is_balanced()` method and switches to an analytical solver (`_get_results_analysis()`) instead. This analytical approach:
+To avoid this, the tool automatically:
 
-- Performs a phase-sweep across all possible read/write alignments
-- Accounts for write/read latencies in a deterministic way
-- Calculates the worst-case occupancy trajectory across all phase shifts
-- Returns a meaningful depth based on the temporal interaction of layered traffic patterns
+- Detects balance using `is_balanced()`
+- Switches to a deterministic analytical solver (`_get_results_analysis()`)
 
-*Note:* Layered specifications with temporal structure enable the solver to perform meaningful optimization. Flat and balanced specs are handled automatically with appropriate methods.
+This analytical method:
+
+- Sweeps all possible write/read phase offsets
+- Accounts for write and read latency
+- Computes the true worst-case occupancy over the horizon
+- Produces a finite, meaningful required depth
+
+*Note:*
+
+- Layered specifications with temporal structure (bursts, gaps, cycles) provide a richer worst-case analysis space where CP-SAT does provide benefit.
+- Flat and balanced cases are automatically handled using the appropriate analytical paths.
 
 ---
 
-## XON / XOFF Solver {#xon-xoff-solver}
+## XON / XOFF Solver
 
 ### XON / XOFF Purpose
 
@@ -578,8 +614,6 @@ Models XON/XOFF flow control protocols where the receiver uses threshold-based s
 - When occupancy drains below the `xon` threshold, the receiver de-asserts XOFF (signals XON)
 - The sender resumes transmission after a resume latency (`resume_latency`)
 - Hysteresis between `xon` and `xoff` prevents rapid toggling (control chatter) when occupancy stays near a single threshold
-
-XON/XOFF is commonly used in UARTs, network switches, and storage interfaces where simple threshold-based flow control provides adequate backpressure without per-transaction handshaking.
 
 ### XON / XOFF Overview
 
@@ -680,7 +714,7 @@ Manual mode is useful when:
 
 ---
 
-## CBFC Solver {#cbfc-solver}
+## CBFC Solver
 
 ### CBFC Purpose
 
@@ -690,8 +724,6 @@ Models Credit-Based Flow Control (CBFC) protocols where the sender's transmissio
 - Credits are returned after the receiver consumes data, subject to a return latency (`cred_ret_latency`)
 - The sender can only transmit when sufficient credits are available
 - This provides backpressure without requiring a synchronous ready/valid handshake
-
-CBFC is commonly used in network protocols and interconnects where asynchronous flow control is preferred over cycle-by-cycle handshaking.
 
 ### CBFC Overview
 
@@ -784,7 +816,7 @@ Manual mode is useful when:
 
 ---
 
-## CDC Solver {#cdc-solver}
+## CDC Solver
 
 ### CDC Purpose
 
@@ -894,7 +926,7 @@ The `big_fifo_domain` parameter determines which clock domain is used for the la
 
 ---
 
-## Replay Solver {#replay-solver}
+## Replay Solver
 
 ### Replay Purpose
 
@@ -980,7 +1012,7 @@ The CP-SAT formulation serves as a **reference implementation** that validates t
 
 ---
 
-## Advanced Topics {#advanced-topics}
+## Advanced Topics
 
 ### Performance Considerations
 
@@ -1001,7 +1033,7 @@ Solver runtime depends on several factors:
 
 In most practical cases, flat and moderately layered specs solve in under a minute. Only highly complex, deeply layered, or very long-horizon cases should require longer runtimes.
 
-### How Layers Compose {#how-layers-compose}
+### How Layers Compose
 
 The tool builds a binary valid pattern (0/1 sequence) by composing layers from innermost (transaction) to outermost (stream):
 
@@ -1064,7 +1096,7 @@ This hybrid approach (uniform for single burst, alternating for multi-burst) ens
 
 ---
 
-## FAQ {#faq}
+## FAQ
 
 If you encounter performance issues, the first four questions may be helpful to review first.
 
@@ -1307,7 +1339,7 @@ This leads to witness patterns that are mathematically valid but may not always 
 
 ---
 
-## Appendix {#appendix}
+## Appendix
 
 ### Key Classes
 

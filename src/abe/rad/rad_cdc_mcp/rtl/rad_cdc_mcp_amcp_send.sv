@@ -4,7 +4,7 @@
 
 // This file: src/abe/rad/rad_cdc_mcp/rtl/rad_cdc_mcp_amcp_send.sv
 
-// Multi-bit CDC multi-cycle pulse (MCP) block
+// Multi-bit CDC Multi-Cycle Path (MCP) block
 // Based on "Clock Domain Crossing (CDC) Design & Verification Techniques
 // Using SystemVerilog" by Clifford E. Cummings, 2008"
 

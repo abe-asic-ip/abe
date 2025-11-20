@@ -204,7 +204,7 @@ def _profile_from_spec(  # pylint: disable=too-many-branches
         return [0] * spec.s_gap + bursts
 
     # Write worst-case: alternate burst gap placement to create maximum valid
-    # clustering. Pattern creates Case-4 worst-case: ...write|write... at burst
+    # clustering. Pattern creates worst-case: ...write|write... at burst
     # boundaries. Strategy: bursts alternate gap placement, transactions
     # alternate within burst to ensure both start-with-valid and end-with-valid
     # at burst txn sections.
@@ -220,7 +220,7 @@ def _profile_from_spec(  # pylint: disable=too-many-branches
                 txn = [1] * spec.t_valid + [0] * spec.t_gap  # valid-first
                 txns.extend(txn)
         else:
-            # Multiple bursts: optimize for Case-4 at boundaries
+            # Multiple bursts: optimize for worst-case at boundaries
             # We want boundaries (odd -> next even) to be "...valid | valid..."
             # That means: the ODD burst should end with VALID.
             need_last_valid = burst_idx % 2 == 1

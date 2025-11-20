@@ -82,14 +82,14 @@ All regressions in the repo:
 make dv-regress-all-and-report
 ```
 
-### Outputs
+### Examine Outputs
 
 ```text
 out_dv/builds/<rad_design>.<hash>/
 out_dv/tests/<rad_design>.<hash>.<test>.<seed>
 ```
 
-### Relevant Directory Layout
+### Explore Relevant Directory Layout
 
 ```text
 .

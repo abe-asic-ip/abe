@@ -74,12 +74,12 @@ make DESIGN=rad_async_fifo formal
 make DESIGN=rad_async_fifo formal-cover
 ```
 
-### Outputs
+### Examine Outputs
 
 - `out_formal/<design>`
 - `out_formal/<design>_cover`
 
-### Examine the Relevant Directory Layout
+### Explore Relevant Directory Layout
 
 ```text
 .

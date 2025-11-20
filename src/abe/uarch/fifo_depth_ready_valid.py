@@ -4,8 +4,13 @@
 
 # This file: src/abe/uarch/fifo_depth_ready_valid.py
 
-"""Calculate Ready/Valid FIFO depth."""
+"""Generic producer/consumer FIFO.
 
+Despite the name, this model does *not* simulate the Ready/Valid
+handshake. It computes the depth required so the FIFO never
+overflows over the horizon, regardless of whether the surrounding
+system uses Ready/Valid backpressure or allows drops on overflow.
+"""
 from __future__ import annotations
 
 import logging

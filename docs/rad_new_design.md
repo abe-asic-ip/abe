@@ -44,18 +44,23 @@ RAD helps make this process **repeatable, predictable, and high-quality**.
 RAD designs follow a consistent structure:
 
 ```text
-src/abe/rad/rad_<design>/
-├── rtl/
-│   ├── rad_<design>.sv
-│   └── srclist.f
-├── dv/
-│   ├── test_rad_<design>.py
-│   └── dv_regress.yaml
-├── formal/
-│   ├── rad_<design>_formal_top.sv
-│   ├── rad_<design>.sby
-│   └── rad_<design>_cover.sby
-└── README.md
+├── src
+│   └── abe
+│       ├── rad
+│       │   ├── rad_<design>
+│       │   │   ├── dv
+│       │   │   │   ├── __init__.py
+│       │   │   │   ├── dv_regress.yaml
+│       │   │   │   ├── rad_<design>*.py
+│       │   │   │   ├── README.md
+│       │   │   │   └── test_rad_<design>.py
+│       │   │   ├── formal
+│       │   │   │   ├── rad_<design>_cover.sby
+│       │   │   │   ├── rad_<design>_formal_top.sv
+│       │   │   │   └── rad_<design>.sby
+│       │   │   ├── rtl
+│       │   │   │   ├── rad_<design>*.sv
+│       │   │   │   └── srclist.f
 ```
 
 This structure ensures compatibility with all Makeflows, DV tools, and templates in the ABE environment.
