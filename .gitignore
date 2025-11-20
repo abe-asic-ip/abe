@@ -1,0 +1,31 @@
+# SPDX-FileCopyrightText: 2025 Hugh Walsh
+#
+# SPDX-License-Identifier: MIT
+
+# This file: .gitignore
+
+# Locals
+mk/local.mk
+
+# Python
+.venv/
+*.egg-info/
+*.dist-info/
+**/__pycache__/
+**/.pytest_cache/
+**/.mypy_cache/
+
+# Outputs
+out_uarch*/
+out_synth/
+out_formal/
+out_dv*/
+
+# Artifacts
+site/
+waves/
+*.log
+*.vcd
+*.fst
+*.gtkw
+*.ron
