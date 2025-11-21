@@ -1563,17 +1563,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#author" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Author
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -2126,14 +2115,14 @@ cat<span class="w"> </span>out_uarch_fd_rv_layered/results_scalars.json
 <h2 id="conceptual-background">Conceptual Background<a class="headerlink" href="#conceptual-background" title="Permanent link">&para;</a></h2>
 <h3 id="scope">Scope<a class="headerlink" href="#scope" title="Permanent link">&para;</a></h3>
 <p>This tool models <strong>short-term congestion</strong> in data paths. The YAML specifications describe finite-duration traffic bursts where writes exceed reads. Over longer timescales, system-level flow control ensures balance; that equilibrium is beyond this tool’s scope.</p>
-<p>A “balanced” spec (equal write/read densities) requires only minimal buffering for arbitration or phase alignment. The tool automatically detects balanced cases and switches from CP-SAT to a closed-form analytic solver. Such cases may be detected and handled analytically. The main use case is the <strong>imbalanced</strong> case — temporary write oversubscription requiring real buffering.</p>
+<p>A “balanced” spec (equal write/read densities) requires only minimal buffering for arbitration or phase alignment. Such cases may be detected and handled analytically. The main use case is the <strong>imbalanced</strong> case — temporary write oversubscription requiring real buffering.</p>
 <h3 id="motivation">Motivation<a class="headerlink" href="#motivation" title="Permanent link">&para;</a></h3>
 <p>Traditional sizing methods rely on closed-form equations or spreadsheet estimation. Those approaches may be less accurate when traffic is bursty, multi-layered, or latency-constrained. This tool computes FIFO depth using a hybrid deterministic + solver-based approach. The key idea is to combine (a) domain-specific knowledge of worst-case congestion patterns with (b) an exact optimization stage using CP-SAT. This combination provides a practical and mathematically accurate solution.</p>
 <p>For details on how layers compose and how worst-case patterns are generated, see <a href="#how-layers-compose">How Layers Compose</a>.</p>
 <hr />
 <h2 id="unique-approach">Unique Approach<a class="headerlink" href="#unique-approach" title="Permanent link">&para;</a></h2>
 <h3 id="deterministic-construction-of-worst-case-write-and-read-profiles">Deterministic Construction of Worst-Case Write and Read Profiles<a class="headerlink" href="#deterministic-construction-of-worst-case-write-and-read-profiles" title="Permanent link">&para;</a></h3>
-<p>The user’s layered traffic specification (transaction, burst, and stream structure) is first compiled into <strong>binary valid profiles</strong> for the write and read sides. These profiles are not arbitrary: the tool intentionally creates <strong>worst-case congestion patterns</strong> using a set of deterministic rules derived from theory and literature.</p>
+<p>The user’s layered traffic specification (transaction, burst, and stream structure) is first compiled into <strong>binary valid profiles</strong> for the write and read sides. These profiles are not arbitrary: the tool intentionally creates <strong>worst-case congestion patterns</strong> using a set of deterministic rules.</p>
 <h4 id="write-side-worst-case-maximizing-clustering-of-data"><strong>Write-side Worst Case (maximizing clustering of data)</strong><a class="headerlink" href="#write-side-worst-case-maximizing-clustering-of-data" title="Permanent link">&para;</a></h4>
 <p>The write profile generator creates patterns that produce the densest possible windows of valid cycles:</p>
 <ul>
@@ -2156,8 +2145,8 @@ cat<span class="w"> </span>out_uarch_fd_rv_layered/results_scalars.json
 </ul>
 <p>The result is a pair of profiles <code>(write_valid[], read_valid[])</code> that represent <strong>the worst traffic environment allowed by the user’s layered specification</strong>.</p>
 <h3 id="constraint-based-optimization-using-cp-sat">Constraint-Based Optimization Using CP-SAT<a class="headerlink" href="#constraint-based-optimization-using-cp-sat" title="Permanent link">&para;</a></h3>
-<p>After generating deterministic worst-case masks, the tool invokes a <strong>cycle-accurate CP-SAT optimization</strong> stage.</p>
-<p>The solver determines <strong>when</strong> writes and reads actually fire within cycles marked valid, while enforcing:</p>
+<p>The tool first generates <strong>deterministic worst-case valid masks</strong> using a congestion-packing algorithm that alternates burst phases to maximize data clustering. These binary masks define which cycles are eligible for writes and reads.</p>
+<p>Then, a <strong>cycle-accurate CP-SAT optimization</strong> stage determines <strong>exactly when</strong> writes and reads fire within these valid windows, while enforcing:</p>
 <ul>
 <li><strong>FIFO causality</strong>
   <code>occ[t+1] = occ[t] + writes[t] - reads[t]</code></li>
@@ -2171,7 +2160,7 @@ cat<span class="w"> </span>out_uarch_fd_rv_layered/results_scalars.json
 <li>synchronizer delays (CDC)</li>
 </ul>
 <p>The solver’s objective is to <strong>maximize the peak occupancy</strong> under these constraints.</p>
-<p>Because the deterministic masks already encode the worst-case timing structure, CP-SAT only needs to explore <em>cycle-level scheduling</em> inside those windows — which is computationally tractable while still exact.</p>
+<p>Because the deterministic masks are pre-computed input constraints that encode the worst-case timing structure, CP-SAT only needs to explore <em>cycle-level scheduling</em> inside those windows — which is computationally tractable while still exact.</p>
 <h3 id="why-both-stages-are-necessary">Why Both Stages Are Necessary<a class="headerlink" href="#why-both-stages-are-necessary" title="Permanent link">&para;</a></h3>
 <p>Using <strong>only deterministic mask construction</strong> would give plausible worst cases, but could miss problematic write/read alignments that depend on exact cycle timing.</p>
 <p>Using <strong>only CP-SAT</strong> would require the solver to reason about transactions, bursts, and streams directly, which is computationally impractical for realistic horizons.</p>
@@ -3874,9 +3863,6 @@ round to power of 2 → 32
 <hr />
 <h2 id="licensing">Licensing<a class="headerlink" href="#licensing" title="Permanent link">&para;</a></h2>
 <p>See the <code>LICENSES</code> directory at the repository root.</p>
-<hr />
-<h2 id="author">Author<a class="headerlink" href="#author" title="Permanent link">&para;</a></h2>
-<p><a href="https://linkedin.com/in/hughwalsh">Hugh Walsh</a></p>
 
 
 
