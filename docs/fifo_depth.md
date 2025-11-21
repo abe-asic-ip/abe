@@ -129,7 +129,7 @@ cat out_uarch_fd_rv_layered/results_scalars.json
 
 This tool models **short-term congestion** in data paths. The YAML specifications describe finite-duration traffic bursts where writes exceed reads. Over longer timescales, system-level flow control ensures balance; that equilibrium is beyond this tool’s scope.
 
-A “balanced” spec (equal write/read densities) requires only minimal buffering for arbitration or phase alignment. The tool automatically detects balanced cases and switches from CP-SAT to a closed-form analytic solver. Such cases may be detected and handled analytically. The main use case is the **imbalanced** case — temporary write oversubscription requiring real buffering.
+A “balanced” spec (equal write/read densities) requires only minimal buffering for arbitration or phase alignment. Such cases may be detected and handled analytically. The main use case is the **imbalanced** case — temporary write oversubscription requiring real buffering.
 
 ### Motivation
 
@@ -143,7 +143,7 @@ For details on how layers compose and how worst-case patterns are generated, see
 
 ### Deterministic Construction of Worst-Case Write and Read Profiles
 
-The user’s layered traffic specification (transaction, burst, and stream structure) is first compiled into **binary valid profiles** for the write and read sides. These profiles are not arbitrary: the tool intentionally creates **worst-case congestion patterns** using a set of deterministic rules derived from theory and literature.
+The user’s layered traffic specification (transaction, burst, and stream structure) is first compiled into **binary valid profiles** for the write and read sides. These profiles are not arbitrary: the tool intentionally creates **worst-case congestion patterns** using a set of deterministic rules.
 
 #### **Write-side Worst Case (maximizing clustering of data)**
 
@@ -171,9 +171,9 @@ The result is a pair of profiles `(write_valid[], read_valid[])` that represent 
 
 ### Constraint-Based Optimization Using CP-SAT
 
-After generating deterministic worst-case masks, the tool invokes a **cycle-accurate CP-SAT optimization** stage.
+The tool first generates **deterministic worst-case valid masks** using a congestion-packing algorithm that alternates burst phases to maximize data clustering. These binary masks define which cycles are eligible for writes and reads.
 
-The solver determines **when** writes and reads actually fire within cycles marked valid, while enforcing:
+Then, a **cycle-accurate CP-SAT optimization** stage determines **exactly when** writes and reads fire within these valid windows, while enforcing:
 
 - **FIFO causality**
   `occ[t+1] = occ[t] + writes[t] - reads[t]`
@@ -188,7 +188,7 @@ The solver determines **when** writes and reads actually fire within cycles mark
 
 The solver’s objective is to **maximize the peak occupancy** under these constraints.
 
-Because the deterministic masks already encode the worst-case timing structure, CP-SAT only needs to explore *cycle-level scheduling* inside those windows — which is computationally tractable while still exact.
+Because the deterministic masks are pre-computed input constraints that encode the worst-case timing structure, CP-SAT only needs to explore *cycle-level scheduling* inside those windows — which is computationally tractable while still exact.
 
 ### Why Both Stages Are Necessary
 
@@ -1365,9 +1365,3 @@ This leads to witness patterns that are mathematically valid but may not always 
 ## Licensing
 
 See the `LICENSES` directory at the repository root.
-
----
-
-## Author
-
-[Hugh Walsh](https://linkedin.com/in/hughwalsh)

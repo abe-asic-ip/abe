@@ -11,9 +11,3 @@ SPDX-License-Identifier: MIT
 ## Licensing
 
 See the `LICENSES` directory at the repository root.
-
----
-
-## Author
-
-[Author Name](https://linkedin.com/in/author-name)

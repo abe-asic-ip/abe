@@ -210,9 +210,3 @@ No. It is an analytical tool that uses deterministic traffic analysis and a CPâ€
 ## Licensing
 
 See the `LICENSES` directory at the repository root.
-
----
-
-## Author
-
-[Hugh Walsh](https://linkedin.com/in/hughwalsh)

@@ -212,9 +212,3 @@ make PY_SRCS="src/abe/rad/tools/dv.py" py-typecheck
 ## Licensing
 
 See the `LICENSES` directory at the repository root.
-
----
-
-## Author
-
-[Hugh Walsh](https://linkedin.com/in/hughwalsh)

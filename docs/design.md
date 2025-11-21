@@ -388,9 +388,3 @@ See [RAD Formal](formal.md) and [RAD DV](dv.md) for details on those flows.
 ## Licensing
 
 See the `LICENSES` directory at the repository root.
-
----
-
-## Author
-
-[Hugh Walsh](https://linkedin.com/in/hughwalsh)

@@ -233,9 +233,3 @@ Configure via environment variables or plusargs:
 ## Licensing
 
 See the `LICENSES` directory at the repository root.
-
----
-
-## Author
-
-[Hugh Walsh](https://linkedin.com/in/hughwalsh)

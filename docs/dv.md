@@ -915,9 +915,3 @@ Add debug logging to both reference model and monitors to trace mismatches.
 ## Licensing
 
 See the `LICENSES` directory at the repository root.
-
----
-
-## Author
-
-[Hugh Walsh](https://linkedin.com/in/hughwalsh)

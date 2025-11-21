@@ -109,9 +109,3 @@ for size, stats in pq.pkt.items():
 ## Licensing
 
 See the `LICENSES` directory at the repository root.
-
----
-
-## Author
-
-[Hugh Walsh](https://linkedin.com/in/hughwalsh)
