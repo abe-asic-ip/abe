@@ -1553,6 +1553,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#literature" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Literature
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#licensing" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2056,9 +2067,8 @@ SPDX-License-Identifier: MIT
 <h3 id="known-limitations">Known Limitations<a class="headerlink" href="#known-limitations" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Cannot yet model interface/storage quantum mismatches</li>
-<li>Layered replay not supported</li>
 <li>Threshold optimization for XON/XOFF may have long runtimes for large horizons</li>
-<li>CBFC headroom auto-selection depends on read-valid gapiness</li>
+<li>No automatic data scaling for CP-SAT solver</li>
 <li>CDC solver assumes Gray-coded pointers and synchronizers (not handshake-based async FIFOs)</li>
 </ul>
 <hr />
@@ -3855,11 +3865,15 @@ round to power of 2 → 32
 <hr />
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
 <ul>
-<li>W. Dally and B. Towles, <a href="https://www.amazon.com/Principles-Practices-Interconnection-Networks-Architecture/dp/0122007514">Principles and Practices of Interconnection Networks</a>. San Francisco, CA, USA. Morgan Kaufmann Publishers, 2004.</li>
-<li>A. DeJans Jr,  <a href="https://www.amazon.com/dp/B0FPDHVN7T?ref=ppx_yo2ov_dt_b_fed_digi_asin_title_351">The MILP Optimization Handbook: An Introduction to Linear and Integer Programming for Practitioners</a>. Bit Bros LLC, 2025.</li>
 <li><a href="https://developers.google.com/optimization/cp/cp_solver">Google OR-Tools CP-SAT Solver</a></li>
-<li><a href="https://hardwaregeeksblog.wordpress.com/wp-content/uploads/2016/12/fifodepthcalculationmadeeasy2.pdf">Calculation of FIFO Depth - Made Easy</a></li>
 </ul>
+<hr />
+<h2 id="literature">Literature<a class="headerlink" href="#literature" title="Permanent link">&para;</a></h2>
+<p>[1] W. Dally and B. Towles, <em>Principles and Practices of Interconnection Networks</em>. San Francisco, CA: Morgan Kaufmann, 2004.</p>
+<p>[2] A. DeJans Jr, <em>The MILP Optimization Handbook: An Introduction to Linear and Integer Programming for Practitioners</em>. Bit Bros LLC, 2025.</p>
+<p>[3] C. Soviani and S. A. Edwards, "FIFO sizing for high-performance pipelines," in <em>Proc. 16th Int. Workshop Logic Synth.</em>, San Diego, CA, 2007.</p>
+<p>[4] R. Lu and C. K. Koh, "Performance optimization of latency insensitive systems through buffer queue sizing of communications channels," in <em>Proc. Int. Conf. Comput. Aided Design</em>, San Jose, CA, 2003.</p>
+<p>[5] "Calculation of FIFO depth - made easy." Accessed: Nov. 23, 2025. [Online]. Available: <a href="https://hardwaregeeksblog.wordpress.com/wp-content/uploads/2016/12/fifodepthcalculationmadeeasy2.pdf">https://hardwaregeeksblog.wordpress.com/wp-content/uploads/2016/12/fifodepthcalculationmadeeasy2.pdf</a></p>
 <hr />
 <h2 id="licensing">Licensing<a class="headerlink" href="#licensing" title="Permanent link">&para;</a></h2>
 <p>See the <code>LICENSES</code> directory at the repository root.</p>
