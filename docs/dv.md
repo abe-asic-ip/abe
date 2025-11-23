@@ -896,19 +896,19 @@ Add debug logging to both reference model and monitors to trace mismatches.
 
 ## Literature
 
-[1] R. Salemi, *Python for RTL Verification: A Complete Course in Python, cocotb, and pyuvm*. Boston, MA, USA: Boston Light Press, 2022.
+[1] R. Salemi, *Python for RTL Verification: A Complete Course in Python, cocotb, and pyuvm*. Boston, MA: Boston Light Press, 2022.
 
-[2] B. Hunter, *Advanced UVM*. North Charleston, SC, USA: CreateSpace Independent Publishing Platform, 2016.
+[2] B. Hunter, *Advanced UVM*. North Charleston, SC: CreateSpace Independent Publishing Platform, 2016.
 
-[3] C. E. Cummings, “uvmtb_template files—An efficient and rapid way to create UVM testbenches,” in *Proc. Synopsys Users Group (SNUG)*, Silicon Valley, CA, USA, 2025.
+[3] C. E. Cummings, "uvmtb_template files—An efficient and rapid way to create UVM testbenches," in *Proc. Synopsys Users Group (SNUG)*, Silicon Valley, CA, 2025.
 
-[4] C. E. Cummings, “Applying stimulus and sampling outputs—UVM verification testing techniques,” in *Proc. Synopsys Users Group (SNUG)*, Austin, TX, USA, 2016.
+[4] C. E. Cummings, "Applying stimulus and sampling outputs—UVM verification testing techniques," in *Proc. Synopsys Users Group (SNUG)*, Austin, TX, 2016.
 
-[5] C. E. Cummings, “OVM/UVM scoreboards—Fundamental architectures,” in *Proc. Synopsys Users Group (SNUG)*, Silicon Valley, CA, USA, 2013.
+[5] C. E. Cummings, "OVM/UVM scoreboards—Fundamental architectures," in *Proc. Synopsys Users Group (SNUG)*, Silicon Valley, CA, 2013.
 
-[6] C. E. Cummings, “The OVM/UVM factory and factory overrides—How they work and why they are important,” in *Proc. Synopsys Users Group (SNUG)*, 2012.
+[6] C. E. Cummings, "The OVM/UVM factory and factory overrides—How they work and why they are important," in *Proc. Synopsys Users Group (SNUG)*, San Jose, CA, 2012.
 
-[7] C. E. Cummings and T. Fitzpatrick, “OVM and UVM techniques for terminating tests,” in *Proc. Design and Verification Conf. (DVCon)*, San Jose, CA, USA, 2011.
+[7] C. E. Cummings and T. Fitzpatrick, "OVM and UVM techniques for terminating tests," in *Proc. Design and Verification Conf. (DVCon)*, San Jose, CA, 2011.
 
 ---
 

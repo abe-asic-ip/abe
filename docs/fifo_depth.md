@@ -56,9 +56,8 @@ The **ABE Uarch FIFO Depth Tool** computes the *optimal* FIFO depth and flow-con
 ### Known Limitations
 
 - Cannot yet model interface/storage quantum mismatches
-- Layered replay not supported
 - Threshold optimization for XON/XOFF may have long runtimes for large horizons
-- CBFC headroom auto-selection depends on read-valid gapiness
+- No automatic data scaling for CP-SAT solver
 - CDC solver assumes Gray-coded pointers and synchronizers (not handshake-based async FIFOs)
 
 ---
@@ -1355,10 +1354,21 @@ This leads to witness patterns that are mathematically valid but may not always 
 
 ## References
 
-- W. Dally and B. Towles, [Principles and Practices of Interconnection Networks](https://www.amazon.com/Principles-Practices-Interconnection-Networks-Architecture/dp/0122007514). San Francisco, CA, USA. Morgan Kaufmann Publishers, 2004.
-- A. DeJans Jr,  [The MILP Optimization Handbook: An Introduction to Linear and Integer Programming for Practitioners](https://www.amazon.com/dp/B0FPDHVN7T?ref=ppx_yo2ov_dt_b_fed_digi_asin_title_351). Bit Bros LLC, 2025.
 - [Google OR-Tools CP-SAT Solver](https://developers.google.com/optimization/cp/cp_solver)
-- [Calculation of FIFO Depth - Made Easy](https://hardwaregeeksblog.wordpress.com/wp-content/uploads/2016/12/fifodepthcalculationmadeeasy2.pdf)
+
+---
+
+## Literature
+
+[1] W. Dally and B. Towles, *Principles and Practices of Interconnection Networks*. San Francisco, CA: Morgan Kaufmann, 2004.
+
+[2] A. DeJans Jr, *The MILP Optimization Handbook: An Introduction to Linear and Integer Programming for Practitioners*. Bit Bros LLC, 2025.
+
+[3] C. Soviani and S. A. Edwards, "FIFO sizing for high-performance pipelines," in *Proc. 16th Int. Workshop Logic Synth.*, San Diego, CA, 2007.
+
+[4] R. Lu and C. K. Koh, "Performance optimization of latency insensitive systems through buffer queue sizing of communications channels," in *Proc. Int. Conf. Comput. Aided Design*, San Jose, CA, 2003.
+
+[5] "Calculation of FIFO depth - made easy." Accessed: Nov. 23, 2025. [Online]. Available: <https://hardwaregeeksblog.wordpress.com/wp-content/uploads/2016/12/fifodepthcalculationmadeeasy2.pdf>
 
 ---
 

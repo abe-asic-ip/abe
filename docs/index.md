@@ -30,7 +30,7 @@ Welcome to ABE — a better environment for developing ASIC IP.
 ABE provides tools and resources for digital design and verification:
 
 - [Microarchitecture tools](#microarchitecture-tools): Including [fifo-depth](fifo_depth.md), a CP-SAT (Constraint Programming - Satisfiability) based tool that computes provably minimal FIFO depths and flow-control parameters for complex traffic profiles.
-- [Python-based DV environment](dv.md): A complete verification methodology using [cocotb](https://www.cocotb.org) and [pyuvm](https://github.com/pyuvm/pyuvm).
+- [UVM-based Python verification environment](dv.md): A complete design verification (DV) methodology using [cocotb](https://www.cocotb.org) and [pyuvm](https://github.com/pyuvm/pyuvm).
 - [Developer workflow and tooling](#developer-tooling): Make-based workflows, synthesis scripts, and code management tools.
 - [Reusable ASIC Designs (RAD)](#reusable-asic-designs-rad): A library of RTL designs validated with ABE's synthesis, formal verification, and DV flows.
 
