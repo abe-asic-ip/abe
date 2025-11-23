@@ -5,7 +5,7 @@ SPDX-FileCopyrightText: 2025 Hugh Walsh
 SPDX-License-Identifier: MIT
 
 Generate README.md from docs/index.md by:
-1. Adding the "Read the full documentation" link
+1. Replacing the repository link with the documentation link for GitHub landing
 2. Prefixing all relative .md links with "docs/"
 """
 
@@ -22,16 +22,11 @@ def generate_readme() -> None:
     with open(index_path, "r", encoding="utf-8") as f:
         content = f.read()
 
-    # Find the insertion point (after "The goal is simple..." paragraph)
-    # Look for the pattern: line with "professional engineers" followed by blank line
-    insertion_pattern = (
-        r"(for professional engineers, students, researchers, and enthusiasts\.)\n"
-    )
-    docs_link = (
-        "\n\n📚 **[Read the full documentation](https://abe-asic-ip.github.io/abe/)**\n"
-    )
+    repo_link = "**[See the git repository](https://github.com/abe-asic-ip/abe)**"
+    docs_link = "📚 **[Read the full documentation](https://abe-asic-ip.github.io/abe/)**"
 
-    content = re.sub(insertion_pattern, r"\1" + docs_link, content, count=1)
+    # Swap the repository link for the GitHub Pages documentation link in README.md
+    content = content.replace(repo_link, docs_link, 1)
 
     # Replace relative .md links with docs/ prefix
     # Match markdown links like [text](filename.md) or [text](filename.md#anchor)
