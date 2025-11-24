@@ -10,7 +10,7 @@ SPDX-License-Identifier: MIT
 
 Thank you for your interest in contributing!
 
-ABE is a lightweight, open-source environment for developing reusable ASIC IP. Contributions are welcome across microarchitecture tools, RAD blocks, DV infrastructure, documentation, and developer tooling.
+ABE is a lightweight, open-source environment for ASIC IP development. Contributions are welcome across microarchitecture tools, RAD blocks, DV infrastructure, documentation, and developer tooling.
 
 ---
 

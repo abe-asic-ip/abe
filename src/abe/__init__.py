@@ -4,7 +4,7 @@
 
 # This file: src/abe/__init__.py
 
-"""ABE: A Better Environment for Developing ASIC IP.
+"""ABE: A Better Environment for ASIC IP Development.
 
 ABE is a comprehensive framework for hardware design, verification, and
 microarchitecture analysis. It provides reusable IP, verification infrastructure,

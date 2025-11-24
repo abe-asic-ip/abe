@@ -6,7 +6,7 @@ SPDX-License-Identifier: MIT
 
 <!--- This file: docs/index.md -->
 
-# ABE: A Better Environment for Developing ASIC IP
+# ABE: A Better Environment for ASIC IP Development
 
 [![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -15,13 +15,13 @@ SPDX-License-Identifier: MIT
 [![Documentation](https://img.shields.io/badge/docs-github%20pages-blue.svg)](https://abe-asic-ip.github.io/abe/)
 [![REUSE Compliance](https://img.shields.io/badge/REUSE-compliant-green.svg)](https://reuse.software/)
 
-ABE ("A Better Environment") is a lightweight, modern environment for developing reusable ASIC IP. It combines microarchitecture tools, reusable RTL designs, synthesis, formal verification, and Python‑based design verification (DV). ABE runs on free and open‑source tools.
+ABE ("A Better Environment") is a lightweight, modern environment for ASIC IP development. It combines microarchitecture tools, reusable RTL designs, synthesis, formal verification, and Python-based design verification (DV). ABE runs on free and open-source tools.
 
-The goal is simple: **make block‑level ASIC development easier, clearer, and more productive** for professional engineers, students, researchers, and enthusiasts.
+The goal is simple: **make block-level ASIC development easier, clearer, and more productive** for professional engineers, students, researchers, and enthusiasts.
 
 📚 **[Read the full documentation](https://abe-asic-ip.github.io/abe/)**
 
-Welcome to ABE — a better environment for developing ASIC IP.
+Welcome to ABE — a better environment for ASIC IP development.
 
 ---
 
@@ -29,8 +29,8 @@ Welcome to ABE — a better environment for developing ASIC IP.
 
 ABE provides tools and resources for digital design and verification:
 
-- [Microarchitecture tools](#microarchitecture-tools): Including [fifo-depth](docs/fifo_depth.md), a CP-SAT (Constraint Programming - Satisfiability) based tool that computes provably minimal FIFO depths and flow-control parameters for complex traffic profiles.
-- [UVM-based Python verification environment](dv.md): A complete design verification (DV) methodology using [cocotb](https://www.cocotb.org) and [pyuvm](https://github.com/pyuvm/pyuvm).
+- [Microarchitecture tools](#microarchitecture-tools): Including [fifo-depth](docs/fifo_depth.md), a CP-SAT (Constraint Programming - Satisfiability)-based tool that computes provably minimal FIFO depths and flow-control parameters for complex traffic profiles.
+- [UVM-based Python verification environment](docs/dv.md): A complete design verification (DV) methodology using [cocotb](https://www.cocotb.org) and [pyuvm](https://github.com/pyuvm/pyuvm).
 - [Developer workflow and tooling](#developer-tooling): Make-based workflows, synthesis scripts, and code management tools.
 - [Reusable ASIC Designs (RAD)](#reusable-asic-designs-rad): A library of RTL designs validated with ABE's synthesis, formal verification, and DV flows.
 
@@ -40,15 +40,15 @@ These components work together to support the full development cycle from microa
 
 ## Who is ABE for?
 
-ABE is designed for anyone who wants to build ASIC modules with a modern, open‑source workflow:
+ABE is designed for anyone who wants to build ASIC modules with a modern, open-source workflow:
 
 - **Professional engineers** who prefer Python for modeling and verification
-- **Professional engineers** who want license‑free tools
+- **Professional engineers** who want license-free tools
 - **Students** learning microarchitecture, design, formal, or verification
 - **Researchers** building prototypes and publishing reproducible results
 - **Enthusiasts** exploring ASIC IP development with free tools
 
-ABE works well if you want a workflow that is clear, repeatable, and Python‑friendly.
+ABE works well if you want a workflow that is clear, repeatable, and Python-friendly.
 
 ---
 
@@ -58,32 +58,32 @@ ASIC IP development often involves creating microarchitecture tools, scripts, an
 
 ABE was created to address these common challenges:
 
-- **Analytical FIFO sizing.** ABE provides [fifo-depth](docs/fifo_depth.md), a CP-SAT based analytical tool that complements simulation and spreadsheet approaches by computing provably minimal FIFO depths and flow-control parameters for complex, multi-layered traffic profiles across various flow-control protocols.
-- **Comprehensive DV infrastructure.** Many open‑source projects provide RTL. ABE adds complete Python-based verification environments with agents, scoreboards, reference models, functional coverage, and randomization.
+- **Analytical FIFO sizing.** ABE provides [fifo-depth](docs/fifo_depth.md), a CP-SAT-based analytical tool that complements simulation and spreadsheet approaches by computing provably minimal FIFO depths and flow-control parameters for complex, multi-layered traffic profiles across various flow-control protocols.
+- **Comprehensive DV infrastructure.** Many open-source projects provide RTL. ABE adds complete Python-based verification environments with agents, scoreboards, reference models, functional coverage, and randomization.
 - **Python modeling and RTL simulation are often separate.** ABE connects them using [cocotb](https://www.cocotb.org), [pyuvm](https://github.com/pyuvm/pyuvm), and Python reference models.
-- **Workflow and structure around open‑source tools.** ABE provides Makefiles, directory conventions, naming patterns, and tooling to complement powerful open‑source simulators with consistent project organization.
+- **Workflow and structure around open-source tools.** ABE provides Makefiles, directory conventions, naming patterns, and tooling to complement powerful open-source simulators with consistent project organization.
 
 ---
 
-## Where does ABE fit in the open‑source ecosystem?
+## Where does ABE fit in the open-source ecosystem?
 
-ABE sits between lightweight code‑writing tools and complete SoC frameworks. ABE is designed to work together with other open‑source projects and complement existing workflows.
+ABE sits between lightweight code-writing tools and complete SoC frameworks. ABE is designed to work together with other open-source projects and complement existing workflows.
 
 ### ABE and EDA playgrounds / AI copilots
 
-These tools are excellent for writing SystemVerilog code and interactive experimentation. ABE complements them by providing infrastructure for **complete, reusable ASIC IP** development with synthesis, formal verification, Python‑based DV, and structured workflows.
+These tools are excellent for writing SystemVerilog code and interactive experimentation. ABE complements them by providing infrastructure for **complete, reusable ASIC IP** development with synthesis, formal verification, Python-based DV, and structured workflows.
 
 ### ABE and [SVUnit](https://github.com/svunit/svunit) / [VUnit](https://vunit.github.io)
 
-These are excellent testing frameworks for VHDL/SystemVerilog. [SVUnit](https://github.com/svunit/svunit) focuses on unit testing, while [VUnit](https://vunit.github.io) provides verification components and block‑level testing in VHDL/SystemVerilog. ABE complements them by providing **Python‑based verification** ([cocotb](https://www.cocotb.org) + [pyuvm](https://github.com/pyuvm/pyuvm)) with reusable agents, scoreboards, reference models, and functional coverage.
+These are excellent testing frameworks for VHDL/SystemVerilog. [SVUnit](https://github.com/svunit/svunit) focuses on unit testing, while [VUnit](https://vunit.github.io) provides verification components and block-level testing in VHDL/SystemVerilog. ABE complements them by providing **Python-based verification** ([cocotb](https://www.cocotb.org) + [pyuvm](https://github.com/pyuvm/pyuvm)) with reusable agents, scoreboards, reference models, and functional coverage.
 
 ### ABE and [Verilator](https://verilator.org)'s new UVM support
 
-[Verilator](https://verilator.org) now supports UVM. This is great progress for open‑source SystemVerilog verification. ABE offers a different approach with **Python‑based UVM** ([cocotb](https://www.cocotb.org) + [pyuvm](https://github.com/pyuvm/pyuvm)). This provides easier integration with Python reference models, Python workflows, and Python ecosystem tools (e.g. data analysis).
+[Verilator](https://verilator.org) now supports UVM. This is great progress for open-source SystemVerilog verification. ABE offers a different approach with **Python-based UVM** ([cocotb](https://www.cocotb.org) + [pyuvm](https://github.com/pyuvm/pyuvm)). This provides easier integration with Python reference models, Python workflows, and Python ecosystem tools (e.g. data analysis).
 
 ### ABE and [OpenTitan](https://opentitan.org)
 
-[OpenTitan](https://opentitan.org) is an open‑source silicon Root of Trust project. It provides a complete SoC design, reusable ASIC IP, and production‑grade SystemVerilog UVM verification. ABE has a different scope, focusing on **general‑purpose ASIC blocks** with **microarchitecture tools** and **Python‑based verification** for developing ASIC IP.
+[OpenTitan](https://opentitan.org) is an open-source silicon Root of Trust project. It provides a complete SoC design, reusable ASIC IP, and production-grade SystemVerilog UVM verification. ABE has a different scope, focusing on **general-purpose ASIC blocks** with **microarchitecture tools** and **Python-based verification** for ASIC IP development.
 
 ---
 
@@ -110,11 +110,11 @@ ABE's microarchitecture tools help you make informed decisions before writing RT
 
 ### [FIFO Depth Tool](docs/fifo_depth.md)
 
-The [fifo-depth](docs/fifo_depth.md) tool is a CP-SAT based optimization tool that addresses an important challenge in ASIC microarchitecture: determining the minimal FIFO depth and flow-control parameters required to prevent underflow or overflow under complex traffic conditions.
+The [fifo-depth](docs/fifo_depth.md) tool is a CP-SAT-based optimization tool that addresses an important challenge in ASIC microarchitecture: determining the minimal FIFO depth and flow-control parameters required to prevent underflow or overflow under complex traffic conditions.
 
 #### Key Features
 
-The [fifo-depth](docs/fifo_depth.md) tool offers several advantages through its CP-SAT based approach:
+The [fifo-depth](docs/fifo_depth.md) tool offers several advantages through its CP-SAT-based approach:
 
 - **Provably minimal:** Uses CP-SAT optimization to find the smallest FIFO depth that satisfies all constraints, and computes appropriate flow-control parameters (such as thresholds for XON/XOFF or credits for CBFC) when applicable.
 - **Complex traffic profiles:** Handles layered, hierarchical traffic specifications (cycle, transaction, burst, stream levels) that are difficult to analyze manually.
@@ -181,7 +181,7 @@ Ready to dive deeper? Here's your map to everything ABE has to offer:
 
 ### **Is ABE good for beginners?**
 
-Yes. ABE was designed to be clear and easy to learn. It is friendly to people who are new to developing ASIC IP.
+Yes. ABE was designed to be clear and easy to learn. It is friendly to people who are new to ASIC IP development.
 
 ---
 
