@@ -537,9 +537,7 @@ This mode applies to two common architectural situations:
 
 Despite these architectural differences, the FIFO depth requirement is the same:
 
-```text
-The FIFO must be sized so that it never overflows under the worst-case write/read schedule within the analysis horizon.
-```
+  *The FIFO must be sized so that it never overflows under the worst-case write/read schedule within the analysis horizon.*
 
 The solver therefore focuses entirely on worst-case occupancy, not on a specific handshake protocol.
 

@@ -8,7 +8,7 @@ SPDX-License-Identifier: MIT
 
 # Packet Quantization Calculator
 
-The `pkt-quantize` tool calculates bandwidth and packet rate metrics for packet-based interfaces where packets are quantized to bus beats. Given bus width, clock frequency, and minimum processing cycles, it computes performance across a range of packet sizes and generates tables, CSV files, and plots. The tool assumes packets cannot share a bus beat (e.g., AXI-Stream).
+The `pkt-quantize` tool calculates bandwidth and packet rate metrics for packet-based interfaces where packets are quantized to bus beats. Given bus width, clock frequency, and minimum processing cycles, it computes performance across a range of packet sizes and generates tables, CSV files, and plots. The tool assumes packets cannot share a bus beat (e.g., AXI-Stream). There are protocols like AMBA CXS that allow multiple packets per beat. Such protocols are not subject to the quantization effects modeled by this tool.
 
 ---
 
