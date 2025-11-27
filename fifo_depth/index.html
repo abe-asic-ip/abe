@@ -2806,9 +2806,7 @@ fifo-depth<span class="w"> </span>my_spec.yaml<span class="w"> </span>--verbosit
 <li>If the traffic pattern would overflow the FIFO, that means the system will drop data that should not be dropped.</li>
 </ul>
 <p>Despite these architectural differences, the FIFO depth requirement is the same:</p>
-<div class="codehilite"><pre><span></span><code>The FIFO must be sized so that it never overflows under the worst-case write/read schedule within the analysis horizon.
-</code></pre></div>
-
+<p><em>The FIFO must be sized so that it never overflows under the worst-case write/read schedule within the analysis horizon.</em></p>
 <p>The solver therefore focuses entirely on worst-case occupancy, not on a specific handshake protocol.</p>
 <h3 id="ready-valid-parameters">Ready / Valid Parameters<a class="headerlink" href="#ready-valid-parameters" title="Permanent link">&para;</a></h3>
 <p>None beyond <a href="#common-parameters">common parameters</a>.</p>

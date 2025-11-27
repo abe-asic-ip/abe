@@ -973,7 +973,7 @@ SPDX-License-Identifier: MIT
 <!--- This file: docs/pkt_quantize.md -->
 
 <h1 id="packet-quantization-calculator">Packet Quantization Calculator<a class="headerlink" href="#packet-quantization-calculator" title="Permanent link">&para;</a></h1>
-<p>The <code>pkt-quantize</code> tool calculates bandwidth and packet rate metrics for packet-based interfaces where packets are quantized to bus beats. Given bus width, clock frequency, and minimum processing cycles, it computes performance across a range of packet sizes and generates tables, CSV files, and plots. The tool assumes packets cannot share a bus beat (e.g., AXI-Stream).</p>
+<p>The <code>pkt-quantize</code> tool calculates bandwidth and packet rate metrics for packet-based interfaces where packets are quantized to bus beats. Given bus width, clock frequency, and minimum processing cycles, it computes performance across a range of packet sizes and generates tables, CSV files, and plots. The tool assumes packets cannot share a bus beat (e.g., AXI-Stream). There are protocols like AMBA CXS that allow multiple packets per beat. Such protocols are not subject to the quantization effects modeled by this tool.</p>
 <hr />
 <h2 id="getting-started">Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
 <h3 id="set-up-and-install-the-environment">Set Up and Install the Environment<a class="headerlink" href="#set-up-and-install-the-environment" title="Permanent link">&para;</a></h3>
