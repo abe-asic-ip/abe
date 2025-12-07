@@ -10,7 +10,10 @@ SPDX-License-Identifier: MIT
 
 ## Overview
 
-This verification environment implements a **single-agent architecture** to verify the rad_cdc_sync multi-stage clock domain crossing synchronizer. The DUT is a simple pipeline of flip-flops that synchronizes an asynchronous input signal to the destination clock domain.
+This verification environment implements a **single-agent architecture** to
+verify the rad_cdc_sync multi-stage clock domain crossing synchronizer. The DUT
+is a simple pipeline of flip-flops that synchronizes an asynchronous input
+signal to the destination clock domain.
 
 ## Design Rationale
 
@@ -19,9 +22,12 @@ The rad_cdc_sync RTL has:
 - **Synchronous domain**: Operates on `clk`, uses `rst_n`, observes `sync_o`
 - **Asynchronous input**: `async_i` can toggle at arbitrary times relative to `clk`
 - **Parameterizable stages**: `STAGES` (default 2) determines synchronizer depth
-- **Optional metastability simulation**: When `SIMULATE_METASTABILITY` is defined, models metastability injection
+- **Optional metastability simulation**: When `SIMULATE_METASTABILITY` is
+defined, models metastability injection
 
-The DUT performs a single function: synchronizing an asynchronous signal into the clock domain. This straightforward architecture requires only a single agent to drive the async input and monitor the synchronized output.
+The DUT performs a single function: synchronizing an asynchronous signal into
+the clock domain. This straightforward architecture requires only a single
+agent to drive the async input and monitor the synchronized output.
 
 ## Single-Agent Architecture
 
@@ -29,7 +35,8 @@ The DUT performs a single function: synchronizing an asynchronous signal into th
 
 - **Clock**: `clk` (default 1000ps period)
 - **Reset**: `rst_n`
-- **Driver**: `RadCdcSyncDriver` - Drives `async_i` with timing jitter relative to `clk` edges
+- **Driver**: `RadCdcSyncDriver` - Drives `async_i` with timing jitter relative
+to `clk` edges
 - **Monitors**:
     - `RadCdcSyncMonitorIn` - Samples `async_i` on `clk` (for reference model input)
     - `RadCdcSyncMonitorOut` - Samples `sync_o` on `clk` (synchronized output)
@@ -78,7 +85,9 @@ RadCdcSyncEnv (num_agents=1)
 
 ## Timing and Jitter
 
-The verification strategy focuses on stressing the synchronizer's metastability handling by varying the timing relationship between `async_i` transitions and the `clk` edge.
+The verification strategy focuses on stressing the synchronizer's metastability
+handling by varying the timing relationship between `async_i` transitions and
+the `clk` edge.
 
 ### Driver Timing Strategy
 
@@ -93,7 +102,8 @@ async def drive_item(self, dut: Any, tr: RadCdcSyncItem) -> None:
 
 ### Sequence Jitter Generation
 
-The sequence generates jitter within ±20% of the clock period around the half-period point:
+The sequence generates jitter within ±20% of the clock period around the
+half-period point:
 
 ```python
 # For 1000ps clock: setup=400ps, hold=600ps
@@ -105,7 +115,9 @@ hold = (t // 2) + win   # Half period plus window
 item.delay_ps = random.randrange(setup, hold)
 ```
 
-This creates transitions that occur near the sampling edge of the destination clock, maximizing the likelihood of metastability in RTL simulations with metastability modeling enabled.
+This creates transitions that occur near the sampling edge of the destination
+clock, maximizing the likelihood of metastability in RTL simulations with
+metastability modeling enabled.
 
 ### Toggle Enforcement
 
@@ -122,10 +134,13 @@ This prevents repeated same-value "toggles" that would be invisible to the synch
 
 ## Reference Model
 
-The `RadCdcSyncRefModel` implements a shift register matching the RTL's synchronizer chain:
+The `RadCdcSyncRefModel` implements a shift register matching the RTL's
+synchronizer chain:
 
-- **Configuration**: Reads `RAD_CDC_STAGES` (default 2) and `RAD_CDC_VAL_ON_RESET` (default 0)
-- **Internal state**: `_shreg` - deque of length `STAGES` representing the synchronizer pipeline
+- **Configuration**: Reads `RAD_CDC_STAGES` (default 2) and
+`RAD_CDC_VAL_ON_RESET` (default 0)
+- **Internal state**: `_shreg` - deque of length `STAGES` representing the
+synchronizer pipeline
 - **Operation**:
   1. On each input transaction, shift `async_i` into the front of the deque
   2. The last element of the deque represents the synchronized output
@@ -178,7 +193,8 @@ The testbench handles metastability:
 
 ### Why Single Agent?
 
-The rad_cdc_sync DUT has no clock domain crossing in the traditional multi-clock sense:
+The rad_cdc_sync DUT has no clock domain crossing in the traditional multi-clock
+sense:
 
 - Only one clock domain (`clk`) drives the synchronous logic
 - The `async_i` input is truly asynchronous (no associated clock)

@@ -10,9 +10,13 @@ SPDX-License-Identifier: MIT
 
 ## Overview
 
-The **Reusable ASIC Designs (RAD)** environment includes a formal verification flow built with open‑source tools. Formal verification works together with RAD's linting, synthesis, and DV flows. It uses math to prove that key safety properties are correct in each design.
+The **Reusable ASIC Designs (RAD)** environment includes a formal verification
+flow built with open‑source tools. Formal verification works together with RAD's
+linting, synthesis, and DV flows. It uses math to prove that key safety
+properties are correct in each design.
 
-The [RAD Design](design.md) flow checks **structure and synthesis**. The [RAD Formal](formal.md) flow checks **logic** for *all possible* input sequences.
+The [RAD Design](design.md) flow checks **structure and synthesis**. The [RAD
+Formal](formal.md) flow checks **logic** for *all possible* input sequences.
 
 The RAD Formal methodology focuses on:
 
@@ -21,7 +25,8 @@ The RAD Formal methodology focuses on:
 - **Reusable SBY templates**
 - **Repeatable Make‑based automation**
 
-This document describes a flow that fits naturally *after initial RTL and design‑side checks* and *before [DV](dv.md) simulation*.
+This document describes a flow that fits naturally *after initial RTL and
+design‑side checks* and *before [DV](dv.md) simulation*.
 
 ### Audience
 
@@ -65,7 +70,8 @@ make py-install-all
 make deps
 ```
 
-This shows any missing tools. Installation steps depend on your platform and are not covered in this document.
+This shows any missing tools. Installation steps depend on your platform and
+are not covered in this document.
 
 ### Run Examples
 
@@ -138,7 +144,8 @@ make formal-help
 3. Templates from proven designs like `rad_async_fifo` can serve as a starting point.
 4. Review existing formal collateral for examples.
 
-See also: [Formal Verification Flow](#formal-verification-flow) and [Formal Coverage Flow](#formal-coverage-flow).
+See also: [Formal Verification Flow](#formal-verification-flow) and [Formal
+Coverage Flow](#formal-coverage-flow).
 
 ---
 
@@ -214,7 +221,12 @@ See also: [FAQ #2](#what-depth-should-i-use) and [FAQ #3](#why-doesnt-induction-
 
 **Create the Coverage Configuration: `<design>_cover.sby`**
 
-The coverage `.sby` file is almost the same as the [verification configuration](#symbiyosys-configuration-designsby). The main difference is in the `[options]` section: use `mode cover` instead of `mode prove` (see [FAQ #5](#difference-between-formal-and-formal-cover)). Coverage mode finds traces that meet the `cover` statements in your formal testbench. This is useful for:
+The coverage `.sby` file is almost the same as the
+[verification configuration](#symbiyosys-configuration-designsby). The main
+difference is in the `[options]` section: use `mode cover` instead of `mode
+prove` (see [FAQ #5](#difference-between-formal-and-formal-cover)). Coverage
+mode finds traces that meet the `cover` statements in your formal testbench.
+This is useful for:
 
 - Creating traces.
 - Checking reachability.
@@ -238,7 +250,8 @@ src/abe/rad/rad_async_fifo/formal/rad_async_fifo_cover.sby
 
 ### Why use formal if simulation passes?
 
-Formal checks *all* legal input sequences. It works together with [simulation testing](dv.md). It can help find:
+Formal checks *all* legal input sequences. It works together with [simulation
+testing](dv.md). It can help find:
 
 - Underflow/overflow.
 - Race conditions.
@@ -279,7 +292,8 @@ Making assumptions simpler or stronger can often fix induction problems.
 ### Which solvers should I use?
 
 - **[Boolector](https://github.com/Boolector/boolector)** (recommended to start).
-- [Yices](https://yices.csl.sri.com/) or [Z3](https://github.com/Z3Prover/z3) can help if Boolector does not support something.
+- [Yices](https://yices.csl.sri.com/) or [Z3](https://github.com/Z3Prover/z3)
+can help if Boolector does not support something.
 
 ---
 

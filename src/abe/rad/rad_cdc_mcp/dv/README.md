@@ -10,16 +10,22 @@ SPDX-License-Identifier: MIT
 
 ## Overview
 
-This verification environment implements a **dual-agent architecture** to properly model the independent source and destination clock domains of the rad_cdc_mcp dual-clock Multi-Cycle Path (MCP) synchronizer.
+This verification environment implements a **dual-agent architecture** to
+properly model the independent source and destination clock domains of the
+rad_cdc_mcp dual-clock Multi-Cycle Path (MCP) synchronizer.
 
 ## Design Rationale
 
 The rad_cdc_mcp RTL has:
 
-- **a-domain (source)**: Operates on `aclk`, uses `arst_n`, controls `asend` and `adatain`, observes `aready`
-- **b-domain (destination)**: Operates on `bclk`, uses `brst_n`, controls `bload`, observes `bdata` and `bvalid`
+- **a-domain (source)**: Operates on `aclk`, uses `arst_n`, controls `asend`
+and `adatain`, observes `aready`
+- **b-domain (destination)**: Operates on `bclk`, uses `brst_n`, controls
+`bload`, observes `bdata` and `bvalid`
 
-These domains are **independent** - in a real system, they would be controlled by separate blocks that only see their respective interface signals. This fundamental architectural constraint led to the dual-agent design.
+These domains are **independent** - in a real system, they would be controlled
+by separate blocks that only see their respective interface signals. This
+fundamental architectural constraint led to the dual-agent design.
 
 ---
 
@@ -188,7 +194,8 @@ The reference model (`RadCdcMcpRefModel`) implements:
 
 Rejected alternatives:
 
-1. ❌ Single sequence controlling both domains - unrealistic, violates clock domain separation
+1. ❌ Single sequence controlling both domains - unrealistic, violates clock
+domain separation
 2. ❌ Dual sequences with single agent - complexity in driver/sequencer routing
 3. ❌ Single sequence with dual clock driver - doesn't model real system behavior
 4. ✅ **Dual agents** - clean separation, matches real system architecture
@@ -197,7 +204,8 @@ Rejected alternatives:
 
 - **Protocol enforcement** separate from **stimulus generation**
 - a-domain (source) must respect `aready` to ensure MCP can accept data
-- b-domain (destination) can assert `bload` freely; data validity is checked via `bvalid`
+- b-domain (destination) can assert `bload` freely; data validity is checked
+  via `bvalid`
 - Sequences focus on test patterns (random, burst, corner cases)
 - Drivers ensure protocol correctness at the interface level
 - Models real hardware behavior: protocol is enforced at interface level

@@ -10,7 +10,10 @@ SPDX-License-Identifier: MIT
 
 ## Overview
 
-ABE uses Python for microarchitecture tools (see [FIFO Depth Tool](fifo_depth.md) and [Packet Quantization Calculator](pkt_quantize.md)) and [RAD DV](dv.md). This document describes the static analysis tools that help maintain code quality.
+ABE uses Python for microarchitecture tools (see
+[FIFO Depth Tool](fifo_depth.md) and
+[Packet Quantization Calculator](pkt_quantize.md)) and [RAD DV](dv.md). This
+document describes the static analysis tools that help maintain code quality.
 
 **Audience**: ABE contributors
 
@@ -76,7 +79,9 @@ make py-help
 
 ## Organize Imports with [isort](https://pycqa.github.io/isort)
 
-[isort](https://pycqa.github.io/isort) automatically sorts and organizes Python import statements. It groups imports into sections (standard library, third-party, local) and sorts them alphabetically for consistency.
+[isort](https://pycqa.github.io/isort) automatically sorts and organizes Python
+import statements. It groups imports into sections (standard library,
+third-party, local) and sorts them alphabetically for consistency.
 
 ### [isort](https://pycqa.github.io/isort) Commands
 
@@ -107,7 +112,9 @@ Configured in `.isort.cfg` and `pyproject.toml` under `[tool.isort]`.
 
 ## Format with [black](https://github.com/psf/black)
 
-[black](https://github.com/psf/black) is a Python code formatter that automatically formats code to a consistent style. It applies the same formatting rules everywhere, making code easier to read and review.
+[black](https://github.com/psf/black) is a Python code formatter that
+automatically formats code to a consistent style. It applies the same
+formatting rules everywhere, making code easier to read and review.
 
 ### [black](https://github.com/psf/black) Commands
 
@@ -131,7 +138,8 @@ Configured in `pyproject.toml` under `[tool.black]`.
 
 ## Lint with [pylint](https://pylint.org)
 
-[pylint](https://pylint.org) analyzes Python code for errors and style issues. It finds bugs and potential problems before you run the code.
+[pylint](https://pylint.org) analyzes Python code for errors and style issues.
+It finds bugs and potential problems before you run the code.
 
 ### Commands
 
@@ -143,13 +151,15 @@ make PY_SRCS=<files> py-lint
 
 ### Configuration
 
-Configured in `pyproject.toml` under `[tool.pylint]` and via command-line flags in `mk/00-vars.mk`.
+Configured in `pyproject.toml` under `[tool.pylint]` and via command-line flags
+in `mk/00-vars.mk`.
 
 ---
 
 ## Type Check with [mypy](https://mypy-lang.org)
 
-[mypy](https://mypy-lang.org) is a static type checker for Python. It checks type annotations without running the code and finds type-related bugs early.
+[mypy](https://mypy-lang.org) is a static type checker for Python. It checks
+type annotations without running the code and finds type-related bugs early.
 
 ### [mypy](https://mypy-lang.org) Commands
 

@@ -10,15 +10,20 @@ SPDX-License-Identifier: MIT
 
 ## Overview
 
-This document describes how to create a new reusable IP design in the **RAD (Reusable ASIC Designs)** environment. It brings together information from these documents:
+This document describes how to create a new reusable IP design in the **RAD
+(Reusable ASIC Designs)** environment. It brings together information from these
+documents:
 
-- [FIFO Depth Tool](fifo_depth.md) & [Packet Quantization Calculator](pkt_quantize.md) — tools for sizing buffers and analyzing throughput
+- [FIFO Depth Tool](fifo_depth.md) &
+[Packet Quantization Calculator](pkt_quantize.md) — tools for sizing buffers and
+analyzing throughput
 - [ABE Python Development](python_dev.md) — Python coding standards for DV utilities
 - [RAD Design](design.md) — RTL structure, linting, formatting, synthesis
 - [RAD Formal](formal.md) — formal proof setup and methods
 - [RAD DV](dv.md) — UVM-style testbench using cocotb + pyuvm
 
-A RAD design includes **RTL**, **formal verification**, **DV tests**, and **documentation**. All parts follow ABE conventions and use Make-based flows.
+A RAD design includes **RTL**, **formal verification**, **DV tests**, and
+**documentation**. All parts follow ABE conventions and use Make-based flows.
 
 This guide provides a step-by-step process for creating a new RAD design.
 
@@ -63,7 +68,8 @@ RAD designs follow a consistent structure:
 │       │   │   │   └── srclist.f
 ```
 
-This structure ensures compatibility with all Makeflows, DV tools, and templates in the ABE environment.
+This structure ensures compatibility with all Makeflows, DV tools, and templates
+in the ABE environment.
 
 ---
 
@@ -91,7 +97,8 @@ Add a placeholder `README.md`.
 
 ## 2. Use Microarchitecture Tools if Needed
 
-If your design needs buffer sizing or throughput analysis, use the `fifo-depth` or `pkt-quantize` tools.
+If your design needs buffer sizing or throughput analysis, use the `fifo-depth`
+or `pkt-quantize` tools.
 
 ---
 

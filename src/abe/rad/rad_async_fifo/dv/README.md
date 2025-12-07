@@ -10,7 +10,9 @@ SPDX-License-Identifier: MIT
 
 ## Overview
 
-This verification environment implements a **dual-agent architecture** to properly model the independent write and read clock domains of the rad_async_fifo dual-clock asynchronous FIFO.
+This verification environment implements a **dual-agent architecture** to
+properly model the independent write and read clock domains of the
+rad_async_fifo dual-clock asynchronous FIFO.
 
 ---
 
@@ -18,10 +20,14 @@ This verification environment implements a **dual-agent architecture** to proper
 
 The rad_async_fifo RTL has:
 
-- **Write domain**: Operates on `wclk`, uses `wrst_n`, controls `winc` and `wdata`, observes `wfull`
-- **Read domain**: Operates on `rclk`, uses `rrst_n`, controls `rinc`, observes `rdata` and `rempty`
+- **Write domain**: Operates on `wclk`, uses `wrst_n`, controls `winc` and
+`wdata`, observes `wfull`
+- **Read domain**: Operates on `rclk`, uses `rrst_n`, controls `rinc`, observes
+`rdata` and `rempty`
 
-These domains are **independent** - in a real system, they would be controlled by separate blocks that only see their respective interface signals. This fundamental architectural constraint led to the dual-agent design.
+These domains are **independent** - in a real system, they would be controlled
+by separate blocks that only see their respective interface signals. This
+fundamental architectural constraint led to the dual-agent design.
 
 ## Dual-Agent Architecture
 
@@ -37,7 +43,8 @@ These domains are **independent** - in a real system, they would be controlled b
     - Inputs: `winc`, `wdata`
     - Outputs: `wfull` (feedback from DUT)
 - **Sequence**: `RadAsyncFifoWriteSequence`
-    - Generates random write transactions with configurable probability (default 0.7)
+    - Generates random write transactions with configurable probability (default
+    0.7)
     - Protocol enforcement handled by driver, not sequence
     - Generates random `wdata` values within configured data width
 
@@ -197,7 +204,8 @@ The reference model (`RadAsyncFifoRefModel`) implements:
 
 Rejected alternatives:
 
-1. ❌ Single sequence controlling both domains - unrealistic, violates clock domain separation
+1. ❌ Single sequence controlling both domains - unrealistic, violates clock
+domain separation
 2. ❌ Dual sequences with single agent - complexity in driver/sequencer routing
 3. ❌ Single sequence with dual clock driver - doesn't model real system behavior
 4. ✅ **Dual agents** - clean separation, matches real system architecture

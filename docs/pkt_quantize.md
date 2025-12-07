@@ -8,7 +8,13 @@ SPDX-License-Identifier: MIT
 
 # Packet Quantization Calculator
 
-The `pkt-quantize` tool calculates bandwidth and packet rate metrics for packet-based interfaces where packets are quantized to bus beats. Given bus width, clock frequency, and minimum processing cycles, it computes performance across a range of packet sizes and generates tables, CSV files, and plots. The tool assumes packets cannot share a bus beat (e.g., AXI-Stream). There are protocols like AMBA CXS that allow multiple packets per beat. Such protocols are not subject to the quantization effects modeled by this tool.
+The `pkt-quantize` tool calculates bandwidth and packet rate metrics for
+packet-based interfaces where packets are quantized to bus beats. Given bus
+width, clock frequency, and minimum processing cycles, it computes performance
+across a range of packet sizes and generates tables, CSV files, and plots. The
+tool assumes packets cannot share a bus beat (e.g., AXI-Stream). There are
+protocols like AMBA CXS that allow multiple packets per beat. Such protocols
+are not subject to the quantization effects modeled by this tool.
 
 ---
 
@@ -28,7 +34,8 @@ make py-install-all
 
 ```bash
 pkt-quantize
-pkt-quantize --bus-width 64 --clk-freq 1.5e9 --min-cycles 2 --min-size 64 --max-size 512
+pkt-quantize --bus-width 64 --clk-freq 1.5e9 --min-cycles 2 --min-size 64
+--max-size 512
 ```
 
 ### Examine Outputs
@@ -54,17 +61,17 @@ out_arch_pkt_quantize/*
 
 ## Command Line Options
 
-| Option             | Description                                         | Default                   |
-|--------------------|-----------------------------------------------------|---------------------------|
-| `--bus-width`      | Bus width (bytes)                                   | `128`                     |
-| `--clk-freq`       | Clock frequency (Hz)                                | `1.1e9`                   |
-| `--min-cycles`     | Minimum clock cycles to process a packet            | `1`                       |
-| `--min-size`       | Minimum packet size (bytes)                         | `64`                      |
-| `--max-size`       | Maximum packet size (bytes)                         | `1518`                    |
-| `--outdir`         | Output directory                                    | `out_uarch_pkt_quantize/` |
-| `--no-plot-save`   | Skip saving plots to PNG                            | Off                       |
-| `--no-plot-show`   | Skip displaying plots in GUI                        | Off                       |
-| `--log-level`      | Logging level (`debug`, `info`, `warning`, `error`) | `info`                    |
+| Option | Description | Default |
+|--------|-------------|---------|
+| `--bus-width` | Bus width (bytes) | `128`|
+| `--clk-freq` | Clock frequency (Hz) | `1.1e9` |
+| `--min-cycles` | Minimum clock cycles to process a packet | `1` |
+| `--min-size` | Minimum packet size (bytes) | `64` |
+| `--max-size` | Maximum packet size (bytes) | `1518` |
+| `--outdir` | Output directory | `out_uarch_pkt_quantize/` |
+| `--no-plot-save` | Skip saving plots to PNG | Off |
+| `--no-plot-show` | Skip displaying plots in GUI | Off |
+| `--log-level` | Logging level (`debug`, `info`, `warning`, `error`) | `info` |
 
 ---
 

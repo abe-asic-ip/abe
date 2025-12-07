@@ -10,14 +10,17 @@ SPDX-License-Identifier: MIT
 
 ## Overview
 
-The **Reusable ASIC Designs (RAD)** environment provides a consistent, high‑quality foundation for building reusable SystemVerilog IP within the **ABE** project. **RAD focuses on RTL quality**. RAD helps designs achieve:
+The **Reusable ASIC Designs (RAD)** environment provides a consistent,
+high‑quality foundation for building reusable SystemVerilog IP within the
+**ABE** project. **RAD focuses on RTL quality**. RAD helps designs achieve:
 
 - **Consistency** across modules
 - **Clean structure** for simulation, lint, formal, and synthesis
 - **Compatibility** with open‑source tools
 - **Readiness** for verification
 
-This document describes the **design workflow**. It covers what happens *after writing RTL* and *before [formal verification](formal.md) and [DV](dv.md)*.
+This document describes the **design workflow**. It covers what happens *after
+writing RTL* and *before [formal verification](formal.md) and [DV](dv.md)*.
 
 ### Audience
 
@@ -32,8 +35,10 @@ This document describes the **design workflow**. It covers what happens *after w
 
 ### Key Features
 
-- Unified Make targets for [RTL formatting](#rtl-formatting-with-verible), [linting](#rtl-linting-with-verible), and [synthesis](#synthesis-flow)
-- [Verible](https://github.com/chipsalliance/verible)‑based SystemVerilog formatting and linting
+- Unified Make targets for [RTL formatting](#rtl-formatting-with-verible),
+[linting](#rtl-linting-with-verible), and [synthesis](#synthesis-flow)
+- [Verible](https://github.com/chipsalliance/verible)‑based SystemVerilog
+formatting and linting
 - [Verilator](https://verilator.org)‑based SystemVerilog linting
 - [Yosys](https://github.com/YosysHQ/yosys)‑based synthesis flow (via [sv2v](https://github.com/zachjs/sv2v))
 - Standardized [directory structure](#directory-structure) and naming
@@ -61,7 +66,8 @@ Run:
 make deps-design
 ```
 
-This prints any missing host‑side tools. Installation is platform‑specific and outside the scope of this document.
+This prints any missing host‑side tools. Installation is platform‑specific and
+outside the scope of this document.
 
 ### Run Examples
 
@@ -127,7 +133,8 @@ make synth-help
 
 ## Guidelines for Creating New RAD RTL Designs
 
-These guidelines help maintain consistency and tooling compatibility across the RAD library:
+These guidelines help maintain consistency and tooling compatibility across the
+RAD library:
 
 ### Directory Structure
 
@@ -167,7 +174,10 @@ This file lists:
 - Include directories
 - Compile-time defines
 
-Every tool ([Verilator](https://verilator.org), [Verible](https://github.com/chipsalliance/verible), [sv2v](https://github.com/zachjs/sv2v), [Yosys](https://github.com/YosysHQ/yosys), DV) uses the same `srclist.f`.
+Every tool ([Verilator](https://verilator.org),
+[Verible](https://github.com/chipsalliance/verible),
+[sv2v](https://github.com/zachjs/sv2v),
+[Yosys](https://github.com/YosysHQ/yosys), DV) uses the same `srclist.f`.
 
 ### Timescale And Shared Headers
 
@@ -196,11 +206,13 @@ For designs with a single clock and reset:
 - Name the clock `clk`
 - Use an active-low reset named `rst_n`
 
-The DV base classes assume these names, minimizing verification effort. This convention also maintains consistency across all RAD IP.
+The DV base classes assume these names, minimizing verification effort. This
+convention also maintains consistency across all RAD IP.
 
 ### Reference Design
 
-`rad_async_fifo` is a complete example. It shows the recommended [directory structure](#directory-structure), conventions, and Make integration.
+`rad_async_fifo` is a complete example. It shows the recommended [directory
+structure](#directory-structure), conventions, and Make integration.
 
 ---
 
@@ -248,13 +260,15 @@ Run:
 make DESIGN=<design> rtl-lint-verilator
 ```
 
-[Verilator](https://verilator.org) linting is important because RAD DV uses [Verilator](https://verilator.org) as the default simulator.
+[Verilator](https://verilator.org) linting is important because RAD DV uses
+[Verilator](https://verilator.org) as the default simulator.
 
 ---
 
 ## Synthesis Flow
 
-[Yosys](https://github.com/YosysHQ/yosys) synthesis checks that designs can be synthesized and provides statistics.
+[Yosys](https://github.com/YosysHQ/yosys) synthesis checks that designs can be
+synthesized and provides statistics.
 
 ### End‑to‑End Flow
 
@@ -324,7 +338,8 @@ See [RTL Formatting](#rtl-formatting-with-verible) for details.
 [Verible](https://github.com/chipsalliance/verible) checks **structure and style**.
 They work together to find different types of errors.
 
-See [RTL Linting – Verible](#rtl-linting-with-verible) and [RTL Linting – Verilator](#rtl-linting-with-verilator) for details.
+See [RTL Linting – Verible](#rtl-linting-with-verible) and [RTL Linting –
+Verilator](#rtl-linting-with-verilator) for details.
 
 ---
 
@@ -342,7 +357,9 @@ See [Synthesis Flow](#synthesis-flow) for details.
 
 ### Why does synthesis use [sv2v](https://github.com/zachjs/sv2v)?
 
-[Yosys](https://github.com/YosysHQ/yosys) provides excellent Verilog support. `sv2v` enables consistent conversion from SystemVerilog to Verilog, allowing us to use [Yosys](https://github.com/YosysHQ/yosys) effectively.
+[Yosys](https://github.com/YosysHQ/yosys) provides excellent Verilog support.
+`sv2v` enables consistent conversion from SystemVerilog to Verilog, allowing us
+to use [Yosys](https://github.com/YosysHQ/yosys) effectively.
 
 See [End‑to‑End Flow](#endtoend-flow) for details.
 
