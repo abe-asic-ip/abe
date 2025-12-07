@@ -929,7 +929,8 @@ This mirrors UVM best practices:
 - **Clean separation** enables independent sampling and timing
 - **Reusability** across different verification strategies
 
-See Cliff Cummings' "Applying stimulus and sampling outputs" paper ([Literature](#literature) section).
+See Cliff Cummings' "Applying stimulus and sampling outputs" paper
+([Literature](#literature) section).
 
 ---
 
