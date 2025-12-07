@@ -2005,10 +2005,12 @@ SPDX-License-Identifier: MIT
 </ul>
 <h3 id="key-features">Key Features<a class="headerlink" href="#key-features" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Unified solver supporting major flow-control protocols:</li>
+<li>Unified solver supporting major flow-control protocols:<ul>
 <li>Ready / Valid</li>
 <li>XON/XOFF</li>
 <li>Credit-Based Flow Control (CBFC)</li>
+</ul>
+</li>
 <li>Layered traffic profile input (cycle, transaction, burst, or stream).</li>
 <li>Uses a deterministic algorithm to construct the worst-case write and read profiles.</li>
 <li>Uses a mathematical solver (CP-SAT) to find the worst peak occupancy.</li>
@@ -2137,11 +2139,13 @@ cat<span class="w"> </span>out_uarch_fd_rv_layered/results_scalars.json
 <p>The write profile generator creates patterns that produce the densest possible windows of valid cycles:</p>
 <ul>
 <li>Transactions inside a burst alternate between <code>valid-first</code> and <code>gap-first</code> to create long, contiguous data regions.</li>
-<li>Bursts with data (D) and idles (I) are arranged using an <code>(I,D)</code> / <code>(D,I)</code> envelope based on the number of bursts:</li>
+<li>Bursts with data (D) and idles (I) are arranged using an <code>(I,D)</code> / <code>(D,I)</code> envelope based on the number of bursts:<ul>
 <li><code>s_cnt = 1</code>: <code>(D,I)</code></li>
 <li><code>s_cnt = 2</code>: <code>(I,D) (D,I)</code></li>
 <li><code>s_cnt = 3</code>: <code>(I,D) (D,I) (D,I)</code></li>
 <li><code>s_cnt = 4</code>: <code>(I,D) (D,I) (I,D) (D,I)</code></li>
+</ul>
+</li>
 <li>This places idles at the start and end of the stream, while concentrating data in the interior.</li>
 <li>For multi-burst streams, boundaries are constructed to create <code>...1 | 1...</code> transitions (“Case-4” behavior), known to maximize FIFO occupancy.</li>
 </ul>
@@ -2162,12 +2166,16 @@ cat<span class="w"> </span>out_uarch_fd_rv_layered/results_scalars.json
   <code>occ[t+1] = occ[t] + writes[t] - reads[t]</code></li>
 <li><strong>Non-negativity</strong>
   <code>occ[t] ≥ 0</code></li>
-<li><strong>Throughput constraints</strong></li>
+<li><strong>Throughput constraints</strong><ul>
 <li>total writes = <code>sum_w</code></li>
 <li>total reads  = <code>sum_r</code></li>
-<li><strong>Latency constraints</strong></li>
+</ul>
+</li>
+<li><strong>Latency constraints</strong><ul>
 <li><code>wr_latency</code>, <code>rd_latency</code></li>
 <li>synchronizer delays (CDC)</li>
+</ul>
+</li>
 </ul>
 <p>The solver’s objective is to <strong>maximize the peak occupancy</strong> under these constraints.</p>
 <p>Because the deterministic masks are pre-computed input constraints that encode the worst-case timing structure, CP-SAT only needs to explore <em>cycle-level scheduling</em> inside those windows — which is computationally tractable while still exact.</p>
@@ -2798,12 +2806,16 @@ fifo-depth<span class="w"> </span>my_spec.yaml<span class="w"> </span>--verbosit
 <p>In ABE, “Ready / Valid” is a shorthand name for a generic producer/consumer FIFO with no explicit flow-control protocol modeled inside the solver.</p>
 <p>This mode applies to two common architectural situations:</p>
 <ul>
-<li>Backpressured systems (e.g., actual Ready/Valid handshake)</li>
+<li>Backpressured systems (e.g., actual Ready/Valid handshake)<ul>
 <li>Overflow is prevented by deasserting ready.</li>
 <li>If the traffic pattern would overflow the FIFO, that means the design will be forced to stall the producer and miss performance goals.</li>
-<li>Drop-tolerant systems (no backpressure)</li>
+</ul>
+</li>
+<li>Drop-tolerant systems (no backpressure)<ul>
 <li>Overflow results in dropped data.</li>
 <li>If the traffic pattern would overflow the FIFO, that means the system will drop data that should not be dropped.</li>
+</ul>
+</li>
 </ul>
 <p>Despite these architectural differences, the FIFO depth requirement is the same:</p>
 <p><em>The FIFO must be sized so that it never overflows under the worst-case write/read schedule within the analysis horizon.</em></p>
@@ -3600,11 +3612,13 @@ fifo-depth<span class="w"> </span>my_spec.yaml<span class="w"> </span>--verbosit
 </ul>
 <p><em>Multiple Bursts (<code>bursts_per_stream &gt; 1</code>):</em></p>
 <ul>
-<li><strong>Transaction-level alternation</strong>: Transactions within each burst alternate between gap-first and valid-first patterns to achieve valid clustering at burst boundaries</li>
+<li><strong>Transaction-level alternation</strong>: Transactions within each burst alternate between gap-first and valid-first patterns to achieve valid clustering at burst boundaries<ul>
 <li>Pattern choice depends on burst index parity and <code>transactions_per_burst</code> parity</li>
 <li>Odd-indexed bursts are configured to end with valid cycles</li>
 <li>Even-indexed bursts ≥ 2 are configured to start with valid cycles</li>
-<li><strong>Burst-level alternation</strong>: Bursts place gaps strategically to concentrate data in the middle of the observation window</li>
+</ul>
+</li>
+<li><strong>Burst-level alternation</strong>: Bursts place gaps strategically to concentrate data in the middle of the observation window<ul>
 <li>First burst (index 0): gap followed by transactions (I,D) - places idle at start</li>
 <li>Last burst: transactions followed by gap (D,I) - places idle at end</li>
 <li>Middle bursts alternate:<ul>
@@ -3619,6 +3633,8 @@ fifo-depth<span class="w"> </span>my_spec.yaml<span class="w"> </span>--verbosit
 </ul>
 </li>
 </ul>
+</li>
+</ul>
 <p><strong>For Read Profiles (maximizing FIFO drain delay):</strong></p>
 <p><em>Single Burst (<code>bursts_per_stream == 1</code>):</em></p>
 <ul>
@@ -3627,10 +3643,12 @@ fifo-depth<span class="w"> </span>my_spec.yaml<span class="w"> </span>--verbosit
 </ul>
 <p><em>Multiple Bursts (<code>bursts_per_stream &gt; 1</code>):</em></p>
 <ul>
-<li><strong>Transaction-level alternation</strong>: Transactions alternate to cluster idle cycles at boundaries</li>
+<li><strong>Transaction-level alternation</strong>: Transactions alternate to cluster idle cycles at boundaries<ul>
 <li>Alternation pattern based on combined (burst_index + transaction_index) parity</li>
 <li>Even parity: valid-first then gap (boundary with next gap-first forms larger idle)</li>
 <li>Odd parity: gap-first then valid</li>
+</ul>
+</li>
 <li><strong>Burst-level alternation</strong>: All burst gaps placed at start to maximize read delay</li>
 </ul>
 <p><strong>Causality Preservation:</strong></p>

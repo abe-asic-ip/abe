@@ -1110,16 +1110,22 @@ SPDX-License-Identifier: MIT
 <li><strong>Clock</strong>: <code>clk</code> (default 1000ps period)</li>
 <li><strong>Reset</strong>: <code>rst_n</code></li>
 <li><strong>Driver</strong>: <code>RadCdcSyncDriver</code> - Drives <code>async_i</code> with timing jitter relative to <code>clk</code> edges</li>
-<li><strong>Monitors</strong>:</li>
+<li><strong>Monitors</strong>:<ul>
 <li><code>RadCdcSyncMonitorIn</code> - Samples <code>async_i</code> on <code>clk</code> (for reference model input)</li>
 <li><code>RadCdcSyncMonitorOut</code> - Samples <code>sync_o</code> on <code>clk</code> (synchronized output)</li>
-<li><strong>Item</strong>: <code>RadCdcSyncItem</code></li>
+</ul>
+</li>
+<li><strong>Item</strong>: <code>RadCdcSyncItem</code><ul>
 <li>Inputs: <code>async_i</code>, <code>delay_ps</code> (pre-toggle jitter)</li>
 <li>Outputs: <code>sync_o</code> (synchronized output from DUT)</li>
-<li><strong>Sequence</strong>: <code>RadCdcSyncSequence</code></li>
+</ul>
+</li>
+<li><strong>Sequence</strong>: <code>RadCdcSyncSequence</code><ul>
 <li>Generates toggling pattern with timing jitter to stress metastability</li>
 <li>Enforces visible transitions (state alternates 0 → 1 → 0 → 1)</li>
 <li>Applies random delay in ±20% window around half clock period</li>
+</ul>
+</li>
 </ul>
 <hr />
 <h2 id="component-structure">Component Structure<a class="headerlink" href="#component-structure" title="Permanent link">&para;</a></h2>

@@ -1244,31 +1244,43 @@ SPDX-License-Identifier: MIT
 <li><strong>Clock</strong>: <code>wclk</code> (default 1000ps period)</li>
 <li><strong>Reset</strong>: <code>wrst_n</code></li>
 <li><strong>Driver</strong>: <code>RadAsyncFifoWriteDriver</code> - Drives <code>winc</code>, <code>wdata</code> on <code>wclk</code> edges</li>
-<li><strong>Monitors</strong>:</li>
+<li><strong>Monitors</strong>:<ul>
 <li><code>RadAsyncFifoWriteMonitorIn</code> - Samples <code>winc</code>, <code>wdata</code> on <code>wclk</code></li>
 <li><code>RadAsyncFifoWriteMonitorOut</code> - Samples <code>wfull</code> on <code>wclk</code></li>
-<li><strong>Item</strong>: <code>RadAsyncFifoWriteItem</code></li>
+</ul>
+</li>
+<li><strong>Item</strong>: <code>RadAsyncFifoWriteItem</code><ul>
 <li>Inputs: <code>winc</code>, <code>wdata</code></li>
 <li>Outputs: <code>wfull</code> (feedback from DUT)</li>
-<li><strong>Sequence</strong>: <code>RadAsyncFifoWriteSequence</code></li>
+</ul>
+</li>
+<li><strong>Sequence</strong>: <code>RadAsyncFifoWriteSequence</code><ul>
 <li>Generates random write transactions with configurable probability (default 0.7)</li>
 <li>Protocol enforcement handled by driver, not sequence</li>
 <li>Generates random <code>wdata</code> values within configured data width</li>
+</ul>
+</li>
 </ul>
 <h3 id="agent-1-read-domain">Agent 1: Read Domain<a class="headerlink" href="#agent-1-read-domain" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Clock</strong>: <code>rclk</code> (default 1200ps period)</li>
 <li><strong>Reset</strong>: <code>rrst_n</code></li>
 <li><strong>Driver</strong>: <code>RadAsyncFifoReadDriver</code> - Drives <code>rinc</code> on <code>rclk</code> edges</li>
-<li><strong>Monitors</strong>:</li>
+<li><strong>Monitors</strong>:<ul>
 <li><code>RadAsyncFifoReadMonitorIn</code> - Samples <code>rinc</code> on <code>rclk</code></li>
 <li><code>RadAsyncFifoReadMonitorOut</code> - Samples <code>rdata</code>, <code>rempty</code> on <code>rclk</code></li>
-<li><strong>Item</strong>: <code>RadAsyncFifoReadItem</code></li>
+</ul>
+</li>
+<li><strong>Item</strong>: <code>RadAsyncFifoReadItem</code><ul>
 <li>Inputs: <code>rinc</code></li>
 <li>Outputs: <code>rdata</code>, <code>rempty</code> (feedback from DUT)</li>
-<li><strong>Sequence</strong>: <code>RadAsyncFifoReadSequence</code></li>
+</ul>
+</li>
+<li><strong>Sequence</strong>: <code>RadAsyncFifoReadSequence</code><ul>
 <li>Generates random read transactions with configurable probability (default 0.7)</li>
 <li>Protocol enforcement handled by driver, not sequence</li>
+</ul>
+</li>
 </ul>
 <hr />
 <h2 id="component-structure">Component Structure<a class="headerlink" href="#component-structure" title="Permanent link">&para;</a></h2>
@@ -1412,30 +1424,40 @@ SPDX-License-Identifier: MIT
 <h2 id="files">Files<a class="headerlink" href="#files" title="Permanent link">&para;</a></h2>
 <h3 id="transaction-items">Transaction Items<a class="headerlink" href="#transaction-items" title="Permanent link">&para;</a></h3>
 <ul>
-<li><code>rad_async_fifo_item.py</code> - Contains both transaction classes:</li>
+<li><code>rad_async_fifo_item.py</code> - Contains both transaction classes:<ul>
 <li><code>RadAsyncFifoWriteItem</code> - Write domain (winc, wdata, wfull)</li>
 <li><code>RadAsyncFifoReadItem</code> - Read domain (rinc, rdata, rempty)</li>
 </ul>
+</li>
+</ul>
 <h3 id="drivers">Drivers<a class="headerlink" href="#drivers" title="Permanent link">&para;</a></h3>
 <ul>
-<li><code>rad_async_fifo_driver.py</code> - Contains both driver classes:</li>
+<li><code>rad_async_fifo_driver.py</code> - Contains both driver classes:<ul>
 <li><code>RadAsyncFifoWriteDriver</code> - Drives write inputs on wclk</li>
 <li><code>RadAsyncFifoReadDriver</code> - Drives read inputs on rclk</li>
 </ul>
+</li>
+</ul>
 <h3 id="sequences">Sequences<a class="headerlink" href="#sequences" title="Permanent link">&para;</a></h3>
 <ul>
-<li><code>rad_async_fifo_sequence.py</code> - Contains both sequence classes:</li>
+<li><code>rad_async_fifo_sequence.py</code> - Contains both sequence classes:<ul>
 <li><code>RadAsyncFifoWriteSequence</code> - Generates write transactions</li>
 <li><code>RadAsyncFifoReadSequence</code> - Generates read transactions</li>
 </ul>
+</li>
+</ul>
 <h3 id="monitors">Monitors<a class="headerlink" href="#monitors" title="Permanent link">&para;</a></h3>
 <ul>
-<li><code>rad_async_fifo_monitor_in.py</code> - Contains both input monitor classes:</li>
+<li><code>rad_async_fifo_monitor_in.py</code> - Contains both input monitor classes:<ul>
 <li><code>RadAsyncFifoWriteMonitorIn</code> - Samples winc, wdata on wclk</li>
 <li><code>RadAsyncFifoReadMonitorIn</code> - Samples rinc on rclk</li>
-<li><code>rad_async_fifo_monitor_out.py</code> - Contains both output monitor classes:</li>
+</ul>
+</li>
+<li><code>rad_async_fifo_monitor_out.py</code> - Contains both output monitor classes:<ul>
 <li><code>RadAsyncFifoWriteMonitorOut</code> - Samples wfull on wclk</li>
 <li><code>RadAsyncFifoReadMonitorOut</code> - Samples rdata, rempty on rclk</li>
+</ul>
+</li>
 </ul>
 <h3 id="environment-test">Environment &amp; Test<a class="headerlink" href="#environment-test" title="Permanent link">&para;</a></h3>
 <ul>

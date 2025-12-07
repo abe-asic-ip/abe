@@ -1244,31 +1244,43 @@ SPDX-License-Identifier: MIT
 <li><strong>Clock</strong>: <code>aclk</code> (default 1000ps period)</li>
 <li><strong>Reset</strong>: <code>arst_n</code></li>
 <li><strong>Driver</strong>: <code>RadCdcMcpWriteDriver</code> - Drives <code>asend</code>, <code>adatain</code> on <code>aclk</code> edges</li>
-<li><strong>Monitors</strong>:</li>
+<li><strong>Monitors</strong>:<ul>
 <li><code>RadCdcMcpWriteMonitorIn</code> - Samples <code>asend</code>, <code>adatain</code> on <code>aclk</code></li>
 <li><code>RadCdcMcpWriteMonitorOut</code> - Samples <code>aready</code> on <code>aclk</code></li>
-<li><strong>Item</strong>: <code>RadCdcMcpWriteItem</code></li>
+</ul>
+</li>
+<li><strong>Item</strong>: <code>RadCdcMcpWriteItem</code><ul>
 <li>Inputs: <code>asend</code>, <code>adatain</code></li>
 <li>Outputs: <code>aready</code> (feedback from DUT)</li>
-<li><strong>Sequence</strong>: <code>RadCdcMcpWriteSequence</code></li>
+</ul>
+</li>
+<li><strong>Sequence</strong>: <code>RadCdcMcpWriteSequence</code><ul>
 <li>Generates random send transactions with configurable probability (default 0.7)</li>
 <li>Protocol enforcement handled by driver, not sequence</li>
 <li>Generates random <code>adatain</code> values within configured data width</li>
+</ul>
+</li>
 </ul>
 <h3 id="agent-1-b-domain-destination">Agent 1: b-domain (Destination)<a class="headerlink" href="#agent-1-b-domain-destination" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Clock</strong>: <code>bclk</code> (default 1200ps period)</li>
 <li><strong>Reset</strong>: <code>brst_n</code></li>
 <li><strong>Driver</strong>: <code>RadCdcMcpReadDriver</code> - Drives <code>bload</code> on <code>bclk</code> edges</li>
-<li><strong>Monitors</strong>:</li>
+<li><strong>Monitors</strong>:<ul>
 <li><code>RadCdcMcpReadMonitorIn</code> - Samples <code>bload</code> on <code>bclk</code></li>
 <li><code>RadCdcMcpReadMonitorOut</code> - Samples <code>bdata</code>, <code>bvalid</code> on <code>bclk</code></li>
-<li><strong>Item</strong>: <code>RadCdcMcpReadItem</code></li>
+</ul>
+</li>
+<li><strong>Item</strong>: <code>RadCdcMcpReadItem</code><ul>
 <li>Inputs: <code>bload</code></li>
 <li>Outputs: <code>bdata</code>, <code>bvalid</code> (feedback from DUT)</li>
-<li><strong>Sequence</strong>: <code>RadCdcMcpReadSequence</code></li>
+</ul>
+</li>
+<li><strong>Sequence</strong>: <code>RadCdcMcpReadSequence</code><ul>
 <li>Generates random load transactions with configurable probability (default 0.7)</li>
 <li>Protocol enforcement not required (driver does not implement backpressure)</li>
+</ul>
+</li>
 </ul>
 <hr />
 <h2 id="component-structure">Component Structure<a class="headerlink" href="#component-structure" title="Permanent link">&para;</a></h2>
@@ -1404,30 +1416,40 @@ SPDX-License-Identifier: MIT
 <h2 id="files">Files<a class="headerlink" href="#files" title="Permanent link">&para;</a></h2>
 <h3 id="transaction-items">Transaction Items<a class="headerlink" href="#transaction-items" title="Permanent link">&para;</a></h3>
 <ul>
-<li><code>rad_cdc_mcp_item.py</code> - Contains both transaction classes:</li>
+<li><code>rad_cdc_mcp_item.py</code> - Contains both transaction classes:<ul>
 <li><code>RadCdcMcpWriteItem</code> - a-domain (asend, adatain, aready)</li>
 <li><code>RadCdcMcpReadItem</code> - b-domain (bload, bdata, bvalid)</li>
 </ul>
+</li>
+</ul>
 <h3 id="drivers">Drivers<a class="headerlink" href="#drivers" title="Permanent link">&para;</a></h3>
 <ul>
-<li><code>rad_cdc_mcp_driver.py</code> - Contains both driver classes:</li>
+<li><code>rad_cdc_mcp_driver.py</code> - Contains both driver classes:<ul>
 <li><code>RadCdcMcpWriteDriver</code> - Drives a-domain inputs on aclk with backpressure</li>
 <li><code>RadCdcMcpReadDriver</code> - Drives b-domain inputs on bclk (no backpressure)</li>
 </ul>
+</li>
+</ul>
 <h3 id="sequences">Sequences<a class="headerlink" href="#sequences" title="Permanent link">&para;</a></h3>
 <ul>
-<li><code>rad_cdc_mcp_sequence.py</code> - Contains both sequence classes:</li>
+<li><code>rad_cdc_mcp_sequence.py</code> - Contains both sequence classes:<ul>
 <li><code>RadCdcMcpWriteSequence</code> - Generates send transactions</li>
 <li><code>RadCdcMcpReadSequence</code> - Generates load transactions</li>
 </ul>
+</li>
+</ul>
 <h3 id="monitors">Monitors<a class="headerlink" href="#monitors" title="Permanent link">&para;</a></h3>
 <ul>
-<li><code>rad_cdc_mcp_monitor_in.py</code> - Contains both input monitor classes:</li>
+<li><code>rad_cdc_mcp_monitor_in.py</code> - Contains both input monitor classes:<ul>
 <li><code>RadCdcMcpWriteMonitorIn</code> - Samples asend, adatain on aclk</li>
 <li><code>RadCdcMcpReadMonitorIn</code> - Samples bload on bclk</li>
-<li><code>rad_cdc_mcp_monitor_out.py</code> - Contains both output monitor classes:</li>
+</ul>
+</li>
+<li><code>rad_cdc_mcp_monitor_out.py</code> - Contains both output monitor classes:<ul>
 <li><code>RadCdcMcpWriteMonitorOut</code> - Samples aready on aclk</li>
 <li><code>RadCdcMcpReadMonitorOut</code> - Samples bdata, bvalid on bclk</li>
+</ul>
+</li>
 </ul>
 <h3 id="environment-test">Environment &amp; Test<a class="headerlink" href="#environment-test" title="Permanent link">&para;</a></h3>
 <ul>

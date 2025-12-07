@@ -2656,70 +2656,78 @@ make<span class="w"> </span>dv-report
 <h4 id="output-timing-considerations">Output Timing Considerations<a class="headerlink" href="#output-timing-considerations" title="Permanent link">&para;</a></h4>
 <p>How you implement monitors depends on output timing and protocol complexity:</p>
 <ul>
-<li><strong>Simple registered outputs</strong>: Use <code>BaseMonitorOut</code> directly</li>
 <li>
-<p>Example: <code>rad_cdc_sync</code> - output updates same cycle, sampled at standard timing</p>
+<p><strong>Simple registered outputs</strong>: Use <code>BaseMonitorOut</code> directly</p>
+<ul>
+<li>Example: <code>rad_cdc_sync</code> - output updates same cycle, sampled at standard timing</li>
+</ul>
 </li>
 <li>
 <p><strong>Pipelined registered outputs</strong>: Extend <code>BaseMonitorOut</code> with cycle tracking</p>
-</li>
+<ul>
 <li>Example: <code>rad_cdc_mcp</code> - <code>bdata</code> updates one cycle after <code>bload &amp;&amp; bvalid</code></li>
 <li>Monitor uses <code>_prev_load_pending</code> to track when valid data is available</li>
-<li>
-<p>Only emits transactions when actual data transfer completes</p>
+<li>Only emits transactions when actual data transfer completes</li>
+</ul>
 </li>
 <li>
 <p><strong>Conditional sampling</strong>: Override <code>run_phase()</code> to filter transactions</p>
-</li>
+<ul>
 <li>Examples: Both <code>rad_async_fifo</code> and <code>rad_cdc_mcp</code></li>
 <li>Only send transactions to analysis port when transfer conditions are met</li>
 <li>Prevents scoreboard from checking invalid/idle cycles</li>
+</ul>
+</li>
 </ul>
 <p>Most simple designs have registered outputs and can use <code>BaseMonitorOut</code> unchanged. For pipelined protocols or conditional sampling, reference the existing benches for patterns.</p>
 <h3 id="2-implement-core-components">2. Implement Core Components<a class="headerlink" href="#2-implement-core-components" title="Permanent link">&para;</a></h3>
 <p>Customize these design-specific files:</p>
 <ul>
-<li><strong>Item</strong> (<code>rad_&lt;design&gt;_item.py</code>): Define input and output fields</li>
-<li>Implement <code>_in_fields()</code> and <code>_out_fields()</code> methods</li>
 <li>
-<p>Add any design-specific constraints or configuration parameters</p>
+<p><strong>Item</strong> (<code>rad_&lt;design&gt;_item.py</code>): Define input and output fields</p>
+<ul>
+<li>Implement <code>_in_fields()</code> and <code>_out_fields()</code> methods</li>
+<li>Add any design-specific constraints or configuration parameters</li>
+</ul>
 </li>
 <li>
 <p><strong>Driver</strong> (<code>rad_&lt;design&gt;_driver.py</code>): Drive design inputs with proper timing</p>
-</li>
+<ul>
 <li>Set <code>initial_dut_input_values</code> for reset state</li>
 <li>Implement <code>drive_item()</code> to apply transactions on drive edges</li>
-<li>
-<p>Handle backpressure or protocol requirements</p>
+<li>Handle backpressure or protocol requirements</li>
+</ul>
 </li>
 <li>
 <p><strong>Monitors</strong> (<code>rad_&lt;design&gt;_monitor_in.py</code>, <code>rad_&lt;design&gt;_monitor_out.py</code>): Observe design signals</p>
-</li>
+<ul>
 <li>Input monitor: Sample inputs for reference model</li>
 <li>Output monitor: Sample outputs for scoreboard comparison</li>
-<li>
-<p>Implement <code>sample_dut()</code> to capture signal values</p>
+<li>Implement <code>sample_dut()</code> to capture signal values</li>
+</ul>
 </li>
 <li>
 <p><strong>Reference Model</strong> (<code>rad_&lt;design&gt;_ref_model.py</code>): Compute expected behavior</p>
-</li>
+<ul>
 <li>Implement <code>calc_exp()</code> to predict design outputs from inputs</li>
 <li>Maintain internal state matching design behavior</li>
-<li>
-<p>Handle <code>reset_change()</code> for proper state initialization</p>
+<li>Handle <code>reset_change()</code> for proper state initialization</li>
+</ul>
 </li>
 <li>
 <p><strong>Sequence</strong> (<code>rad_&lt;design&gt;_sequence.py</code>): Generate stimulus patterns</p>
-</li>
+<ul>
 <li>Implement <code>set_item_inputs()</code> to randomize or set input field values</li>
-<li>
-<p>Configure sequence length via <code>RAD_&lt;DESIGN&gt;_SEQ_LEN</code> environment variable</p>
+<li>Configure sequence length via <code>RAD_&lt;DESIGN&gt;_SEQ_LEN</code> environment variable</li>
+</ul>
 </li>
 <li>
 <p><strong>Coverage</strong> (<code>rad_&lt;design&gt;_coverage.py</code>): Define functional coverage</p>
-</li>
+<ul>
 <li>Use <code>@CoverPoint</code> decorators from <a href="https://github.com/mciepluc/cocotb-coverage">cocotb-coverage</a></li>
 <li>Implement <code>write()</code> method to sample coverage from transactions</li>
+</ul>
+</li>
 </ul>
 <h3 id="3-develop-tests">3. Develop Tests<a class="headerlink" href="#3-develop-tests" title="Permanent link">&para;</a></h3>
 <p>All tests need to:</p>
