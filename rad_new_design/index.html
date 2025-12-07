@@ -1012,15 +1012,20 @@ SPDX-License-Identifier: MIT
 
 <h1 id="creating-a-new-rad-design">Creating a New RAD Design<a class="headerlink" href="#creating-a-new-rad-design" title="Permanent link">&para;</a></h1>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>This document describes how to create a new reusable IP design in the <strong>RAD (Reusable ASIC Designs)</strong> environment. It brings together information from these documents:</p>
+<p>This document describes how to create a new reusable IP design in the <strong>RAD
+(Reusable ASIC Designs)</strong> environment. It brings together information from these
+documents:</p>
 <ul>
-<li><a href="../fifo_depth/">FIFO Depth Tool</a> &amp; <a href="../pkt_quantize/">Packet Quantization Calculator</a> — tools for sizing buffers and analyzing throughput</li>
+<li><a href="../fifo_depth/">FIFO Depth Tool</a> &amp;
+<a href="../pkt_quantize/">Packet Quantization Calculator</a> — tools for sizing buffers and
+analyzing throughput</li>
 <li><a href="../python_dev/">ABE Python Development</a> — Python coding standards for DV utilities</li>
 <li><a href="../design/">RAD Design</a> — RTL structure, linting, formatting, synthesis</li>
 <li><a href="../formal/">RAD Formal</a> — formal proof setup and methods</li>
 <li><a href="../dv/">RAD DV</a> — UVM-style testbench using cocotb + pyuvm</li>
 </ul>
-<p>A RAD design includes <strong>RTL</strong>, <strong>formal verification</strong>, <strong>DV tests</strong>, and <strong>documentation</strong>. All parts follow ABE conventions and use Make-based flows.</p>
+<p>A RAD design includes <strong>RTL</strong>, <strong>formal verification</strong>, <strong>DV tests</strong>, and
+<strong>documentation</strong>. All parts follow ABE conventions and use Make-based flows.</p>
 <p>This guide provides a step-by-step process for creating a new RAD design.</p>
 <hr />
 <h2 id="goals">Goals<a class="headerlink" href="#goals" title="Permanent link">&para;</a></h2>
@@ -1056,7 +1061,8 @@ SPDX-License-Identifier: MIT
 │       │   │   │   └── srclist.f
 </code></pre></div>
 
-<p>This structure ensures compatibility with all Makeflows, DV tools, and templates in the ABE environment.</p>
+<p>This structure ensures compatibility with all Makeflows, DV tools, and templates
+in the ABE environment.</p>
 <hr />
 <h2 id="workflow">Workflow<a class="headerlink" href="#workflow" title="Permanent link">&para;</a></h2>
 <h2 id="1-create-the-design-directory">1. Create the Design Directory<a class="headerlink" href="#1-create-the-design-directory" title="Permanent link">&para;</a></h2>
@@ -1073,7 +1079,8 @@ dv/
 <p>Add a placeholder <code>README.md</code>.</p>
 <hr />
 <h2 id="2-use-microarchitecture-tools-if-needed">2. Use Microarchitecture Tools if Needed<a class="headerlink" href="#2-use-microarchitecture-tools-if-needed" title="Permanent link">&para;</a></h2>
-<p>If your design needs buffer sizing or throughput analysis, use the <code>fifo-depth</code> or <code>pkt-quantize</code> tools.</p>
+<p>If your design needs buffer sizing or throughput analysis, use the <code>fifo-depth</code>
+or <code>pkt-quantize</code> tools.</p>
 <hr />
 <h2 id="3-write-rtl-using-rad-conventions">3. Write RTL Using RAD Conventions<a class="headerlink" href="#3-write-rtl-using-rad-conventions" title="Permanent link">&para;</a></h2>
 <p>See <a href="../design/">RAD Design</a> for RTL guidelines. Your RTL should:</p>

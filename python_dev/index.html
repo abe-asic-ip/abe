@@ -1191,7 +1191,10 @@ SPDX-License-Identifier: MIT
 
 <h1 id="abe-python-development">ABE Python Development<a class="headerlink" href="#abe-python-development" title="Permanent link">&para;</a></h1>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>ABE uses Python for microarchitecture tools (see <a href="../fifo_depth/">FIFO Depth Tool</a> and <a href="../pkt_quantize/">Packet Quantization Calculator</a>) and <a href="../dv/">RAD DV</a>. This document describes the static analysis tools that help maintain code quality.</p>
+<p>ABE uses Python for microarchitecture tools (see
+<a href="../fifo_depth/">FIFO Depth Tool</a> and
+<a href="../pkt_quantize/">Packet Quantization Calculator</a>) and <a href="../dv/">RAD DV</a>. This
+document describes the static analysis tools that help maintain code quality.</p>
 <p><strong>Audience</strong>: ABE contributors</p>
 <p><strong>Tools</strong>:</p>
 <ul>
@@ -1238,7 +1241,9 @@ make<span class="w"> </span>py-install-all
 
 <hr />
 <h2 id="organize-imports-with-isort">Organize Imports with <a href="https://pycqa.github.io/isort">isort</a><a class="headerlink" href="#organize-imports-with-isort" title="Permanent link">&para;</a></h2>
-<p><a href="https://pycqa.github.io/isort">isort</a> automatically sorts and organizes Python import statements. It groups imports into sections (standard library, third-party, local) and sorts them alphabetically for consistency.</p>
+<p><a href="https://pycqa.github.io/isort">isort</a> automatically sorts and organizes Python
+import statements. It groups imports into sections (standard library,
+third-party, local) and sorts them alphabetically for consistency.</p>
 <h3 id="isort-commands"><a href="https://pycqa.github.io/isort">isort</a> Commands<a class="headerlink" href="#isort-commands" title="Permanent link">&para;</a></h3>
 <p>Check import organization without modifying files:</p>
 <div class="codehilite"><pre><span></span><code>make<span class="w"> </span><span class="nv">PY_SRCS</span><span class="o">=</span>&lt;files&gt;<span class="w"> </span>py-isort-check
@@ -1257,7 +1262,9 @@ make<span class="w"> </span><span class="nv">PY_SRCS</span><span class="o">=</sp
 <p>Configured in <code>.isort.cfg</code> and <code>pyproject.toml</code> under <code>[tool.isort]</code>.</p>
 <hr />
 <h2 id="format-with-black">Format with <a href="https://github.com/psf/black">black</a><a class="headerlink" href="#format-with-black" title="Permanent link">&para;</a></h2>
-<p><a href="https://github.com/psf/black">black</a> is a Python code formatter that automatically formats code to a consistent style. It applies the same formatting rules everywhere, making code easier to read and review.</p>
+<p><a href="https://github.com/psf/black">black</a> is a Python code formatter that
+automatically formats code to a consistent style. It applies the same
+formatting rules everywhere, making code easier to read and review.</p>
 <h3 id="black-commands"><a href="https://github.com/psf/black">black</a> Commands<a class="headerlink" href="#black-commands" title="Permanent link">&para;</a></h3>
 <p>Check code formatting without modifying files:</p>
 <div class="codehilite"><pre><span></span><code>make<span class="w"> </span><span class="nv">PY_SRCS</span><span class="o">=</span>&lt;files&gt;<span class="w"> </span>py-format-check
@@ -1271,17 +1278,20 @@ make<span class="w"> </span><span class="nv">PY_SRCS</span><span class="o">=</sp
 <p>Configured in <code>pyproject.toml</code> under <code>[tool.black]</code>.</p>
 <hr />
 <h2 id="lint-with-pylint">Lint with <a href="https://pylint.org">pylint</a><a class="headerlink" href="#lint-with-pylint" title="Permanent link">&para;</a></h2>
-<p><a href="https://pylint.org">pylint</a> analyzes Python code for errors and style issues. It finds bugs and potential problems before you run the code.</p>
+<p><a href="https://pylint.org">pylint</a> analyzes Python code for errors and style issues.
+It finds bugs and potential problems before you run the code.</p>
 <h3 id="commands">Commands<a class="headerlink" href="#commands" title="Permanent link">&para;</a></h3>
 <p>Run <a href="https://pylint.org">pylint</a> on specified files:</p>
 <div class="codehilite"><pre><span></span><code>make<span class="w"> </span><span class="nv">PY_SRCS</span><span class="o">=</span>&lt;files&gt;<span class="w"> </span>py-lint
 </code></pre></div>
 
 <h3 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h3>
-<p>Configured in <code>pyproject.toml</code> under <code>[tool.pylint]</code> and via command-line flags in <code>mk/00-vars.mk</code>.</p>
+<p>Configured in <code>pyproject.toml</code> under <code>[tool.pylint]</code> and via command-line flags
+in <code>mk/00-vars.mk</code>.</p>
 <hr />
 <h2 id="type-check-with-mypy">Type Check with <a href="https://mypy-lang.org">mypy</a><a class="headerlink" href="#type-check-with-mypy" title="Permanent link">&para;</a></h2>
-<p><a href="https://mypy-lang.org">mypy</a> is a static type checker for Python. It checks type annotations without running the code and finds type-related bugs early.</p>
+<p><a href="https://mypy-lang.org">mypy</a> is a static type checker for Python. It checks
+type annotations without running the code and finds type-related bugs early.</p>
 <h3 id="mypy-commands"><a href="https://mypy-lang.org">mypy</a> Commands<a class="headerlink" href="#mypy-commands" title="Permanent link">&para;</a></h3>
 <p>Run <a href="https://mypy-lang.org">mypy</a> type checking on specified files:</p>
 <div class="codehilite"><pre><span></span><code>make<span class="w"> </span><span class="nv">PY_SRCS</span><span class="o">=</span>&lt;files&gt;<span class="w"> </span>py-typecheck

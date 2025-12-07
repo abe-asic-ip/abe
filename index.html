@@ -1158,23 +1158,35 @@ SPDX-License-Identifier: MIT
 <a href="https://github.com/abe-asic-ip/abe"><img alt="GitHub" src="https://img.shields.io/badge/github-abe--asic--ip%2Fabe-blue.svg" /></a>
 <a href="https://abe-asic-ip.github.io/abe/"><img alt="Documentation" src="https://img.shields.io/badge/docs-github%20pages-blue.svg" /></a>
 <a href="https://reuse.software/"><img alt="REUSE Compliance" src="https://img.shields.io/badge/REUSE-compliant-green.svg" /></a></p>
-<p>ABE ("A Better Environment") is a lightweight, modern environment for ASIC IP development. It combines microarchitecture tools, reusable RTL designs, synthesis, formal verification, and Python-based design verification (DV). ABE runs on free and open-source tools.</p>
-<p>The goal is simple: <strong>make block-level ASIC development easier, clearer, and more productive</strong> for professional engineers, students, researchers, and enthusiasts.</p>
+<p>ABE ("A Better Environment") is a lightweight, modern environment for ASIC IP
+development. It combines microarchitecture tools, reusable RTL designs,
+synthesis, formal verification, and Python-based design verification (DV). ABE
+runs on free and open-source tools.</p>
+<p>The goal is simple: <strong>make block-level ASIC development easier, clearer, and
+more productive</strong> for professional engineers, students, researchers, and enthusiasts.</p>
 <p><strong><a href="https://github.com/abe-asic-ip/abe">See the git repository</a></strong></p>
 <p>Welcome to ABE — a better environment for ASIC IP development.</p>
 <hr />
 <h2 id="what-is-abe">What is ABE?<a class="headerlink" href="#what-is-abe" title="Permanent link">&para;</a></h2>
 <p>ABE provides tools and resources for digital design and verification:</p>
 <ul>
-<li><a href="#microarchitecture-tools">Microarchitecture tools</a>: Including <a href="fifo_depth/">fifo-depth</a>, a CP-SAT (Constraint Programming - Satisfiability)-based tool that computes provably minimal FIFO depths and flow-control parameters for complex traffic profiles.</li>
-<li><a href="dv/">UVM-based Python verification environment</a>: A complete design verification (DV) methodology using <a href="https://www.cocotb.org">cocotb</a> and <a href="https://github.com/pyuvm/pyuvm">pyuvm</a>.</li>
-<li><a href="#developer-tooling">Developer workflow and tooling</a>: Make-based workflows, synthesis scripts, and code management tools.</li>
-<li><a href="#reusable-asic-designs-rad">Reusable ASIC Designs (RAD)</a>: A library of RTL designs validated with ABE's synthesis, formal verification, and DV flows.</li>
+<li><a href="#microarchitecture-tools">Microarchitecture tools</a>: Including
+<a href="fifo_depth/">fifo-depth</a>, a CP-SAT (Constraint Programming -
+Satisfiability)-based tool that computes provably minimal FIFO depths and
+flow-control parameters for complex traffic profiles.</li>
+<li><a href="dv/">UVM-based Python verification environment</a>: A complete design
+verification (DV) methodology using <a href="https://www.cocotb.org">cocotb</a> and <a href="https://github.com/pyuvm/pyuvm">pyuvm</a>.</li>
+<li><a href="#developer-tooling">Developer workflow and tooling</a>: Make-based workflows,
+synthesis scripts, and code management tools.</li>
+<li><a href="#reusable-asic-designs-rad">Reusable ASIC Designs (RAD)</a>: A library of RTL
+designs validated with ABE's synthesis, formal verification, and DV flows.</li>
 </ul>
-<p>These components work together to support the full development cycle from microarchitecture to verification.</p>
+<p>These components work together to support the full development cycle from
+microarchitecture to verification.</p>
 <hr />
 <h2 id="who-is-abe-for">Who is ABE for?<a class="headerlink" href="#who-is-abe-for" title="Permanent link">&para;</a></h2>
-<p>ABE is designed for anyone who wants to build ASIC modules with a modern, open-source workflow:</p>
+<p>ABE is designed for anyone who wants to build ASIC modules with a modern,
+open-source workflow:</p>
 <ul>
 <li><strong>Professional engineers</strong> who prefer Python for modeling and verification</li>
 <li><strong>Professional engineers</strong> who want license-free tools</li>
@@ -1185,34 +1197,74 @@ SPDX-License-Identifier: MIT
 <p>ABE works well if you want a workflow that is clear, repeatable, and Python-friendly.</p>
 <hr />
 <h2 id="why-was-abe-created">Why was ABE created?<a class="headerlink" href="#why-was-abe-created" title="Permanent link">&para;</a></h2>
-<p>ASIC IP development often involves creating microarchitecture tools, scripts, and testbenches for each new project. ABE's philosophy is practical: provide solid, reusable infrastructure so designers can focus on building designs rather than recreating validation frameworks.</p>
+<p>ASIC IP development often involves creating microarchitecture tools, scripts,
+and testbenches for each new project. ABE's philosophy is practical: provide
+solid, reusable infrastructure so designers can focus on building designs
+rather than recreating validation frameworks.</p>
 <p>ABE was created to address these common challenges:</p>
 <ul>
-<li><strong>Analytical FIFO sizing.</strong> ABE provides <a href="fifo_depth/">fifo-depth</a>, a CP-SAT-based analytical tool that complements simulation and spreadsheet approaches by computing provably minimal FIFO depths and flow-control parameters for complex, multi-layered traffic profiles across various flow-control protocols.</li>
-<li><strong>Comprehensive DV infrastructure.</strong> Many open-source projects provide RTL. ABE adds complete Python-based verification environments with agents, scoreboards, reference models, functional coverage, and randomization.</li>
-<li><strong>Python modeling and RTL simulation are often separate.</strong> ABE connects them using <a href="https://www.cocotb.org">cocotb</a>, <a href="https://github.com/pyuvm/pyuvm">pyuvm</a>, and Python reference models.</li>
-<li><strong>Workflow and structure around open-source tools.</strong> ABE provides Makefiles, directory conventions, naming patterns, and tooling to complement powerful open-source simulators with consistent project organization.</li>
+<li><strong>Analytical FIFO sizing.</strong> ABE provides <a href="fifo_depth/">fifo-depth</a>, a
+CP-SAT-based analytical tool that complements simulation and spreadsheet
+approaches by computing provably minimal FIFO depths and flow-control
+parameters for complex, multi-layered traffic profiles across various
+flow-control protocols.</li>
+<li><strong>Comprehensive DV infrastructure.</strong> Many open-source projects provide RTL.
+ABE adds complete Python-based verification environments with agents,
+scoreboards, reference models, functional coverage, and randomization.</li>
+<li><strong>Python modeling and RTL simulation are often separate.</strong> ABE connects them
+using <a href="https://www.cocotb.org">cocotb</a>,
+<a href="https://github.com/pyuvm/pyuvm">pyuvm</a>, and Python reference models.</li>
+<li><strong>Workflow and structure around open-source tools.</strong> ABE provides Makefiles,
+directory conventions, naming patterns, and tooling to complement powerful
+open-source simulators with consistent project organization.</li>
 </ul>
 <hr />
 <h2 id="where-does-abe-fit-in-the-open-source-ecosystem">Where does ABE fit in the open-source ecosystem?<a class="headerlink" href="#where-does-abe-fit-in-the-open-source-ecosystem" title="Permanent link">&para;</a></h2>
-<p>ABE sits between lightweight code-writing tools and complete SoC frameworks. ABE is designed to work together with other open-source projects and complement existing workflows.</p>
+<p>ABE sits between lightweight code-writing tools and complete SoC frameworks.
+ABE is designed to work together with other open-source projects and complement
+existing workflows.</p>
 <h3 id="abe-and-eda-playgrounds-ai-copilots">ABE and EDA playgrounds / AI copilots<a class="headerlink" href="#abe-and-eda-playgrounds-ai-copilots" title="Permanent link">&para;</a></h3>
-<p>These tools are excellent for writing SystemVerilog code and interactive experimentation. ABE complements them by providing infrastructure for <strong>complete, reusable ASIC IP</strong> development with synthesis, formal verification, Python-based DV, and structured workflows.</p>
+<p>These tools are excellent for writing SystemVerilog code and interactive
+experimentation. ABE complements them by providing infrastructure for
+<strong>complete, reusable ASIC IP</strong> development with synthesis, formal verification,
+Python-based DV, and structured workflows.</p>
 <h3 id="abe-and-svunit-vunit">ABE and <a href="https://github.com/svunit/svunit">SVUnit</a> / <a href="https://vunit.github.io">VUnit</a><a class="headerlink" href="#abe-and-svunit-vunit" title="Permanent link">&para;</a></h3>
-<p>These are excellent testing frameworks for VHDL/SystemVerilog. <a href="https://github.com/svunit/svunit">SVUnit</a> focuses on unit testing, while <a href="https://vunit.github.io">VUnit</a> provides verification components and block-level testing in VHDL/SystemVerilog. ABE complements them by providing <strong>Python-based verification</strong> (<a href="https://www.cocotb.org">cocotb</a> + <a href="https://github.com/pyuvm/pyuvm">pyuvm</a>) with reusable agents, scoreboards, reference models, and functional coverage.</p>
+<p>These are excellent testing frameworks for VHDL/SystemVerilog.
+<a href="https://github.com/svunit/svunit">SVUnit</a> focuses on unit testing, while
+<a href="https://vunit.github.io">VUnit</a> provides verification components and
+block-level testing in VHDL/SystemVerilog. ABE complements them by providing
+<strong>Python-based verification</strong> (<a href="https://www.cocotb.org">cocotb</a> +
+<a href="https://github.com/pyuvm/pyuvm">pyuvm</a>) with reusable agents, scoreboards,
+reference models, and functional coverage.</p>
 <h3 id="abe-and-verilators-new-uvm-support">ABE and <a href="https://verilator.org">Verilator</a>'s new UVM support<a class="headerlink" href="#abe-and-verilators-new-uvm-support" title="Permanent link">&para;</a></h3>
-<p><a href="https://verilator.org">Verilator</a> now supports UVM. This is great progress for open-source SystemVerilog verification. ABE offers a different approach with <strong>Python-based UVM</strong> (<a href="https://www.cocotb.org">cocotb</a> + <a href="https://github.com/pyuvm/pyuvm">pyuvm</a>). This provides easier integration with Python reference models, Python workflows, and Python ecosystem tools (e.g. data analysis).</p>
+<p><a href="https://verilator.org">Verilator</a> now supports UVM. This is great progress
+for open-source SystemVerilog verification. ABE offers a different approach
+with <strong>Python-based UVM</strong> (<a href="https://www.cocotb.org">cocotb</a> +
+<a href="https://github.com/pyuvm/pyuvm">pyuvm</a>). This provides easier integration
+with Python reference models, Python workflows, and Python ecosystem tools
+(e.g. data analysis).</p>
 <h3 id="abe-and-opentitan">ABE and <a href="https://opentitan.org">OpenTitan</a><a class="headerlink" href="#abe-and-opentitan" title="Permanent link">&para;</a></h3>
-<p><a href="https://opentitan.org">OpenTitan</a> is an open-source silicon Root of Trust project. It provides a complete SoC design, reusable ASIC IP, and production-grade SystemVerilog UVM verification. ABE has a different scope, focusing on <strong>general-purpose ASIC blocks</strong> with <strong>microarchitecture tools</strong> and <strong>Python-based verification</strong> for ASIC IP development.</p>
+<p><a href="https://opentitan.org">OpenTitan</a> is an open-source silicon Root of Trust
+project. It provides a complete SoC design, reusable ASIC IP, and
+production-grade SystemVerilog UVM verification. ABE has a different scope,
+focusing on <strong>general-purpose ASIC blocks</strong> with <strong>microarchitecture tools</strong>
+and <strong>Python-based verification</strong> for ASIC IP development.</p>
 <hr />
 <h2 id="how-can-i-get-started">How Can I Get Started?<a class="headerlink" href="#how-can-i-get-started" title="Permanent link">&para;</a></h2>
 <ol>
 <li><strong>Clone the repository</strong></li>
 <li><strong>Set up the Python environment</strong> (<a href="python_dev/#set-up-and-install-the-environment">see details</a>)</li>
-<li><strong>Try <a href="fifo_depth/">fifo-depth</a></strong> on an example YAML spec to see CP-SAT based FIFO optimization in action</li>
-<li><strong>Install free tools</strong>: see <a href="design/#install-required-tools">RAD Design</a>, <a href="formal/#install-required-tools">RAD Formal</a>, and <a href="dv/#install-required-tools">RAD DV</a> for details.</li>
-<li><strong>Explore a <a href="#reusable-asic-designs-rad">RAD</a> design</strong> to experience <a href="design/">RTL</a>, <a href="design/">synthesis</a>, <a href="formal/">formal</a>, and <a href="dv/">DV</a> flows firsthand</li>
-<li><strong><a href="dv/#run-examples">Run a test</a></strong> with <a href="dv/#1-dv-main-front-end-runs-a-single-test"><code>dv</code></a> and a (<a href="https://www.cocotb.org">cocotb</a> + <a href="https://github.com/pyuvm/pyuvm">pyuvm</a>) bench</li>
+<li><strong>Try <a href="fifo_depth/">fifo-depth</a></strong> on an example YAML spec to see CP-SAT
+based FIFO optimization in action</li>
+<li><strong>Install free tools</strong>: see <a href="design/#install-required-tools">RAD Design</a>,
+<a href="formal/#install-required-tools">RAD Formal</a>, and
+<a href="dv/#install-required-tools">RAD DV</a> for details.</li>
+<li><strong>Explore a <a href="#reusable-asic-designs-rad">RAD</a> design</strong> to experience
+<a href="design/">RTL</a>, <a href="design/">synthesis</a>, <a href="formal/">formal</a>, and <a href="dv/">DV</a>
+flows firsthand</li>
+<li><strong><a href="dv/#run-examples">Run a test</a></strong> with
+<a href="dv/#1-dv-main-front-end-runs-a-single-test"><code>dv</code></a> and a
+(<a href="https://www.cocotb.org">cocotb</a> + <a href="https://github.com/pyuvm/pyuvm">pyuvm</a>) bench</li>
 </ol>
 <hr />
 <h2 id="the-abe-toolkit">The ABE Toolkit<a class="headerlink" href="#the-abe-toolkit" title="Permanent link">&para;</a></h2>
@@ -1221,43 +1273,61 @@ SPDX-License-Identifier: MIT
 <h2 id="microarchitecture-tools">Microarchitecture Tools<a class="headerlink" href="#microarchitecture-tools" title="Permanent link">&para;</a></h2>
 <p>ABE's microarchitecture tools help you make informed decisions before writing RTL.</p>
 <h3 id="fifo-depth-tool"><a href="fifo_depth/">FIFO Depth Tool</a><a class="headerlink" href="#fifo-depth-tool" title="Permanent link">&para;</a></h3>
-<p>The <a href="fifo_depth/">fifo-depth</a> tool is a CP-SAT-based optimization tool that addresses an important challenge in ASIC microarchitecture: determining the minimal FIFO depth and flow-control parameters required to prevent underflow or overflow under complex traffic conditions.</p>
+<p>The <a href="fifo_depth/">fifo-depth</a> tool is a CP-SAT-based optimization tool that
+addresses an important challenge in ASIC microarchitecture: determining the
+minimal FIFO depth and flow-control parameters required to prevent underflow or
+overflow under complex traffic conditions.</p>
 <h4 id="key-features">Key Features<a class="headerlink" href="#key-features" title="Permanent link">&para;</a></h4>
-<p>The <a href="fifo_depth/">fifo-depth</a> tool offers several advantages through its CP-SAT-based approach:</p>
+<p>The <a href="fifo_depth/">fifo-depth</a> tool offers several advantages through its
+CP-SAT-based approach:</p>
 <ul>
-<li><strong>Provably minimal:</strong> Uses CP-SAT optimization to find the smallest FIFO depth that satisfies all constraints, and computes appropriate flow-control parameters (such as thresholds for XON/XOFF or credits for CBFC) when applicable.</li>
-<li><strong>Complex traffic profiles:</strong> Handles layered, hierarchical traffic specifications (cycle, transaction, burst, stream levels) that are difficult to analyze manually.</li>
-<li><strong>Multiple flow-control protocols:</strong> Supports Ready/Valid, XON/XOFF, Credit-Based Flow Control (CBFC), and replay buffers.</li>
-<li><strong>CDC optimization:</strong> For multi-clock FIFOs, proposes optimal partitioning between asynchronous and synchronous storage.</li>
-<li><strong>Witness sequences:</strong> Generates the exact read/write patterns that cause the worst-case occupancy.</li>
+<li><strong>Provably minimal:</strong> Uses CP-SAT optimization to find the smallest FIFO
+depth that satisfies all constraints, and computes appropriate flow-control
+parameters (such as thresholds for XON/XOFF or credits for CBFC) when applicable.</li>
+<li><strong>Complex traffic profiles:</strong> Handles layered, hierarchical traffic
+specifications (cycle, transaction, burst, stream levels) that are difficult to
+analyze manually.</li>
+<li><strong>Multiple flow-control protocols:</strong> Supports Ready/Valid, XON/XOFF,
+Credit-Based Flow Control (CBFC), and replay buffers.</li>
+<li><strong>CDC optimization:</strong> For multi-clock FIFOs, proposes optimal partitioning
+between asynchronous and synchronous storage.</li>
+<li><strong>Witness sequences:</strong> Generates the exact read/write patterns that cause
+the worst-case occupancy.</li>
 </ul>
-<p>This analytical approach complements spreadsheet and simulation-based methods and can help identify corner cases and optimize FIFO provisioning in complex scenarios.</p>
+<p>This analytical approach complements spreadsheet and simulation-based methods
+and can help identify corner cases and optimize FIFO provisioning in complex scenarios.</p>
 <h3 id="packet-quantization-calculator"><a href="pkt_quantize/">Packet Quantization Calculator</a><a class="headerlink" href="#packet-quantization-calculator" title="Permanent link">&para;</a></h3>
-<p>The <a href="pkt_quantize/">pkt-quantize</a> tool calculates bandwidth and packet rate metrics for packet-based interfaces where packets are quantized to bus beats.</p>
+<p>The <a href="pkt_quantize/">pkt-quantize</a> tool calculates bandwidth and packet rate
+metrics for packet-based interfaces where packets are quantized to bus beats.</p>
 <hr />
 <h2 id="developer-tooling">Developer Tooling<a class="headerlink" href="#developer-tooling" title="Permanent link">&para;</a></h2>
 <p>ABE includes:</p>
 <ul>
 <li>Standard directory layout</li>
 <li><a href="python_dev/">Python environment setup</a></li>
-<li><a href="python_dev/">Python static analysis</a> with <a href="https://pycqa.github.io/isort">isort</a>, <a href="https://github.com/psf/black">black</a>, <a href="https://pylint.org">pylint</a>, and <a href="https://mypy-lang.org">mypy</a></li>
+<li><a href="python_dev/">Python static analysis</a> with
+<a href="https://pycqa.github.io/isort">isort</a>, <a href="https://github.com/psf/black">black</a>,
+<a href="https://pylint.org">pylint</a>, and <a href="https://mypy-lang.org">mypy</a></li>
 <li>Make targets for RTL development, synthesis, formal, and DV</li>
 <li>Documentation conventions</li>
 </ul>
 <p>All designed to help you build ASIC IP quickly and consistently.</p>
 <hr />
 <h2 id="reusable-asic-designs-rad">Reusable ASIC Designs (RAD)<a class="headerlink" href="#reusable-asic-designs-rad" title="Permanent link">&para;</a></h2>
-<p>RAD provides production-quality RTL designs that have been validated using ABE's synthesis, formal verification, and DV flows.</p>
+<p>RAD provides production-quality RTL designs that have been validated using
+ABE's synthesis, formal verification, and DV flows.</p>
 <p>Each RAD design includes:</p>
 <ul>
 <li><a href="design/">RTL implementation</a></li>
 <li><a href="design/">Synthesis</a></li>
 <li><a href="formal/">Formal</a> verification and coverage</li>
 <li>A Python reference model</li>
-<li>A complete <a href="dv/">DV environment</a> with agents, scoreboards, functional coverage, and randomization</li>
+<li>A complete <a href="dv/">DV environment</a> with agents, scoreboards, functional
+coverage, and randomization</li>
 <li>Documentation</li>
 </ul>
-<p>Current RAD designs include core CDC building blocks: synchronizers, Multi-Cycle Path formulations, and asynchronous FIFOs.</p>
+<p>Current RAD designs include core CDC building blocks: synchronizers,
+Multi-Cycle Path formulations, and asynchronous FIFOs.</p>
 <hr />
 <h2 id="explore-abe">Explore ABE<a class="headerlink" href="#explore-abe" title="Permanent link">&para;</a></h2>
 <p>Ready to dive deeper? Here's your map to everything ABE has to offer:</p>
@@ -1302,19 +1372,29 @@ SPDX-License-Identifier: MIT
 <hr />
 <h2 id="faq">FAQ<a class="headerlink" href="#faq" title="Permanent link">&para;</a></h2>
 <h3 id="is-abe-good-for-beginners"><strong>Is ABE good for beginners?</strong><a class="headerlink" href="#is-abe-good-for-beginners" title="Permanent link">&para;</a></h3>
-<p>Yes. ABE was designed to be clear and easy to learn. It is friendly to people who are new to ASIC IP development.</p>
+<p>Yes. ABE was designed to be clear and easy to learn. It is friendly to people
+who are new to ASIC IP development.</p>
 <hr />
 <h3 id="is-abe-an-soc-framework"><strong>Is ABE an SoC framework?</strong><a class="headerlink" href="#is-abe-an-soc-framework" title="Permanent link">&para;</a></h3>
-<p>ABE focuses on microarchitecture analysis, reusable ASIC IP, and DV patterns rather than full SoC integration.</p>
+<p>ABE focuses on microarchitecture analysis, reusable ASIC IP, and DV patterns
+rather than full SoC integration.</p>
 <hr />
 <h3 id="does-abe-replace-uvm"><strong>Does ABE replace UVM?</strong><a class="headerlink" href="#does-abe-replace-uvm" title="Permanent link">&para;</a></h3>
-<p>ABE uses <a href="https://github.com/pyuvm/pyuvm">pyuvm</a>, a Python implementation of UVM. Some users may prefer Python UVM. Others may prefer SystemVerilog UVM. Both approaches have advantages and disadvantages.</p>
+<p>ABE uses <a href="https://github.com/pyuvm/pyuvm">pyuvm</a>, a Python implementation of
+UVM. Some users may prefer Python UVM. Others may prefer SystemVerilog UVM.
+Both approaches have advantages and disadvantages.</p>
 <hr />
 <h3 id="can-i-use-abe-with-commercial-simulators"><strong>Can I use ABE with commercial simulators?</strong><a class="headerlink" href="#can-i-use-abe-with-commercial-simulators" title="Permanent link">&para;</a></h3>
-<p>ABE currently supports <a href="https://verilator.org">Verilator</a> and <a href="https://steveicarus.github.io/iverilog">Icarus Verilog</a>. While <a href="https://www.cocotb.org">cocotb</a> works with commercial simulators, ABE's test infrastructure would need updates to support them. Contributors with simulator access can extend the <a href="dv/#1-dv-main-front-end-runs-a-single-test"><code>dv</code></a> tool and submit changes to the repository.</p>
+<p>ABE currently supports <a href="https://verilator.org">Verilator</a> and
+<a href="https://steveicarus.github.io/iverilog">Icarus Verilog</a>. While
+<a href="https://www.cocotb.org">cocotb</a> works with commercial simulators, ABE's test
+infrastructure would need updates to support them. Contributors with simulator
+access can extend the <a href="dv/#1-dv-main-front-end-runs-a-single-test"><code>dv</code></a> tool
+and submit changes to the repository.</p>
 <hr />
 <h3 id="is-the-fifo-depth-tool-a-simulator"><strong>Is the <a href="fifo_depth/">fifo-depth</a> tool a simulator?</strong><a class="headerlink" href="#is-the-fifo-depth-tool-a-simulator" title="Permanent link">&para;</a></h3>
-<p>No. It is an analytical tool that uses deterministic traffic analysis and a CP‑SAT solver to determine worst‑case depths and flow-control parameters.</p>
+<p>No. It is an analytical tool that uses deterministic traffic analysis and a
+CP‑SAT solver to determine worst‑case depths and flow-control parameters.</p>
 <hr />
 <h2 id="licensing">Licensing<a class="headerlink" href="#licensing" title="Permanent link">&para;</a></h2>
 <p>See the <code>LICENSES</code> directory at the repository root.</p>

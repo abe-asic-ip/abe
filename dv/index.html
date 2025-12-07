@@ -1790,15 +1790,27 @@ SPDX-License-Identifier: MIT
 
 <h1 id="reusable-asic-designs-rad-design-verification-dv">Reusable ASIC Designs (RAD) – Design Verification (DV)<a class="headerlink" href="#reusable-asic-designs-rad-design-verification-dv" title="Permanent link">&para;</a></h1>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>The <strong>Reusable ASIC Designs (RAD)</strong> DV environment provides a complete, reusable, and open‑source verification framework for all RAD designs. It combines <strong><a href="https://www.cocotb.org">cocotb</a></strong>, <strong><a href="https://github.com/pyuvm/pyuvm">pyuvm</a></strong>, and a robust set of <strong>shared base classes</strong>, enabling UVM‑style verification using modern Python tooling.</p>
+<p>The <strong>Reusable ASIC Designs (RAD)</strong> DV environment provides a complete,
+reusable, and open‑source verification framework for all RAD designs. It
+combines <strong><a href="https://www.cocotb.org">cocotb</a></strong>,
+<strong><a href="https://github.com/pyuvm/pyuvm">pyuvm</a></strong>, and a robust set of <strong>shared base
+classes</strong>, enabling UVM‑style verification using modern Python tooling.</p>
 <p>RAD DV follows the ABE philosophy:</p>
 <ul>
-<li><strong>Consistency</strong>: All RAD designs use the same structure and DV architecture</li>
-<li><strong>Reusability</strong>: Shared base classes for agents, drivers, monitors, sequences, scoreboards, and coverage</li>
+<li><strong>Consistency</strong>: All RAD designs use the same structure and DV
+  architecture</li>
+<li><strong>Reusability</strong>: Shared base classes for agents, drivers, monitors,
+  sequences, scoreboards, and coverage</li>
 <li><strong>Automation</strong>: Make targets, regression scripts, auto‑generated benches</li>
-<li><strong>Portability</strong>: 100% open‑source toolchain (<a href="https://www.cocotb.org">cocotb</a>, <a href="https://verilator.org">Verilator</a>, <a href="https://github.com/pyuvm/pyuvm">pyuvm</a>, <a href="https://docs.pytest.org/en/stable">pytest</a>)</li>
+<li><strong>Portability</strong>: 100% open‑source toolchain
+  (<a href="https://www.cocotb.org">cocotb</a>, <a href="https://verilator.org">Verilator</a>,
+  <a href="https://github.com/pyuvm/pyuvm">pyuvm</a>,
+  <a href="https://docs.pytest.org/en/stable">pytest</a>)</li>
 </ul>
-<p><strong><a href="../design/">RAD Design</a></strong> ensures RTL quality, <strong><a href="../formal/">RAD Formal</a></strong> ensures logical correctness, and <strong><a href="./">RAD DV</a></strong> ensures <em>functional correctness under realistic stimulus</em>.</p>
+<p><strong><a href="../design/">RAD Design</a></strong> ensures RTL quality,
+<strong><a href="../formal/">RAD Formal</a></strong> ensures logical correctness, and
+<strong><a href="./">RAD DV</a></strong> ensures <em>functional correctness under realistic
+stimulus</em>.</p>
 <h3 id="audience">Audience<a class="headerlink" href="#audience" title="Permanent link">&para;</a></h3>
 <ul>
 <li>DV engineers building verification environments for new RAD designs</li>
@@ -1832,7 +1844,8 @@ make<span class="w"> </span>py-install-all
 </code></pre></div>
 
 <h3 id="install-required-tools">Install Required Tools<a class="headerlink" href="#install-required-tools" title="Permanent link">&para;</a></h3>
-<p>Install <a href="https://verilator.org">Verilator</a> and a waveform viewer such as <a href="https://surfer-project.org">Surfer</a> or <a href="https://gtkwave.sourceforge.net">GTKWave</a>.</p>
+<p>Install <a href="https://verilator.org">Verilator</a> and a waveform viewer such as
+<a href="https://surfer-project.org">Surfer</a> or <a href="https://gtkwave.sourceforge.net">GTKWave</a>.</p>
 <h3 id="run-examples">Run Examples<a class="headerlink" href="#run-examples" title="Permanent link">&para;</a></h3>
 <p>A single test:</p>
 <div class="codehilite"><pre><span></span><code>dv<span class="w"> </span>--design<span class="o">=</span>rad_async_fifo<span class="w"> </span>--test<span class="o">=</span>test_rad_async_fifo<span class="w"> </span>--waves<span class="w"> </span><span class="m">1</span>
@@ -1933,49 +1946,98 @@ out_dv/tests/&lt;rad_design&gt;.&lt;hash&gt;.&lt;test&gt;.&lt;seed&gt;
 <h2 id="methodology">Methodology<a class="headerlink" href="#methodology" title="Permanent link">&para;</a></h2>
 <h3 id="choices">Choices<a class="headerlink" href="#choices" title="Permanent link">&para;</a></h3>
 <h4 id="methodology-uvm-for-block-level-verification">Methodology: UVM for Block-Level Verification<a class="headerlink" href="#methodology-uvm-for-block-level-verification" title="Permanent link">&para;</a></h4>
-<p>UVM provides a proven, standardized methodology that is good for block-level verification. Cliff Cummings' uvmtb_template paper (see <a href="#literature">Literature</a> section) shows how UVM works well for block-level testbenches.</p>
+<p>UVM provides a proven, standardized methodology that is good for
+block-level verification. Cliff Cummings' uvmtb_template paper (see
+<a href="#literature">Literature</a> section) shows how UVM works well for
+block-level testbenches.</p>
 <h4 id="technology-cocotbpyuvm-over-verilatorsystemverilog-uvm">Technology: cocotb/pyuvm over Verilator/SystemVerilog UVM<a class="headerlink" href="#technology-cocotbpyuvm-over-verilatorsystemverilog-uvm" title="Permanent link">&para;</a></h4>
-<p>ABE's open-source mission uses an open-source simulator. When the project began, <a href="https://verilator.org">Verilator</a> did not support UVM for SystemVerilog (it does now). This made <a href="https://www.cocotb.org">cocotb</a>/<a href="https://github.com/pyuvm/pyuvm">pyuvm</a> a natural choice for combining UVM methodology with open-source simulation.</p>
+<p>ABE's open-source mission uses an open-source simulator. When the project
+began, <a href="https://verilator.org">Verilator</a> did not support UVM for
+SystemVerilog (it does now). This made
+<a href="https://www.cocotb.org">cocotb</a>/<a href="https://github.com/pyuvm/pyuvm">pyuvm</a> a
+natural choice for combining UVM methodology with open-source simulation.</p>
 <h4 id="discipline-uvm-standard-patterns-over-python-idioms">Discipline: UVM Standard Patterns over Python Idioms<a class="headerlink" href="#discipline-uvm-standard-patterns-over-python-idioms" title="Permanent link">&para;</a></h4>
-<p>Python enables design patterns not possible in SystemVerilog. Standard UVM does not support these patterns. However, RAD DV uses fewer Python-specific patterns. This keeps UVM portable and easier to read for engineers who know SystemVerilog UVM. Exception: small mixins for clock/reset infrastructure reduce repetitive code without hiding the UVM structure.</p>
+<p>Python enables design patterns not possible in SystemVerilog. Standard UVM
+does not support these patterns. However, RAD DV uses fewer Python-specific
+patterns. This keeps UVM portable and easier to read for engineers who know
+SystemVerilog UVM. Exception: small mixins for clock/reset infrastructure
+reduce repetitive code without hiding the UVM structure.</p>
 <h3 id="benefits">Benefits<a class="headerlink" href="#benefits" title="Permanent link">&para;</a></h3>
 <h4 id="python-reference-models">Python Reference Models<a class="headerlink" href="#python-reference-models" title="Permanent link">&para;</a></h4>
-<p>Traditional UVM testbenches implement reference models in SystemVerilog or C++ (via DPI-C). Using Python with SystemVerilog simulators is very difficult. This creates several challenges:</p>
+<p>Traditional UVM testbenches implement reference models in SystemVerilog or
+C++ (via DPI-C). Using Python with SystemVerilog simulators is very
+difficult. This creates several challenges:</p>
 <ul>
-<li><strong>The translation gap</strong>: ASIC architects often develop specifications and models in Python. Verification engineers must rewrite them in SystemVerilog or C++ for use in UVM scoreboards</li>
-<li><strong>Maintenance creates errors</strong>: Keeping reference models synchronized with changing Python specifications causes translation errors and extra maintenance work</li>
-<li><strong>Missed reuse opportunities</strong>: Python's powerful features and extensive libraries (NumPy, SciPy, etc.) cannot be used for behavioral modeling in traditional UVM</li>
+<li><strong>The translation gap</strong>: ASIC architects often develop specifications and
+  models in Python. Verification engineers must rewrite them in
+  SystemVerilog or C++ for use in UVM scoreboards</li>
+<li><strong>Maintenance creates errors</strong>: Keeping reference models synchronized with
+  changing Python specifications causes translation errors and extra
+  maintenance work</li>
+<li><strong>Missed reuse opportunities</strong>: Python's powerful features and extensive
+  libraries (NumPy, SciPy, etc.) cannot be used for behavioral modeling in
+  traditional UVM</li>
 </ul>
-<p>RAD DV solves these problems by allowing reference models to be written directly in Python with the testbench:</p>
+<p>RAD DV solves these problems by allowing reference models to be written
+directly in Python with the testbench:</p>
 <ul>
-<li>Architects' Python specifications can often be used directly as reference models with small changes</li>
-<li>Model mismatches are greatly reduced because there is no translation layer</li>
-<li>Debug time can decrease—the Wilson Research Group Functional Verification Study reports that debugging is a significant portion of verification effort</li>
+<li>Architects' Python specifications can often be used directly as reference
+  models with small changes</li>
+<li>Model mismatches are greatly reduced because there is no translation
+  layer</li>
+<li>Debug time can decrease—the Wilson Research Group Functional Verification
+  Study reports that debugging is a significant portion of verification
+  effort</li>
 </ul>
 <h4 id="rich-python-ecosystem">Rich Python Ecosystem<a class="headerlink" href="#rich-python-ecosystem" title="Permanent link">&para;</a></h4>
-<p>Open-source simulators like <a href="https://verilator.org">Verilator</a> and <a href="https://steveicarus.github.io/iverilog">Icarus Verilog</a> provide basic simulation capabilities. They do not have the integrated test management, analysis, and debugging tools found in commercial products. Python's ecosystem fills this gap and gives open-source developers access to similar capabilities:</p>
+<p>Open-source simulators like <a href="https://verilator.org">Verilator</a> and
+<a href="https://steveicarus.github.io/iverilog">Icarus Verilog</a> provide basic
+simulation capabilities. They do not have the integrated test management,
+analysis, and debugging tools found in commercial products. Python's
+ecosystem fills this gap and gives open-source developers access to similar
+capabilities:</p>
 <ul>
-<li><strong>Test management</strong>: <a href="https://docs.pytest.org/en/stable">pytest</a> for test discovery, parametrization, fixtures, and regression orchestration</li>
-<li><strong>Data analysis</strong>: NumPy, pandas for processing results, analyzing coverage trends, and generating metrics</li>
-<li><strong>Visualization</strong>: Matplotlib, seaborn for plotting coverage data, regression trends, and performance metrics</li>
-<li><strong>Debugging and introspection</strong>: Interactive debugging and comprehensive logging for development and debug workflows</li>
-<li><strong>Automation and CI/CD</strong>: Direct integration with git, reporting tools, and continuous integration pipelines</li>
+<li><strong>Test management</strong>: <a href="https://docs.pytest.org/en/stable">pytest</a> for test
+  discovery, parametrization, fixtures, and regression orchestration</li>
+<li><strong>Data analysis</strong>: NumPy, pandas for processing results, analyzing
+  coverage trends, and generating metrics</li>
+<li><strong>Visualization</strong>: Matplotlib, seaborn for plotting coverage data,
+  regression trends, and performance metrics</li>
+<li><strong>Debugging and introspection</strong>: Interactive debugging and comprehensive
+  logging for development and debug workflows</li>
+<li><strong>Automation and CI/CD</strong>: Direct integration with git, reporting tools,
+  and continuous integration pipelines</li>
 </ul>
 <h3 id="known-limitations">Known Limitations<a class="headerlink" href="#known-limitations" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>Simulator support</strong>: Only <a href="https://verilator.org">Verilator</a> and <a href="https://steveicarus.github.io/iverilog">Icarus Verilog</a> are currently supported. While <a href="https://www.cocotb.org">cocotb</a> supports many commercial simulators (VCS, Questa, Xcelium, etc.), integration into RAD DV requires access to licenses for testing and validation.</li>
-<li><strong>Sequential test execution</strong>: Regression tests run one at a time instead of in parallel. This makes large test suites run slower</li>
-<li><strong>Third-party VIP integration</strong>: Does not integrate with commercial VIP or third-party AIP</li>
+<li><strong>Simulator support</strong>: Only <a href="https://verilator.org">Verilator</a> and
+  <a href="https://steveicarus.github.io/iverilog">Icarus Verilog</a> are currently
+  supported. While <a href="https://www.cocotb.org">cocotb</a> supports many
+  commercial simulators (VCS, Questa, Xcelium, etc.), integration into RAD
+  DV requires access to licenses for testing and validation.</li>
+<li><strong>Sequential test execution</strong>: Regression tests run one at a time instead
+  of in parallel. This makes large test suites run slower</li>
+<li><strong>Third-party VIP integration</strong>: Does not integrate with commercial VIP
+  or third-party AIP</li>
 </ul>
 <h3 id="future-enhancements">Future Enhancements<a class="headerlink" href="#future-enhancements" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>Additional simulator support</strong>: Expand beyond <a href="https://verilator.org">Verilator</a> and <a href="https://steveicarus.github.io/iverilog">Icarus Verilog</a></li>
-<li><strong>Parallel test execution</strong>: Enable concurrent test runs for faster regression completion</li>
-<li><strong>Multi-agent single-clock example</strong>: Example bench demonstrating single clock/reset domain with multiple agents (multiple interfaces)</li>
-<li><strong>Code coverage integration</strong>: Example using <a href="https://verilator.org">Verilator</a>'s coverage capabilities</li>
-<li><strong>Constrained randomization</strong>: Example using <a href="https://github.com/mciepluc/cocotb-coverage">cocotb-coverage</a> for constraint-based stimulus generation</li>
-<li><strong>Functional coverage workflows</strong>: Examples demonstrating coverage database merging, cross-coverage, and coverage-driven verification</li>
-<li><strong>Standard protocol libraries</strong>: Pre-built reusable agents for common bus protocols (AXI, APB, AHB, etc.)</li>
+<li><strong>Additional simulator support</strong>: Expand beyond
+  <a href="https://verilator.org">Verilator</a> and
+  <a href="https://steveicarus.github.io/iverilog">Icarus Verilog</a></li>
+<li><strong>Parallel test execution</strong>: Enable concurrent test runs for faster
+  regression completion</li>
+<li><strong>Multi-agent single-clock example</strong>: Example bench demonstrating single
+  clock/reset domain with multiple agents (multiple interfaces)</li>
+<li><strong>Code coverage integration</strong>: Example using
+  <a href="https://verilator.org">Verilator</a>'s coverage capabilities</li>
+<li><strong>Constrained randomization</strong>: Example using
+  <a href="https://github.com/mciepluc/cocotb-coverage">cocotb-coverage</a> for
+  constraint-based stimulus generation</li>
+<li><strong>Functional coverage workflows</strong>: Examples demonstrating coverage
+  database merging, cross-coverage, and coverage-driven verification</li>
+<li><strong>Standard protocol libraries</strong>: Pre-built reusable agents for common bus
+  protocols (AXI, APB, AHB, etc.)</li>
 </ul>
 <hr />
 <h2 id="makefiles">Makefiles<a class="headerlink" href="#makefiles" title="Permanent link">&para;</a></h2>
@@ -1996,8 +2058,12 @@ make<span class="w"> </span>dv-help
 <div class="codehilite"><pre><span></span><code>src/abe/rad/shared/dv/
 </code></pre></div>
 
-<p>RAD DV environments use classic UVM patterns implemented in Python via <a href="https://github.com/pyuvm/pyuvm">pyuvm</a> and <a href="https://www.cocotb.org">cocotb</a>. All testbenches inherit from reusable base classes that provide standard verification infrastructure.</p>
-<p>The following table summarizes the shared base classes. See the module docstrings for detailed usage.</p>
+<p>RAD DV environments use classic UVM patterns implemented in Python via
+<a href="https://github.com/pyuvm/pyuvm">pyuvm</a> and <a href="https://www.cocotb.org">cocotb</a>.
+All testbenches inherit from reusable base classes that provide standard
+verification infrastructure.</p>
+<p>The following table summarizes the shared base classes. See the module
+docstrings for detailed usage.</p>
 <table>
 <thead>
 <tr>
@@ -2131,15 +2197,22 @@ make<span class="w"> </span>dv-help
 <div class="codehilite"><pre><span></span><code>src/abe/rad/tools/
 </code></pre></div>
 
-<p>The following sections describe the tools at a high level. See the module docstrings for more detail.</p>
+<p>The following sections describe the tools at a high level. See the module
+docstrings for more detail.</p>
 <h3 id="1-dv-main-front-end-runs-a-single-test">1. <code>dv</code> — Main Front-End (Runs a Single Test)<a class="headerlink" href="#1-dv-main-front-end-runs-a-single-test" title="Permanent link">&para;</a></h3>
 <h4 id="dv-purpose"><code>dv</code> Purpose<a class="headerlink" href="#dv-purpose" title="Permanent link">&para;</a></h4>
 <ul>
-<li>Verify RTL designs using <a href="https://www.cocotb.org">cocotb</a> + <a href="https://github.com/pyuvm/pyuvm">pyuvm</a> + <a href="https://docs.pytest.org/en/stable">pytest</a> framework</li>
-<li>Support multiple simulators (<a href="https://verilator.org">Verilator</a>, <a href="https://steveicarus.github.io/iverilog">Icarus Verilog</a>) with configurable waveform generation (FST, VCD)</li>
-<li>Execute single or multi-seed regression testing with automatic result tracking</li>
+<li>Verify RTL designs using <a href="https://www.cocotb.org">cocotb</a> +
+  <a href="https://github.com/pyuvm/pyuvm">pyuvm</a> +
+  <a href="https://docs.pytest.org/en/stable">pytest</a> framework</li>
+<li>Support multiple simulators (<a href="https://verilator.org">Verilator</a>,
+  <a href="https://steveicarus.github.io/iverilog">Icarus Verilog</a>) with configurable
+  waveform generation (FST, VCD)</li>
+<li>Execute single or multi-seed regression testing with automatic result
+  tracking</li>
 <li>Generate test manifests for build/test reproducibility and caching</li>
-<li>Provide flexible build/test orchestration via <code>--cmd</code> (build-only, test-only, or both)</li>
+<li>Provide flexible build/test orchestration via <code>--cmd</code> (build-only,
+  test-only, or both)</li>
 </ul>
 <h4 id="dv-typical-usage"><code>dv</code> Typical Usage<a class="headerlink" href="#dv-typical-usage" title="Permanent link">&para;</a></h4>
 <div class="codehilite"><pre><span></span><code>dv<span class="w"> </span>--design<span class="o">=</span>rad_async_fifo<span class="w"> </span>--test<span class="o">=</span>test_rad_async_fifo<span class="w"> </span>--seed<span class="o">=</span><span class="m">1999</span>
@@ -2284,7 +2357,10 @@ make<span class="w"> </span><span class="nv">DESIGN</span><span class="o">=</spa
 <div class="codehilite"><pre><span></span><code>&lt;outdir&gt;/builds/&lt;rad_design&gt;.&lt;hash&gt;
 </code></pre></div>
 
-<p>The hash is a 10-character SHA-1 fingerprint computed from build-affecting parameters: simulator type, waveform settings (enabled/format), and user build arguments. This ensures identical build configurations reuse the same directory while different configurations get separate builds.</p>
+<p>The hash is a 10-character SHA-1 fingerprint computed from build-affecting
+parameters: simulator type, waveform settings (enabled/format), and user build
+arguments. This ensures identical build configurations reuse the same directory
+while different configurations get separate builds.</p>
 <p>Key files:</p>
 <table>
 <thead>
@@ -2343,7 +2419,8 @@ make<span class="w"> </span><span class="nv">DESIGN</span><span class="o">=</spa
 <li>Execute YAML-defined regression test suites with strict configuration management</li>
 <li>Apply global default arguments to all jobs with per-job override capability</li>
 <li>Run multiple test jobs one at a time with automatic pass/fail tracking</li>
-<li>Generate colored summary reports with copy-pasteable replay commands for failed tests</li>
+<li>Generate colored summary reports with copy-pasteable replay commands for
+failed tests</li>
 <li>Let <code>dv</code> handle seeds for consistent multi-seed support</li>
 </ul>
 <h4 id="dv-regress-typical-usage"><code>dv-regress</code> Typical Usage<a class="headerlink" href="#dv-regress-typical-usage" title="Permanent link">&para;</a></h4>
@@ -2382,7 +2459,9 @@ make<span class="w"> </span><span class="nv">DESIGN</span><span class="o">=</spa
 <hr />
 <h3 id="3-dv-regress-all-run-all-rad-regressions">3. <code>dv-regress-all</code> — Run All RAD Regressions<a class="headerlink" href="#3-dv-regress-all-run-all-rad-regressions" title="Permanent link">&para;</a></h3>
 <h4 id="dv-regress-all-purpose"><code>dv-regress-all</code> Purpose<a class="headerlink" href="#dv-regress-all-purpose" title="Permanent link">&para;</a></h4>
-<p>Searches all directories for <code>dv_regress.yaml</code> files in the repository and runs each regression using <code>dv-regress</code>. All regressions share the same output directory for unified result tracking.</p>
+<p>Searches all directories for <code>dv_regress.yaml</code> files in the repository and runs
+each regression using <code>dv-regress</code>. All regressions share the same output
+directory for unified result tracking.</p>
 <h4 id="dv-regress-all-typical-usage"><code>dv-regress-all</code> Typical Usage<a class="headerlink" href="#dv-regress-all-typical-usage" title="Permanent link">&para;</a></h4>
 <div class="codehilite"><pre><span></span><code>dv-regress-all
 make<span class="w"> </span>dv-regress-all
@@ -2419,7 +2498,8 @@ make<span class="w"> </span>dv-regress-all
 <hr />
 <h3 id="4-dv-report-summaries-reporting">4. <code>dv-report</code> — Summaries &amp; Reporting<a class="headerlink" href="#4-dv-report-summaries-reporting" title="Permanent link">&para;</a></h3>
 <h4 id="dv-report-purpose"><code>dv-report</code> Purpose<a class="headerlink" href="#dv-report-purpose" title="Permanent link">&para;</a></h4>
-<p>Scans test output directories for manifest files and generates an organized report of expected/unexpected passes and failures with copy-pasteable replay commands.</p>
+<p>Scans test output directories for manifest files and generates an organized
+report of expected/unexpected passes and failures with copy-pasteable replay commands.</p>
 <h4 id="dv-report-typical-usage"><code>dv-report</code> Typical Usage<a class="headerlink" href="#dv-report-typical-usage" title="Permanent link">&para;</a></h4>
 <div class="codehilite"><pre><span></span><code>dv-report
 make<span class="w"> </span>dv-report
@@ -2505,7 +2585,8 @@ make<span class="w"> </span>dv-report
 </table>
 <hr />
 <h2 id="regression-guidelines">Regression Guidelines<a class="headerlink" href="#regression-guidelines" title="Permanent link">&para;</a></h2>
-<p>The <code>dv_regress.yaml</code> file defines regression test jobs using YAML. Each bench includes this file to enable <code>dv-regress</code> execution.</p>
+<p>The <code>dv_regress.yaml</code> file defines regression test jobs using YAML. Each bench
+includes this file to enable <code>dv-regress</code> execution.</p>
 <h3 id="schema">Schema<a class="headerlink" href="#schema" title="Permanent link">&para;</a></h3>
 <div class="codehilite"><pre><span></span><code><span class="c1"># Optional: Global defaults applied to all jobs</span>
 <span class="nt">defaults</span><span class="p">:</span>
@@ -2525,7 +2606,8 @@ make<span class="w"> </span>dv-report
 <li><strong>List of strings</strong>: <code>["--design=rad_foo", "--test=test_rad_foo"]</code></li>
 <li><strong>Single string</strong>: <code>"--design=rad_foo --test=test_rad_foo"</code></li>
 </ul>
-<p>Arguments are passed directly to <code>dv</code>, supporting all <code>dv</code> command-line options (see <a href="#dv-arguments"><code>dv</code> Arguments</a> table).</p>
+<p>Arguments are passed directly to <code>dv</code>, supporting all <code>dv</code> command-line options
+(see <a href="#dv-arguments"><code>dv</code> Arguments</a> table).</p>
 <h3 id="common-patterns">Common Patterns<a class="headerlink" href="#common-patterns" title="Permanent link">&para;</a></h3>
 <p><strong>Basic regression with multiple seeds:</strong></p>
 <div class="codehilite"><pre><span></span><code><span class="nt">jobs</span><span class="p">:</span>
@@ -2589,13 +2671,15 @@ make<span class="w"> </span>dv-report
 <li><strong>Seeds</strong>: Use <code>--nseeds</code> for random seeds or <code>--seeds</code> for explicit values</li>
 <li><strong>Build variants</strong>: Use <code>--build-arg</code> for RTL compilation flags</li>
 <li><strong>Defaults</strong>: Use global defaults to reduce repetition across jobs</li>
-<li><strong>Job args override defaults</strong>: Per-job arguments take precedence over global defaults</li>
+<li><strong>Job args override defaults</strong>: Per-job arguments take precedence over
+global defaults</li>
 </ol>
 <h4 id="example-files">Example Files<a class="headerlink" href="#example-files" title="Permanent link">&para;</a></h4>
 <p>See existing regression files for reference:</p>
 <ul>
 <li><code>src/abe/rad/rad_async_fifo/dv/dv_regress.yaml</code> - Simple single-job regression</li>
-<li><code>src/abe/rad/rad_cdc_sync/dv/dv_regress.yaml</code> - Multiple configurations including negative tests</li>
+<li><code>src/abe/rad/rad_cdc_sync/dv/dv_regress.yaml</code> - Multiple configurations
+including negative tests</li>
 <li><code>src/abe/rad/rad_cdc_mcp/dv/dv_regress.yaml</code> - Basic pattern</li>
 </ul>
 <hr />
@@ -2646,11 +2730,13 @@ make<span class="w"> </span>dv-report
 <li>Reference <code>rad_cdc_sync</code> bench for implementation examples</li>
 </ol>
 <h4 id="multi-clock-multi-agent-designs">Multi-Clock / Multi-Agent Designs<a class="headerlink" href="#multi-clock-multi-agent-designs" title="Permanent link">&para;</a></h4>
-<p>For designs with multiple independent clock domains or requiring separate agents per domain:</p>
+<p>For designs with multiple independent clock domains or requiring separate
+agents per domain:</p>
 <ol>
 <li>Copy the bench most similar to your design (<code>rad_cdc_mcp</code> or <code>rad_async_fifo</code>)</li>
 <li>Rename all files and classes to match your design</li>
-<li>Customize the agent count, clock configurations, and reset routing in the environment and test classes.</li>
+<li>Customize the agent count, clock configurations, and reset routing in the
+environment and test classes.</li>
 <li>See the README.md files in these benches for dual-agent architecture patterns</li>
 </ol>
 <h4 id="output-timing-considerations">Output Timing Considerations<a class="headerlink" href="#output-timing-considerations" title="Permanent link">&para;</a></h4>
@@ -2679,7 +2765,9 @@ make<span class="w"> </span>dv-report
 </ul>
 </li>
 </ul>
-<p>Most simple designs have registered outputs and can use <code>BaseMonitorOut</code> unchanged. For pipelined protocols or conditional sampling, reference the existing benches for patterns.</p>
+<p>Most simple designs have registered outputs and can use <code>BaseMonitorOut</code>
+unchanged. For pipelined protocols or conditional sampling, reference the
+existing benches for patterns.</p>
 <h3 id="2-implement-core-components">2. Implement Core Components<a class="headerlink" href="#2-implement-core-components" title="Permanent link">&para;</a></h3>
 <p>Customize these design-specific files:</p>
 <ul>
@@ -2699,7 +2787,8 @@ make<span class="w"> </span>dv-report
 </ul>
 </li>
 <li>
-<p><strong>Monitors</strong> (<code>rad_&lt;design&gt;_monitor_in.py</code>, <code>rad_&lt;design&gt;_monitor_out.py</code>): Observe design signals</p>
+<p><strong>Monitors</strong> (<code>rad_&lt;design&gt;_monitor_in.py</code>, <code>rad_&lt;design&gt;_monitor_out.py</code>):
+Observe design signals</p>
 <ul>
 <li>Input monitor: Sample inputs for reference model</li>
 <li>Output monitor: Sample outputs for scoreboard comparison</li>
@@ -2748,7 +2837,8 @@ make<span class="w"> </span>dv-report
 </code></pre></div>
 
 <p><strong>Multi-clock example:</strong></p>
-<p>For designs with multiple clocks/resets, create clock and reset drivers in the test. Reference <code>rad_cdc_mcp</code> and <code>rad_async_fifo</code>.</p>
+<p>For designs with multiple clocks/resets, create clock and reset drivers in the
+test. Reference <code>rad_cdc_mcp</code> and <code>rad_async_fifo</code>.</p>
 <h3 id="4-create-regression-configuration">4. Create Regression Configuration<a class="headerlink" href="#4-create-regression-configuration" title="Permanent link">&para;</a></h3>
 <p>Add <code>dv_regress.yaml</code> to define test jobs (see <a href="#regression-guidelines">Regression Guidelines</a>).</p>
 <h3 id="5-run-debug">5. Run &amp; Debug<a class="headerlink" href="#5-run-debug" title="Permanent link">&para;</a></h3>
@@ -2765,11 +2855,15 @@ make<span class="w"> </span>dv-report
 </code></pre></div>
 
 <p><strong>Evaluate coverage:</strong></p>
-<p>Current RAD examples use simple counters logged during <code>report_phase()</code>. Check test logs for coverage summaries:</p>
+<p>Current RAD examples use simple counters logged during <code>report_phase()</code>. Check
+test logs for coverage summaries:</p>
 <div class="codehilite"><pre><span></span><code>grep<span class="w"> </span>-A5<span class="w"> </span><span class="s2">&quot;Coverage summary&quot;</span><span class="w"> </span>out_dv/tests/*/test.log
 </code></pre></div>
 
-<p><strong>Note:</strong> The <code>BaseCoverage</code> class supports <a href="https://github.com/mciepluc/cocotb-coverage">cocotb-coverage</a> with <code>@CoverPoint</code> decorators for database-driven coverage collection and merging. To use this feature:</p>
+<p><strong>Note:</strong> The <code>BaseCoverage</code> class supports
+<a href="https://github.com/mciepluc/cocotb-coverage">cocotb-coverage</a> with
+<code>@CoverPoint</code> decorators for database-driven coverage collection and merging.
+To use this feature:</p>
 <ol>
 <li>Import decorators: <code>from cocotb_coverage.coverage import CoverPoint, CoverCross</code></li>
 <li>Decorate the <code>sample()</code> method with coverpoints</li>
@@ -2796,13 +2890,15 @@ make<span class="w"> </span>dv-report
 <p>Yes, with caveats:</p>
 <ul>
 <li><a href="https://www.cocotb.org">cocotb</a> supports VCS, Questa, Xcelium, and others</li>
-<li>RAD DV tools (<code>dv</code>, <code>dv-regress</code>) currently only configure <a href="https://verilator.org">Verilator</a> and <a href="https://steveicarus.github.io/iverilog">Icarus Verilog</a></li>
+<li>RAD DV tools (<code>dv</code>, <code>dv-regress</code>) currently only configure
+<a href="https://verilator.org">Verilator</a> and <a href="https://steveicarus.github.io/iverilog">Icarus Verilog</a></li>
 <li>Extending to commercial simulators requires license access for testing</li>
 </ul>
 <p>The testbench code itself is simulator-agnostic.</p>
 <hr />
 <h3 id="why-do-regression-tests-run-sequentially-instead-of-in-parallel">Why do regression tests run sequentially instead of in parallel?<a class="headerlink" href="#why-do-regression-tests-run-sequentially-instead-of-in-parallel" title="Permanent link">&para;</a></h3>
-<p>Parallel execution is a <a href="#future-enhancements">future enhancement</a>. For faster regressions, consider:</p>
+<p>Parallel execution is a <a href="#future-enhancements">future enhancement</a>. For faster
+regressions, consider:</p>
 <ul>
 <li>Running multiple <code>dv-regress</code> instances on different machines</li>
 <li>Reducing <code>--nseeds</code> for smoke testing</li>
@@ -2817,10 +2913,15 @@ make<span class="w"> </span>dv-report
 <li><strong>Familiar structure</strong> for verification engineers</li>
 <li><strong>Reusability</strong> across designs through base classes</li>
 </ul>
-<p>Pure <a href="https://www.cocotb.org">cocotb</a> is excellent for simple testbenches. For complex block-level verification, RAD DV benefits from UVM's structural framework.</p>
+<p>Pure <a href="https://www.cocotb.org">cocotb</a> is excellent for simple testbenches. For
+complex block-level verification, RAD DV benefits from UVM's structural framework.</p>
 <hr />
 <h3 id="can-i-use-systemverilog-assertions-with-rad-dv">Can I use SystemVerilog assertions with RAD DV?<a class="headerlink" href="#can-i-use-systemverilog-assertions-with-rad-dv" title="Permanent link">&para;</a></h3>
-<p>Yes. SVA assertions in RTL are fully supported by <a href="https://verilator.org">Verilator</a> and <a href="https://steveicarus.github.io/iverilog">Icarus Verilog</a>. They complement the Python testbench by checking protocol compliance and design constraints at the RTL level. See also <a href="../formal/">RAD Formal</a> for property-based verification.</p>
+<p>Yes. SVA assertions in RTL are fully supported by
+<a href="https://verilator.org">Verilator</a> and
+<a href="https://steveicarus.github.io/iverilog">Icarus Verilog</a>. They complement the
+Python testbench by checking protocol compliance and design constraints at the
+RTL level. See also <a href="../formal/">RAD Formal</a> for property-based verification.</p>
 <hr />
 <h3 id="why-separate-monitors-for-inputs-and-outputs">Why separate monitors for inputs and outputs?<a class="headerlink" href="#why-separate-monitors-for-inputs-and-outputs" title="Permanent link">&para;</a></h3>
 <p>This mirrors UVM best practices:</p>
@@ -2830,13 +2931,15 @@ make<span class="w"> </span>dv-report
 <li><strong>Clean separation</strong> enables independent sampling and timing</li>
 <li><strong>Reusability</strong> across different verification strategies</li>
 </ul>
-<p>See Cliff Cummings' "Applying stimulus and sampling outputs" paper (<a href="#literature">Literature</a> section).</p>
+<p>See Cliff Cummings' "Applying stimulus and sampling outputs" paper
+(<a href="#literature">Literature</a> section).</p>
 <hr />
 <h3 id="how-do-i-debug-a-failing-test">How do I debug a failing test?<a class="headerlink" href="#how-do-i-debug-a-failing-test" title="Permanent link">&para;</a></h3>
 <ol>
 <li><strong>Check the test log</strong>: <code>out_dv/tests/&lt;test_dir&gt;/test.log</code></li>
 <li><strong>Enable verbose logging</strong>: <code>dv --design=&lt;design&gt; --test=&lt;test&gt; --verbosity=debug</code></li>
-<li><strong>View waveforms</strong>: <code>dv --design=&lt;design&gt; --test=&lt;test&gt; --waves=1</code>, then <code>surfer out_dv/tests/*/waves.fst</code></li>
+<li><strong>View waveforms</strong>: <code>dv --design=&lt;design&gt; --test=&lt;test&gt; --waves=1</code>, then
+<code>surfer out_dv/tests/*/waves.fst</code></li>
 <li><strong>Add debug logging</strong>: Use <code>self.logger.debug()</code> in components</li>
 <li><strong>Check manifest</strong>: Review <code>out_dv/tests/&lt;test_dir&gt;/manifest.json</code> for test configuration</li>
 </ol>
@@ -2887,13 +2990,24 @@ make<span class="w"> </span>dv-report
 </ul>
 <hr />
 <h2 id="literature">Literature<a class="headerlink" href="#literature" title="Permanent link">&para;</a></h2>
-<p>[1] R. Salemi, <em>Python for RTL Verification: A Complete Course in Python, cocotb, and pyuvm</em>. Boston, MA: Boston Light Press, 2022.</p>
-<p>[2] B. Hunter, <em>Advanced UVM</em>. North Charleston, SC: CreateSpace Independent Publishing Platform, 2016.</p>
-<p>[3] C. E. Cummings, "uvmtb_template files—An efficient and rapid way to create UVM testbenches," in <em>Proc. Synopsys Users Group (SNUG)</em>, Silicon Valley, CA, 2025.</p>
-<p>[4] C. E. Cummings, "Applying stimulus and sampling outputs—UVM verification testing techniques," in <em>Proc. Synopsys Users Group (SNUG)</em>, Austin, TX, 2016.</p>
-<p>[5] C. E. Cummings, "OVM/UVM scoreboards—Fundamental architectures," in <em>Proc. Synopsys Users Group (SNUG)</em>, Silicon Valley, CA, 2013.</p>
-<p>[6] C. E. Cummings, "The OVM/UVM factory and factory overrides—How they work and why they are important," in <em>Proc. Synopsys Users Group (SNUG)</em>, San Jose, CA, 2012.</p>
-<p>[7] C. E. Cummings and T. Fitzpatrick, "OVM and UVM techniques for terminating tests," in <em>Proc. Design and Verification Conf. (DVCon)</em>, San Jose, CA, 2011.</p>
+<p>[1] R. Salemi, <em>Python for RTL Verification: A Complete Course in Python,
+cocotb, and pyuvm</em>. Boston, MA: Boston Light Press, 2022.</p>
+<p>[2] B. Hunter, <em>Advanced UVM</em>. North Charleston, SC: CreateSpace
+Independent Publishing Platform, 2016.</p>
+<p>[3] C. E. Cummings, "uvmtb_template files—An efficient and rapid way to
+create UVM testbenches," in <em>Proc. Synopsys Users Group (SNUG)</em>, Silicon
+Valley, CA, 2025.</p>
+<p>[4] C. E. Cummings, "Applying stimulus and sampling outputs—UVM
+verification testing techniques," in <em>Proc. Synopsys Users Group (SNUG)</em>,
+Austin, TX, 2016.</p>
+<p>[5] C. E. Cummings, "OVM/UVM scoreboards—Fundamental architectures," in
+<em>Proc. Synopsys Users Group (SNUG)</em>, Silicon Valley, CA, 2013.</p>
+<p>[6] C. E. Cummings, "The OVM/UVM factory and factory overrides—How they
+work and why they are important," in <em>Proc. Synopsys Users Group (SNUG)</em>,
+San Jose, CA, 2012.</p>
+<p>[7] C. E. Cummings and T. Fitzpatrick, "OVM and UVM techniques for
+terminating tests," in <em>Proc. Design and Verification Conf. (DVCon)</em>, San
+Jose, CA, 2011.</p>
 <hr />
 <h2 id="licensing">Licensing<a class="headerlink" href="#licensing" title="Permanent link">&para;</a></h2>
 <p>See the <code>LICENSES</code> directory at the repository root.</p>

@@ -1990,18 +1990,25 @@ SPDX-License-Identifier: MIT
 
 <h1 id="fifo-depth-tool-fifo-depth">FIFO Depth Tool (<code>fifo-depth</code>)<a class="headerlink" href="#fifo-depth-tool-fifo-depth" title="Permanent link">&para;</a></h1>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>The <strong>ABE Uarch FIFO Depth Tool</strong> computes the <em>optimal</em> FIFO depth and flow-control thresholds for ASIC micro-architectures. It uses <strong>Constraint Programming - Satisfiability (CP-SAT)</strong> optimization to find minimal-area solutions that satisfy latency and congestion requirements.</p>
-<p><strong>Note:</strong> Throughout this document, "CP-SAT" is used consistently to refer to the constraint programming satisfiability solver.</p>
+<p>The <strong>ABE Uarch FIFO Depth Tool</strong> computes the <em>optimal</em> FIFO depth and
+flow-control thresholds for ASIC micro-architectures. It uses <strong>Constraint
+Programming - Satisfiability (CP-SAT)</strong> optimization to find minimal-area
+solutions that satisfy latency and congestion requirements.</p>
+<p><strong>Note:</strong> Throughout this document, "CP-SAT" is used consistently to refer to
+the constraint programming satisfiability solver.</p>
 <h3 id="audience">Audience<a class="headerlink" href="#audience" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>ASIC designers</strong> who need to size FIFOs precisely under complex traffic profiles.</li>
-<li><strong>ASIC DV engineers</strong> who want to create stress scenarios or validate margin in performance simulations.</li>
+<li><strong>ASIC DV engineers</strong> who want to create stress scenarios or validate margin
+in performance simulations.</li>
 </ul>
 <h3 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Determine the <strong>smallest FIFO depth</strong> and <strong>thresholds</strong> that prevent underflow or overflow.</li>
+<li>Determine the <strong>smallest FIFO depth</strong> and <strong>thresholds</strong> that prevent
+underflow or overflow.</li>
 <li>Generate <strong>witness sequences</strong> (read/write patterns) that show the limiting case.</li>
-<li>For multi-clock FIFOs, find an <strong>optimal partition</strong> between asynchronous and synchronous storage.</li>
+<li>For multi-clock FIFOs, find an <strong>optimal partition</strong> between asynchronous and
+synchronous storage.</li>
 </ul>
 <h3 id="key-features">Key Features<a class="headerlink" href="#key-features" title="Permanent link">&para;</a></h3>
 <ul>
@@ -2071,7 +2078,8 @@ SPDX-License-Identifier: MIT
 <li>Cannot yet model interface/storage quantum mismatches</li>
 <li>Threshold optimization for XON/XOFF may have long runtimes for large horizons</li>
 <li>No automatic data scaling for CP-SAT solver</li>
-<li>CDC solver assumes Gray-coded pointers and synchronizers (not handshake-based async FIFOs)</li>
+<li>CDC solver assumes Gray-coded pointers and synchronizers (not handshake-based
+async FIFOs)</li>
 </ul>
 <hr />
 <h2 id="getting-started">Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
@@ -2126,28 +2134,49 @@ cat<span class="w"> </span>out_uarch_fd_rv_layered/results_scalars.json
 
 <h2 id="conceptual-background">Conceptual Background<a class="headerlink" href="#conceptual-background" title="Permanent link">&para;</a></h2>
 <h3 id="scope">Scope<a class="headerlink" href="#scope" title="Permanent link">&para;</a></h3>
-<p>This tool models <strong>short-term congestion</strong> in data paths. The YAML specifications describe finite-duration traffic bursts where writes exceed reads. Over longer timescales, system-level flow control ensures balance; that equilibrium is beyond this tool’s scope.</p>
-<p>A “balanced” spec (equal write/read densities) requires only minimal buffering for arbitration or phase alignment. Such cases may be detected and handled analytically. The main use case is the <strong>imbalanced</strong> case — temporary write oversubscription requiring real buffering.</p>
+<p>This tool models <strong>short-term congestion</strong> in data paths. The YAML
+specifications describe finite-duration traffic bursts where writes exceed
+reads. Over longer timescales, system-level flow control ensures balance; that
+equilibrium is beyond this tool’s scope.</p>
+<p>A “balanced” spec (equal write/read densities) requires only minimal buffering
+for arbitration or phase alignment. Such cases may be detected and handled
+analytically. The main use case is the <strong>imbalanced</strong> case — temporary write
+oversubscription requiring real buffering.</p>
 <h3 id="motivation">Motivation<a class="headerlink" href="#motivation" title="Permanent link">&para;</a></h3>
-<p>Traditional sizing methods rely on closed-form equations or spreadsheet estimation. Those approaches may be less accurate when traffic is bursty, multi-layered, or latency-constrained. This tool computes FIFO depth using a hybrid deterministic + solver-based approach. The key idea is to combine (a) domain-specific knowledge of worst-case congestion patterns with (b) an exact optimization stage using CP-SAT. This combination provides a practical and mathematically accurate solution.</p>
-<p>For details on how layers compose and how worst-case patterns are generated, see <a href="#how-layers-compose">How Layers Compose</a>.</p>
+<p>Traditional sizing methods rely on closed-form equations or spreadsheet
+estimation. Those approaches may be less accurate when traffic is bursty,
+multi-layered, or latency-constrained. This tool computes FIFO depth using a
+hybrid deterministic + solver-based approach. The key idea is to combine (a)
+domain-specific knowledge of worst-case congestion patterns with (b) an exact
+optimization stage using CP-SAT. This combination provides a practical and
+mathematically accurate solution.</p>
+<p>For details on how layers compose and how worst-case patterns are generated,
+see <a href="#how-layers-compose">How Layers Compose</a>.</p>
 <hr />
 <h2 id="unique-approach">Unique Approach<a class="headerlink" href="#unique-approach" title="Permanent link">&para;</a></h2>
 <h3 id="deterministic-construction-of-worst-case-write-and-read-profiles">Deterministic Construction of Worst-Case Write and Read Profiles<a class="headerlink" href="#deterministic-construction-of-worst-case-write-and-read-profiles" title="Permanent link">&para;</a></h3>
-<p>The user’s layered traffic specification (transaction, burst, and stream structure) is first compiled into <strong>binary valid profiles</strong> for the write and read sides. These profiles are not arbitrary: the tool intentionally creates <strong>worst-case congestion patterns</strong> using a set of deterministic rules.</p>
+<p>The user’s layered traffic specification (transaction, burst, and stream
+structure) is first compiled into <strong>binary valid profiles</strong> for the write and
+read sides. These profiles are not arbitrary: the tool intentionally creates
+<strong>worst-case congestion patterns</strong> using a set of deterministic rules.</p>
 <h4 id="write-side-worst-case-maximizing-clustering-of-data"><strong>Write-side Worst Case (maximizing clustering of data)</strong><a class="headerlink" href="#write-side-worst-case-maximizing-clustering-of-data" title="Permanent link">&para;</a></h4>
-<p>The write profile generator creates patterns that produce the densest possible windows of valid cycles:</p>
+<p>The write profile generator creates patterns that produce the densest possible
+windows of valid cycles:</p>
 <ul>
-<li>Transactions inside a burst alternate between <code>valid-first</code> and <code>gap-first</code> to create long, contiguous data regions.</li>
-<li>Bursts with data (D) and idles (I) are arranged using an <code>(I,D)</code> / <code>(D,I)</code> envelope based on the number of bursts:<ul>
+<li>Transactions inside a burst alternate between <code>valid-first</code> and <code>gap-first</code>
+to create long, contiguous data regions.</li>
+<li>Bursts with data (D) and idles (I) are arranged using an <code>(I,D)</code> / <code>(D,I)</code>
+envelope based on the number of bursts:<ul>
 <li><code>s_cnt = 1</code>: <code>(D,I)</code></li>
 <li><code>s_cnt = 2</code>: <code>(I,D) (D,I)</code></li>
 <li><code>s_cnt = 3</code>: <code>(I,D) (D,I) (D,I)</code></li>
 <li><code>s_cnt = 4</code>: <code>(I,D) (D,I) (I,D) (D,I)</code></li>
 </ul>
 </li>
-<li>This places idles at the start and end of the stream, while concentrating data in the interior.</li>
-<li>For multi-burst streams, boundaries are constructed to create <code>...1 | 1...</code> transitions (“Case-4” behavior), known to maximize FIFO occupancy.</li>
+<li>This places idles at the start and end of the stream, while concentrating
+data in the interior.</li>
+<li>For multi-burst streams, boundaries are constructed to create <code>...1 | 1...</code>
+transitions (“Case-4” behavior), known to maximize FIFO occupancy.</li>
 </ul>
 <h4 id="read-side-worst-case-delaying-consumption"><strong>Read-side Worst Case (delaying consumption)</strong><a class="headerlink" href="#read-side-worst-case-delaying-consumption" title="Permanent link">&para;</a></h4>
 <p>The read profile generator clusters <strong>idle</strong> cycles to delay consumption:</p>
@@ -2155,12 +2184,17 @@ cat<span class="w"> </span>out_uarch_fd_rv_layered/results_scalars.json
 <li>Every burst begins with a gap (<code>I,D</code>) to ensure reads start as late as possible.</li>
 <li>Transactions alternate so that gap boundaries align and create long idle runs.</li>
 <li>Burst boundaries aggregate idles across the stream.</li>
-<li>A causality guard rotates the read mask so that <strong>no read occurs before data can physically arrive</strong>, incorporating write latency.</li>
+<li>A causality guard rotates the read mask so that <strong>no read occurs before data
+can physically arrive</strong>, incorporating write latency.</li>
 </ul>
-<p>The result is a pair of profiles <code>(write_valid[], read_valid[])</code> that represent <strong>the worst traffic environment allowed by the user’s layered specification</strong>.</p>
+<p>The result is a pair of profiles <code>(write_valid[], read_valid[])</code> that represent
+<strong>the worst traffic environment allowed by the user’s layered specification</strong>.</p>
 <h3 id="constraint-based-optimization-using-cp-sat">Constraint-Based Optimization Using CP-SAT<a class="headerlink" href="#constraint-based-optimization-using-cp-sat" title="Permanent link">&para;</a></h3>
-<p>The tool first generates <strong>deterministic worst-case valid masks</strong> using a congestion-packing algorithm that alternates burst phases to maximize data clustering. These binary masks define which cycles are eligible for writes and reads.</p>
-<p>Then, a <strong>cycle-accurate CP-SAT optimization</strong> stage determines <strong>exactly when</strong> writes and reads fire within these valid windows, while enforcing:</p>
+<p>The tool first generates <strong>deterministic worst-case valid masks</strong> using a
+congestion-packing algorithm that alternates burst phases to maximize data
+clustering. These binary masks define which cycles are eligible for writes and reads.</p>
+<p>Then, a <strong>cycle-accurate CP-SAT optimization</strong> stage determines <strong>exactly
+when</strong> writes and reads fire within these valid windows, while enforcing:</p>
 <ul>
 <li><strong>FIFO causality</strong>
   <code>occ[t+1] = occ[t] + writes[t] - reads[t]</code></li>
@@ -2178,10 +2212,17 @@ cat<span class="w"> </span>out_uarch_fd_rv_layered/results_scalars.json
 </li>
 </ul>
 <p>The solver’s objective is to <strong>maximize the peak occupancy</strong> under these constraints.</p>
-<p>Because the deterministic masks are pre-computed input constraints that encode the worst-case timing structure, CP-SAT only needs to explore <em>cycle-level scheduling</em> inside those windows — which is computationally tractable while still exact.</p>
+<p>Because the deterministic masks are pre-computed input constraints that encode
+the worst-case timing structure, CP-SAT only needs to explore <em>cycle-level
+scheduling</em> inside those windows — which is computationally tractable while
+still exact.</p>
 <h3 id="why-both-stages-are-necessary">Why Both Stages Are Necessary<a class="headerlink" href="#why-both-stages-are-necessary" title="Permanent link">&para;</a></h3>
-<p>Using <strong>only deterministic mask construction</strong> would give plausible worst cases, but could miss problematic write/read alignments that depend on exact cycle timing.</p>
-<p>Using <strong>only CP-SAT</strong> would require the solver to reason about transactions, bursts, and streams directly, which is computationally impractical for realistic horizons.</p>
+<p>Using <strong>only deterministic mask construction</strong> would give plausible worst
+cases, but could miss problematic write/read alignments that depend on exact
+cycle timing.</p>
+<p>Using <strong>only CP-SAT</strong> would require the solver to reason about transactions,
+bursts, and streams directly, which is computationally impractical for
+realistic horizons.</p>
 <p>The hybrid method combines the strengths of both:</p>
 <table>
 <thead>
@@ -2204,8 +2245,10 @@ cat<span class="w"> </span>out_uarch_fd_rv_layered/results_scalars.json
 </tr>
 </tbody>
 </table>
-<p>Together, they compute FIFO depths that are <strong>tight, consistent, and reliable</strong>, yet fast enough for interactive use.</p>
-<p>The hybrid deterministic + CP-SAT method provides a true worst-case bound for the reported depth.</p>
+<p>Together, they compute FIFO depths that are <strong>tight, consistent, and
+reliable</strong>, yet fast enough for interactive use.</p>
+<p>The hybrid deterministic + CP-SAT method provides a true worst-case bound for
+the reported depth.</p>
 <hr />
 <h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
 <div class="codehilite"><pre><span></span><code>YAML spec files (flat / layered)
@@ -2238,7 +2281,8 @@ CP-SAT solvers                |
       JSON / CSV / PNG / log outputs
 </code></pre></div>
 
-<p>Each solver (Ready/Valid, XON/XOFF, CBFC, Replay, CDC) extends <code>FifoSolver</code>. Common data structures are defined in <code>fifo_depth_base.py</code>.</p>
+<p>Each solver (Ready/Valid, XON/XOFF, CBFC, Replay, CDC) extends <code>FifoSolver</code>.
+Common data structures are defined in <code>fifo_depth_base.py</code>.</p>
 <h3 id="typical-workflow">Typical Workflow<a class="headerlink" href="#typical-workflow" title="Permanent link">&para;</a></h3>
 <ol>
 <li>Start with a layered write/read spec</li>
@@ -2375,8 +2419,20 @@ fifo-depth<span class="w"> </span>my_spec.yaml<span class="w"> </span>--verbosit
 </tr>
 </tbody>
 </table>
-<p><strong>Flat specifications</strong> provide explicit bounds on total read and write data over a fixed horizon. Users directly specify <code>sum_w_min</code>, <code>sum_w_max</code>, <code>sum_r_min</code>, and <code>sum_r_max</code> to limit the worst-case traffic pattern. This approach works well when traffic characteristics are well-understood or when migrating from spreadsheet-based analysis. Flat specs require the user to manually calculate aggregate traffic bounds.</p>
-<p><strong>Layered specifications</strong> define traffic patterns hierarchically through independent read and write profiles. Each profile can include multiple layers (e.g., cycle-level behavior, transaction grouping, burst patterns, stream periodicity) that combine to describe complex, realistic traffic. The tool automatically calculates the worst-case aggregate constraints from these layered descriptions. This approach is more intuitive for modeling protocol-specific behavior and allows the solver to explore combinations of layer parameters to find the most stressful scenario.</p>
+<p><strong>Flat specifications</strong> provide explicit bounds on total read and write data
+over a fixed horizon. Users directly specify <code>sum_w_min</code>, <code>sum_w_max</code>,
+<code>sum_r_min</code>, and <code>sum_r_max</code> to limit the worst-case traffic pattern. This
+approach works well when traffic characteristics are well-understood or when
+migrating from spreadsheet-based analysis. Flat specs require the user to
+manually calculate aggregate traffic bounds.</p>
+<p><strong>Layered specifications</strong> define traffic patterns hierarchically through
+independent read and write profiles. Each profile can include multiple layers
+(e.g., cycle-level behavior, transaction grouping, burst patterns, stream
+periodicity) that combine to describe complex, realistic traffic. The tool
+automatically calculates the worst-case aggregate constraints from these
+layered descriptions. This approach is more intuitive for modeling
+protocol-specific behavior and allows the solver to explore combinations of
+layer parameters to find the most stressful scenario.</p>
 <h3 id="data-quantities">Data Quantities<a class="headerlink" href="#data-quantities" title="Permanent link">&para;</a></h3>
 <p>The <code>fifo-depth</code> tool:</p>
 <ul>
@@ -2384,22 +2440,47 @@ fifo-depth<span class="w"> </span>my_spec.yaml<span class="w"> </span>--verbosit
 <li>Treats all data quantities as unitless integers.</li>
 <li>Does not automatically scale data values for the CP-SAT solver.</li>
 </ul>
-<p>Users must ensure that all write and read data parameters are specified in consistent units (e.g., bytes, words, flits) and at appropriate magnitudes for the solver.</p>
+<p>Users must ensure that all write and read data parameters are specified in
+consistent units (e.g., bytes, words, flits) and at appropriate magnitudes for
+the solver.</p>
 <h3 id="horizon-concept">Horizon Concept<a class="headerlink" href="#horizon-concept" title="Permanent link">&para;</a></h3>
-<p>The <strong>horizon</strong> defines the time window (in cycles) over which the solver analyzes traffic patterns and computes FIFO depth requirements. It represents the finite duration of the scenario being modeled — typically a burst or congestion event where write traffic temporarily exceeds read traffic.</p>
+<p>The <strong>horizon</strong> defines the time window (in cycles) over which the solver
+analyzes traffic patterns and computes FIFO depth requirements. It represents
+the finite duration of the scenario being modeled — typically a burst or
+congestion event where write traffic temporarily exceeds read traffic.</p>
 <p>Key characteristics:</p>
 <ul>
-<li><strong>Finite-duration analysis</strong>: The horizon captures a specific traffic scenario, not steady-state equilibrium. The solver finds the worst-case FIFO occupancy within this time window.</li>
-<li><strong>Flat specs</strong>: Users specify horizon directly as a positive integer. All traffic constraints (<code>sum_w_min</code>, <code>sum_w_max</code>, <code>sum_r_min</code>, <code>sum_r_max</code>) apply over this fixed window.</li>
-<li><strong>Layered specs</strong>: Horizon can be <code>"auto"</code> (recommended) or user-specified. Auto mode computes horizon based on the traffic pattern's natural periodicity (<code>overall_period</code>), the blind window (<code>blind_window_cycles</code>), and minimum repetition count (<code>kmin_blocks</code>). This ensures the solver examines sufficient pattern cycles to find worst-case alignment.</li>
-<li><strong>Longer horizons</strong>: Generally capture more realistic worst-case scenarios but increase solver runtime. For layered specs, the auto-computed horizon balances coverage and efficiency.</li>
+<li><strong>Finite-duration analysis</strong>: The horizon captures a specific traffic
+  scenario, not steady-state equilibrium. The solver finds the worst-case FIFO
+  occupancy within this time window.</li>
+<li><strong>Flat specs</strong>: Users specify horizon directly as a positive integer. All
+  traffic constraints (<code>sum_w_min</code>, <code>sum_w_max</code>, <code>sum_r_min</code>, <code>sum_r_max</code>)
+  apply over this fixed window.</li>
+<li><strong>Layered specs</strong>: Horizon can be <code>"auto"</code> (recommended) or user-specified.
+  Auto mode computes horizon based on the traffic pattern's natural periodicity
+  (<code>overall_period</code>), the blind window (<code>blind_window_cycles</code>), and minimum
+  repetition count (<code>kmin_blocks</code>). This ensures the solver examines sufficient
+  pattern cycles to find worst-case alignment.</li>
+<li><strong>Longer horizons</strong>: Generally capture more realistic worst-case scenarios but
+  increase solver runtime. For layered specs, the auto-computed horizon balances
+  coverage and efficiency.</li>
 </ul>
-<p>The horizon does not model long-term system-level flow control or equilibrium — it focuses on short-term congestion that requires buffering.</p>
-<p><strong>Horizon Sufficiency Check</strong>: The solver checks if the specified horizon may be too short to observe the maximum FIFO occupancy. The check uses this formula:</p>
+<p>The horizon does not model long-term system-level flow control or equilibrium
+— it focuses on short-term congestion that requires buffering.</p>
+<p><strong>Horizon Sufficiency Check</strong>: The solver checks if the specified horizon may
+be too short to observe the maximum FIFO occupancy. The check uses this
+formula:</p>
 <div class="codehilite"><pre><span></span><code>horizon &gt;= (sum_w_max / w_max) + (sum_r_max / r_max)
 </code></pre></div>
 
-<p>This check ensures there are enough cycles to write the maximum write traffic (<code>sum_w_max</code> at rate <code>w_max</code>) and read the maximum read traffic (<code>sum_r_max</code> at rate <code>r_max</code>). If the horizon is shorter than this threshold, a warning is issued showing that the computed FIFO depth may be underestimated. This check is most important for protocols without flow control (e.g., <code>ready_valid</code>) where occupancy can reach <code>sum_w_max</code>. Protocols with flow control (e.g., <code>xon_xoff</code>, <code>cbfc</code>) typically have lower occupancy limits because of their flow control mechanisms.</p>
+<p>This check ensures there are enough cycles to write the maximum write traffic
+(<code>sum_w_max</code> at rate <code>w_max</code>) and read the maximum read traffic (<code>sum_r_max</code> at
+rate <code>r_max</code>). If the horizon is shorter than this threshold, a warning is
+issued showing that the computed FIFO depth may be underestimated. This check is
+most important for protocols without flow control (e.g., <code>ready_valid</code>) where
+occupancy can reach <code>sum_w_max</code>. Protocols with flow control (e.g., <code>xon_xoff</code>,
+<code>cbfc</code>) typically have lower occupancy limits because of their flow control
+mechanisms.</p>
 <h3 id="common-parameters">Common Parameters<a class="headerlink" href="#common-parameters" title="Permanent link">&para;</a></h3>
 <p>All solvers use these YAML parameters:</p>
 <table>
@@ -2444,7 +2525,8 @@ fifo-depth<span class="w"> </span>my_spec.yaml<span class="w"> </span>--verbosit
 </tbody>
 </table>
 <h3 id="flat-spec-parameters">Flat Spec Parameters<a class="headerlink" href="#flat-spec-parameters" title="Permanent link">&para;</a></h3>
-<p>The Ready / Valid, XON / XOFF, and CBFC solvers use these YAML parameters for flat specs:</p>
+<p>The Ready / Valid, XON / XOFF, and CBFC solvers use these YAML parameters for
+flat specs:</p>
 <table>
 <thead>
 <tr>
@@ -2522,7 +2604,8 @@ fifo-depth<span class="w"> </span>my_spec.yaml<span class="w"> </span>--verbosit
 </tbody>
 </table>
 <h3 id="layered-spec-parameters">Layered Spec Parameters<a class="headerlink" href="#layered-spec-parameters" title="Permanent link">&para;</a></h3>
-<p>The Ready / Valid, XON / XOFF, and CBFC solvers use these YAML parameters for layered specs:</p>
+<p>The Ready / Valid, XON / XOFF, and CBFC solvers use these YAML parameters for
+layered specs:</p>
 <table>
 <thead>
 <tr>
@@ -2572,14 +2655,20 @@ fifo-depth<span class="w"> </span>my_spec.yaml<span class="w"> </span>--verbosit
 </tbody>
 </table>
 <h4 id="layered-profiles">Layered Profiles<a class="headerlink" href="#layered-profiles" title="Permanent link">&para;</a></h4>
-<p>Layered specs specify independent <strong>write</strong> and <strong>read</strong> traffic profiles using a hierarchical structure. Both <code>write_profile</code> and <code>read_profile</code> use identical YAML parameters organized into four layers that build upon each other to create complex, realistic traffic patterns.</p>
+<p>Layered specs specify independent <strong>write</strong> and <strong>read</strong> traffic profiles using
+a hierarchical structure. Both <code>write_profile</code> and <code>read_profile</code> use identical
+YAML parameters organized into four layers that build upon each other to create
+complex, realistic traffic patterns.</p>
 <p><strong>Layer Structure:</strong></p>
-<p>Each profile is composed of up to 4 layers that define traffic at increasing levels of granularity:</p>
+<p>Each profile is composed of up to 4 layers that define traffic at increasing
+levels of granularity:</p>
 <ol>
 <li><strong>Cycle Layer</strong> (optional): Defines the maximum data items per cycle</li>
 <li><strong>Transaction Layer</strong> (required): Defines active and idle periods within a transaction</li>
-<li><strong>Burst Layer</strong> (required): Defines how transactions are grouped with inter-burst gaps</li>
-<li><strong>Stream Layer</strong> (optional): Defines how bursts are grouped with inter-stream gaps</li>
+<li><strong>Burst Layer</strong> (required): Defines how transactions are grouped with
+inter-burst gaps</li>
+<li><strong>Stream Layer</strong> (optional): Defines how bursts are grouped with
+inter-stream gaps</li>
 </ol>
 <p><strong>Layer Parameters:</strong></p>
 <table>
@@ -2652,7 +2741,9 @@ fifo-depth<span class="w"> </span>my_spec.yaml<span class="w"> </span>--verbosit
 </tr>
 </tbody>
 </table>
-<p>The <code>fifo-depth</code> tool composes write and read patterns to trigger the worst-case FIFO occupancy. See the <a href="#how-layers-compose">How Layers Compose</a> section of the Appendix for details.</p>
+<p>The <code>fifo-depth</code> tool composes write and read patterns to trigger the
+worst-case FIFO occupancy. See the <a href="#how-layers-compose">How Layers Compose</a>
+section of the Appendix for details.</p>
 <p><strong>Example:</strong></p>
 <div class="codehilite"><pre><span></span><code><span class="nt">write_profile</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">cycle</span><span class="p">:</span>
@@ -2773,7 +2864,8 @@ fifo-depth<span class="w"> </span>my_spec.yaml<span class="w"> </span>--verbosit
 <hr />
 <h2 id="future-enhancements">Future Enhancements<a class="headerlink" href="#future-enhancements" title="Permanent link">&para;</a></h2>
 <h3 id="replay-solver-extensions">Replay Solver Extensions<a class="headerlink" href="#replay-solver-extensions" title="Permanent link">&para;</a></h3>
-<p>As noted in the <a href="#replay-solver">Replay Solver</a> section, the current implementation serves as a reference baseline for more complex future variants including:</p>
+<p>As noted in the <a href="#replay-solver">Replay Solver</a> section, the current
+implementation serves as a reference baseline for more complex future variants including:</p>
 <ul>
 <li>Variable round-trip time (jitter, retry delays)</li>
 <li>Credit windows smaller than bandwidth–delay product</li>
@@ -2788,38 +2880,55 @@ fifo-depth<span class="w"> </span>my_spec.yaml<span class="w"> </span>--verbosit
 <li>Does not automatically scale data values for CP-SAT solver efficiency</li>
 </ul>
 <p><strong>Storage Quantum Mismatch:</strong></p>
-<p>The first limitation can underestimate FIFO depth in certain protocols. For example, consider XON/XOFF flow control for Ethernet where FIFO storage is allocated in 64-byte words. Between when the receiver sends XOFF and the sender receives it, the worst case occurs when the sender bursts 65-byte Ethernet packets (64-byte payload + 1-byte overhead). These 65-byte packets use the most FIFO storage relative to bandwidth, but the tool currently cannot model this interface-to-storage quantum mismatch.</p>
+<p>The first limitation can underestimate FIFO depth in certain protocols. For
+example, consider XON/XOFF flow control for Ethernet where FIFO storage is
+allocated in 64-byte words. Between when the receiver sends XOFF and the sender
+receives it, the worst case occurs when the sender bursts 65-byte Ethernet
+packets (64-byte payload + 1-byte overhead). These 65-byte packets use the most
+FIFO storage relative to bandwidth, but the tool currently cannot model this
+interface-to-storage quantum mismatch.</p>
 <p><strong>Units and Autoscaling:</strong></p>
-<p>Supporting units (similar to the <code>pint</code>-based approach used for CDC clock frequencies) would improve specification clarity and reduce user errors from unit inconsistencies.</p>
-<p>Automatic scaling would simultaneously simplify YAML specifications and optimize CP-SAT solver performance by normalizing large or small data values to efficient integer ranges.</p>
+<p>Supporting units (similar to the <code>pint</code>-based approach used for CDC clock
+frequencies) would improve specification clarity and reduce user errors from
+unit inconsistencies.</p>
+<p>Automatic scaling would simultaneously simplify YAML specifications and optimize
+CP-SAT solver performance by normalizing large or small data values to efficient
+integer ranges.</p>
 <p><strong>Implementation Approach:</strong></p>
 <p>The recommended enhancement strategy:</p>
 <ol>
-<li>Add preprocessing stage to read user YAML, translate units, autoscale values, and generate normalized YAML for existing solvers</li>
+<li>Add preprocessing stage to read user YAML, translate units, autoscale values,
+   and generate normalized YAML for existing solvers</li>
 <li>Keep current solver implementations unchanged</li>
 <li>Add postprocessing stage to reverse scaling and restore units in results</li>
 </ol>
-<p>This approach preserves the existing solver architecture while providing a cleaner user interface.</p>
+<p>This approach preserves the existing solver architecture while providing a
+cleaner user interface.</p>
 <hr />
 <h2 id="ready-valid-solver">Ready / Valid Solver<a class="headerlink" href="#ready-valid-solver" title="Permanent link">&para;</a></h2>
 <h3 id="ready-valid-purpose">Ready / Valid Purpose<a class="headerlink" href="#ready-valid-purpose" title="Permanent link">&para;</a></h3>
-<p>In ABE, “Ready / Valid” is a shorthand name for a generic producer/consumer FIFO with no explicit flow-control protocol modeled inside the solver.</p>
+<p>In ABE, “Ready / Valid” is a shorthand name for a generic producer/consumer
+FIFO with no explicit flow-control protocol modeled inside the solver.</p>
 <p>This mode applies to two common architectural situations:</p>
 <ul>
 <li>Backpressured systems (e.g., actual Ready/Valid handshake)<ul>
 <li>Overflow is prevented by deasserting ready.</li>
-<li>If the traffic pattern would overflow the FIFO, that means the design will be forced to stall the producer and miss performance goals.</li>
+<li>If the traffic pattern would overflow the FIFO, that means the design will
+  be forced to stall the producer and miss performance goals.</li>
 </ul>
 </li>
 <li>Drop-tolerant systems (no backpressure)<ul>
 <li>Overflow results in dropped data.</li>
-<li>If the traffic pattern would overflow the FIFO, that means the system will drop data that should not be dropped.</li>
+<li>If the traffic pattern would overflow the FIFO, that means the system
+  will drop data that should not be dropped.</li>
 </ul>
 </li>
 </ul>
 <p>Despite these architectural differences, the FIFO depth requirement is the same:</p>
-<p><em>The FIFO must be sized so that it never overflows under the worst-case write/read schedule within the analysis horizon.</em></p>
-<p>The solver therefore focuses entirely on worst-case occupancy, not on a specific handshake protocol.</p>
+<p><em>The FIFO must be sized so that it never overflows under the worst-case
+  write/read schedule within the analysis horizon.</em></p>
+<p>The solver therefore focuses entirely on worst-case occupancy, not on a
+specific handshake protocol.</p>
 <h3 id="ready-valid-parameters">Ready / Valid Parameters<a class="headerlink" href="#ready-valid-parameters" title="Permanent link">&para;</a></h3>
 <p>None beyond <a href="#common-parameters">common parameters</a>.</p>
 <p>This mode assumes:</p>
@@ -2833,20 +2942,25 @@ fifo-depth<span class="w"> </span>my_spec.yaml<span class="w"> </span>--verbosit
 <p>The depth returned guarantees:</p>
 <ul>
 <li>No overflow over the horizon</li>
-<li>Independent of whether the surrounding system uses Ready/Valid backpressure or allows drops</li>
+<li>Independent of whether the surrounding system uses Ready/Valid backpressure
+or allows drops</li>
 </ul>
 <h3 id="ready-valid-recommendations">Ready / Valid Recommendations<a class="headerlink" href="#ready-valid-recommendations" title="Permanent link">&para;</a></h3>
 <p><strong>Flat Specifications:</strong></p>
-<p>For flat (non-layered) specifications, the FIFO depth will always equal sum_w_max, because:</p>
+<p>For flat (non-layered) specifications, the FIFO depth will always equal
+sum_w_max, because:</p>
 <ul>
 <li>The write-valid and read-valid masks are constant (all 1s)</li>
 <li>The producer can write every cycle</li>
-<li>Without temporal structure, the worst case is “write the maximum burst before any reads”</li>
+<li>Without temporal structure, the worst case is “write the maximum burst before
+any reads”</li>
 <li>Therefore the FIFO must buffer all writes in the horizon</li>
 </ul>
-<p>In this simple case, an analytical calculation is sufficient. The CP-SAT solver yields the same result but provides no optimization benefit.</p>
+<p>In this simple case, an analytical calculation is sufficient. The CP-SAT solver
+yields the same result but provides no optimization benefit.</p>
 <p><strong>Balanced Specifications:</strong></p>
-<p>When the specification is balanced (minimum read density ≥ maximum write density), CP-SAT cannot produce a meaningful worst-case value:</p>
+<p>When the specification is balanced (minimum read density ≥ maximum write
+density), CP-SAT cannot produce a meaningful worst-case value:</p>
 <ul>
 <li>The solver attempts to delay reads indefinitely to maximize occupancy</li>
 <li>But in a balanced spec, reads can always catch up faster than writes</li>
@@ -2866,19 +2980,26 @@ fifo-depth<span class="w"> </span>my_spec.yaml<span class="w"> </span>--verbosit
 </ul>
 <p><em>Note:</em></p>
 <ul>
-<li>Layered specifications with temporal structure (bursts, gaps, cycles) provide a richer worst-case analysis space where CP-SAT does provide benefit.</li>
-<li>Flat and balanced cases are automatically handled using the appropriate analytical paths.</li>
+<li>Layered specifications with temporal structure (bursts, gaps, cycles) provide
+a richer worst-case analysis space where CP-SAT does provide benefit.</li>
+<li>Flat and balanced cases are automatically handled using the appropriate
+analytical paths.</li>
 </ul>
 <hr />
 <h2 id="xon-xoff-solver">XON / XOFF Solver<a class="headerlink" href="#xon-xoff-solver" title="Permanent link">&para;</a></h2>
 <h3 id="xon-xoff-purpose">XON / XOFF Purpose<a class="headerlink" href="#xon-xoff-purpose" title="Permanent link">&para;</a></h3>
-<p>Models XON/XOFF flow control protocols where the receiver uses threshold-based signaling to control the sender's transmission rate. In XON/XOFF:</p>
+<p>Models XON/XOFF flow control protocols where the receiver uses threshold-based
+signaling to control the sender's transmission rate. In XON/XOFF:</p>
 <ul>
-<li>The receiver monitors FIFO occupancy and asserts XOFF when occupancy reaches the <code>xoff</code> threshold, signaling the sender to pause</li>
-<li>The sender reacts to XOFF after a reaction latency (<code>react_latency</code>), then stops or throttles transmission</li>
-<li>When occupancy drains below the <code>xon</code> threshold, the receiver de-asserts XOFF (signals XON)</li>
+<li>The receiver monitors FIFO occupancy and asserts XOFF when occupancy reaches
+  the <code>xoff</code> threshold, signaling the sender to pause</li>
+<li>The sender reacts to XOFF after a reaction latency (<code>react_latency</code>), then
+  stops or throttles transmission</li>
+<li>When occupancy drains below the <code>xon</code> threshold, the receiver de-asserts XOFF
+  (signals XON)</li>
 <li>The sender resumes transmission after a resume latency (<code>resume_latency</code>)</li>
-<li>Hysteresis between <code>xon</code> and <code>xoff</code> prevents rapid toggling (control chatter) when occupancy stays near a single threshold</li>
+<li>Hysteresis between <code>xon</code> and <code>xoff</code> prevents rapid toggling (control chatter)
+  when occupancy stays near a single threshold</li>
 </ul>
 <h3 id="xon-xoff-overview">XON / XOFF Overview<a class="headerlink" href="#xon-xoff-overview" title="Permanent link">&para;</a></h3>
 <p>The XON/XOFF solver computes three critical values:</p>
@@ -2889,33 +3010,48 @@ fifo-depth<span class="w"> </span>my_spec.yaml<span class="w"> </span>--verbosit
 </ol>
 <p>Both <code>xon</code> and <code>xoff</code> are essential hardware parameters. They determine:</p>
 <ul>
-<li><strong>Hysteresis behavior</strong>: The separation between pause and resume thresholds prevents rapid toggling of flow control</li>
-<li><strong>Throughput vs. depth trade-off</strong>: Lower thresholds reduce buffering but may cause more frequent pauses, reducing effective bandwidth</li>
-<li><strong>Reaction margin</strong>: Sufficient headroom above <code>xoff</code> to accommodate data written during the writer's reaction latency</li>
+<li><strong>Hysteresis behavior</strong>: The separation between pause and resume thresholds
+  prevents rapid toggling of flow control</li>
+<li><strong>Throughput vs. depth trade-off</strong>: Lower thresholds reduce buffering but may
+  cause more frequent pauses, reducing effective bandwidth</li>
+<li><strong>Reaction margin</strong>: Sufficient headroom above <code>xoff</code> to accommodate data
+  written during the writer's reaction latency</li>
 </ul>
 <p><strong>Auto Mode vs. Manual Mode:</strong></p>
 <p>The solver supports two modes:</p>
 <ul>
 <li>
-<p><strong>Auto Mode</strong> (<code>thresholds="auto"</code>, default): The solver automatically computes optimal threshold values using constraint programming. It finds threshold configurations that satisfy throughput targets while minimizing FIFO depth, then explores the hysteresis range to balance depth, throughput, and control stability.</p>
+<p><strong>Auto Mode</strong> (<code>thresholds="auto"</code>, default): The solver automatically
+  computes optimal threshold values using constraint programming. It finds
+  threshold configurations that satisfy throughput targets while minimizing FIFO
+  depth, then explores the hysteresis range to balance depth, throughput, and
+  control stability.</p>
 </li>
 <li>
-<p><strong>Manual Mode</strong> (<code>thresholds="manual"</code>): You specify fixed <code>xon</code> and <code>xoff</code> values, and the solver validates whether they provide sufficient flow control and computes the resulting FIFO depth.</p>
+<p><strong>Manual Mode</strong> (<code>thresholds="manual"</code>): You specify fixed <code>xon</code> and <code>xoff</code>
+  values, and the solver validates whether they provide sufficient flow control
+  and computes the resulting FIFO depth.</p>
 </li>
 </ul>
 <p><strong>How Auto-Optimization Works:</strong></p>
 <p>When <code>thresholds="auto"</code> (default):</p>
 <ol>
-<li>The solver analyzes traffic patterns (write/read caps, latencies, atomic writes, throttle rates)</li>
-<li>It calculates bounds for thresholds based on reaction/resume latencies and sustained throughput requirements</li>
+<li>The solver analyzes traffic patterns (write/read caps, latencies, atomic
+   writes, throttle rates)</li>
+<li>It calculates bounds for thresholds based on reaction/resume latencies and
+   sustained throughput requirements</li>
 <li>It explores candidate threshold pairs within the specified <code>hysteresis</code> range</li>
-<li>It optimizes based on preferences: minimize depth (default), minimize hysteresis band (<code>prefer_small_band</code>), or minimize <code>xoff</code> (<code>prefer_low_xoff</code>)</li>
+<li>It optimizes based on preferences: minimize depth (default), minimize
+   hysteresis band (<code>prefer_small_band</code>), or minimize <code>xoff</code> (<code>prefer_low_xoff</code>)</li>
 <li>It validates each candidate against throughput targets and requirements</li>
 <li>It applies any specified margins and rounding to the final depth</li>
 </ol>
-<p><em>Note on adaptive optimization:</em> The solver automatically adjusts threshold search ranges based on traffic burstiness to help ensure adequate margin for reaction latency while avoiding over-provisioning.</p>
+<p><em>Note on adaptive optimization:</em> The solver automatically adjusts threshold
+search ranges based on traffic burstiness to help ensure adequate margin for
+reaction latency while avoiding over-provisioning.</p>
 <h3 id="xon-xoff-parameters">XON / XOFF Parameters<a class="headerlink" href="#xon-xoff-parameters" title="Permanent link">&para;</a></h3>
-<p>XON / XOFF parameters include all <a href="#common-parameters">common parameters</a> plus these XON / XOFF-specific parameters:</p>
+<p>XON / XOFF parameters include all <a href="#common-parameters">common parameters</a> plus
+these XON / XOFF-specific parameters:</p>
 <table>
 <thead>
 <tr>
@@ -3021,7 +3157,8 @@ fifo-depth<span class="w"> </span>my_spec.yaml<span class="w"> </span>--verbosit
 </tbody>
 </table>
 <h3 id="xon-xoff-results">XON / XOFF Results<a class="headerlink" href="#xon-xoff-results" title="Permanent link">&para;</a></h3>
-<p>XON / XOFF results include all <a href="#common-results">common results</a> plus these XON / XOFF-specific results:</p>
+<p>XON / XOFF results include all <a href="#common-results">common results</a> plus these XON
+/ XOFF-specific results:</p>
 <table>
 <thead>
 <tr>
@@ -3053,16 +3190,23 @@ fifo-depth<span class="w"> </span>my_spec.yaml<span class="w"> </span>--verbosit
 <p>Auto mode (<code>thresholds="auto"</code>) is recommended because:</p>
 <ol>
 <li>
-<p><strong>Optimal Threshold Selection</strong>: The solver finds threshold configurations that minimize FIFO depth while meeting your throughput requirements, avoiding over-provisioning of buffer memory.</p>
+<p><strong>Optimal Threshold Selection</strong>: The solver finds threshold configurations
+that minimize FIFO depth while meeting your throughput requirements, avoiding
+over-provisioning of buffer memory.</p>
 </li>
 <li>
-<p><strong>Correct Reaction Margins</strong>: The solver automatically accounts for reaction and resume latencies, ensuring sufficient headroom above <code>xoff</code> to handle data written during the pause reaction period.</p>
+<p><strong>Correct Reaction Margins</strong>: The solver automatically accounts for reaction
+and resume latencies, ensuring sufficient headroom above <code>xoff</code> to handle data
+written during the pause reaction period.</p>
 </li>
 <li>
-<p><strong>Adaptive to Traffic Patterns</strong>: The solver analyzes your specific write/read profiles, atomic transactions, and throttle behavior to determine appropriate threshold values, rather than requiring manual calculation.</p>
+<p><strong>Adaptive to Traffic Patterns</strong>: The solver analyzes your specific
+write/read profiles, atomic transactions, and throttle behavior to determine
+appropriate threshold values, rather than requiring manual calculation.</p>
 </li>
 <li>
-<p><strong>Hysteresis Optimization</strong>: The solver explores the specified hysteresis range to balance control stability (avoiding chatter) against depth minimization.</p>
+<p><strong>Hysteresis Optimization</strong>: The solver explores the specified hysteresis
+range to balance control stability (avoiding chatter) against depth minimization.</p>
 </li>
 </ol>
 <p><strong>When to Use Manual Mode:</strong></p>
@@ -3070,26 +3214,37 @@ fifo-depth<span class="w"> </span>my_spec.yaml<span class="w"> </span>--verbosit
 <ul>
 <li>You have pre-existing XON/XOFF protocol specifications that must be validated</li>
 <li>Hardware constraints dictate specific threshold values (e.g., register width limitations)</li>
-<li>You want to verify that a proposed threshold configuration is sufficient for your traffic</li>
+<li>You want to verify that a proposed threshold configuration is sufficient for
+your traffic</li>
 </ul>
 <p><strong>Recommendations:</strong></p>
 <ul>
-<li>Consider starting with auto mode to understand the optimal thresholds for your traffic pattern</li>
-<li>Use <code>hysteresis</code> (default: <code>[1.0, 1.5]</code>) to control the minimum and maximum separation between <code>xon</code> and <code>xoff</code></li>
-<li>Set <code>throughput_target</code> below 1.0 if you're willing to trade some bandwidth for reduced FIFO depth</li>
-<li>Use <code>prefer_small_band=true</code> to minimize hysteresis width if reducing control signal transitions is critical</li>
-<li>Use <code>prefer_low_xoff=true</code> to minimize peak occupancy if you want flow control to engage earlier</li>
-<li>Apply standard margin and rounding options to add implementation safety margin to the computed depth</li>
+<li>Consider starting with auto mode to understand the optimal thresholds for your
+  traffic pattern</li>
+<li>Use <code>hysteresis</code> (default: <code>[1.0, 1.5]</code>) to control the minimum and maximum
+  separation between <code>xon</code> and <code>xoff</code></li>
+<li>Set <code>throughput_target</code> below 1.0 if you're willing to trade some bandwidth for
+  reduced FIFO depth</li>
+<li>Use <code>prefer_small_band=true</code> to minimize hysteresis width if reducing control
+  signal transitions is critical</li>
+<li>Use <code>prefer_low_xoff=true</code> to minimize peak occupancy if you want flow control
+  to engage earlier</li>
+<li>Apply standard margin and rounding options to add implementation safety margin
+  to the computed depth</li>
 </ul>
 <hr />
 <h2 id="cbfc-solver">CBFC Solver<a class="headerlink" href="#cbfc-solver" title="Permanent link">&para;</a></h2>
 <h3 id="cbfc-purpose">CBFC Purpose<a class="headerlink" href="#cbfc-purpose" title="Permanent link">&para;</a></h3>
-<p>Models Credit-Based Flow Control (CBFC) protocols where the sender's transmission rate is regulated by credits returned asynchronously from the receiver. In CBFC:</p>
+<p>Models Credit-Based Flow Control (CBFC) protocols where the sender's transmission
+rate is regulated by credits returned asynchronously from the receiver. In CBFC:</p>
 <ul>
-<li>The sender maintains a credit pool that is decremented with each write and incremented when credits are returned from the receiver</li>
-<li>Credits are returned after the receiver consumes data, subject to a return latency (<code>cred_ret_latency</code>)</li>
+<li>The sender maintains a credit pool that is decremented with each write and
+  incremented when credits are returned from the receiver</li>
+<li>Credits are returned after the receiver consumes data, subject to a return
+  latency (<code>cred_ret_latency</code>)</li>
 <li>The sender can only transmit when sufficient credits are available</li>
-<li>This provides backpressure without requiring a synchronous ready/valid handshake</li>
+<li>This provides backpressure without requiring a synchronous ready/valid
+  handshake</li>
 </ul>
 <h3 id="cbfc-overview">CBFC Overview<a class="headerlink" href="#cbfc-overview" title="Permanent link">&para;</a></h3>
 <p>The CBFC solver computes three critical values:</p>
@@ -3098,34 +3253,51 @@ fifo-depth<span class="w"> </span>my_spec.yaml<span class="w"> </span>--verbosit
 <li><strong><code>cred_max</code></strong> - The maximum size of the credit pool</li>
 <li><strong><code>cred_init</code></strong> - The initial number of credits at startup</li>
 </ol>
-<p>Both <code>cred_max</code> and <code>cred_init</code> are essential hardware implementation parameters. They determine:</p>
+<p>Both <code>cred_max</code> and <code>cred_init</code> are essential hardware implementation parameters.
+They determine:</p>
 <ul>
-<li><strong>Credit pool sizing</strong>: How many credits the sender must track (affects counter width or memory requirements)</li>
-<li><strong>Startup behavior</strong>: How much data can be transmitted before the first credits return from the receiver</li>
-<li><strong>Sustained throughput</strong>: Whether the credit return rate can support the desired bandwidth</li>
+<li><strong>Credit pool sizing</strong>: How many credits the sender must track (affects counter
+  width or memory requirements)</li>
+<li><strong>Startup behavior</strong>: How much data can be transmitted before the first credits
+  return from the receiver</li>
+<li><strong>Sustained throughput</strong>: Whether the credit return rate can support the desired
+  bandwidth</li>
 </ul>
 <p><strong>Auto Mode vs. Manual Mode:</strong></p>
 <p>The solver supports two modes:</p>
 <ul>
 <li>
-<p><strong>Auto Mode</strong> (<code>cred_max="auto"</code> and/or <code>cred_init="auto"</code>, default): The solver automatically computes optimal credit values using constraint programming. It finds the minimal feasible credit configuration that satisfies the traffic requirements, then adds adaptive headroom based on read-valid gapiness patterns.</p>
+<p><strong>Auto Mode</strong> (<code>cred_max="auto"</code> and/or <code>cred_init="auto"</code>, default): The
+  solver automatically computes optimal credit values using constraint
+  programming. It finds the minimal feasible credit configuration that satisfies
+  the traffic requirements, then adds adaptive headroom based on read-valid
+  gapiness patterns.</p>
 </li>
 <li>
-<p><strong>Manual Mode</strong> (explicit integer values): You specify fixed credit values, and the solver validates whether they provide sufficient flow control and computes the resulting FIFO depth.</p>
+<p><strong>Manual Mode</strong> (explicit integer values): You specify fixed credit values, and
+  the solver validates whether they provide sufficient flow control and computes
+  the resulting FIFO depth.</p>
 </li>
 </ul>
 <p><strong>How Auto-Optimization Works:</strong></p>
 <p>When <code>cred_auto_optimize=true</code> (default) with auto mode:</p>
 <ol>
-<li>The solver analyzes traffic patterns (write/read caps, latencies, credit return latency)</li>
-<li>It computes lower bounds for credits based on startup requirements and sustained throughput</li>
-<li>It performs lexicographic minimization: first minimizes <code>cred_init</code>, then minimizes <code>cred_max</code></li>
-<li>It adds adaptive headroom derived from the read-valid pattern's maximum gap between valid slots</li>
+<li>The solver analyzes traffic patterns (write/read caps, latencies, credit
+   return latency)</li>
+<li>It computes lower bounds for credits based on startup requirements and
+   sustained throughput</li>
+<li>It performs lexicographic minimization: first minimizes <code>cred_init</code>, then
+   minimizes <code>cred_max</code></li>
+<li>It adds adaptive headroom derived from the read-valid pattern's maximum gap
+   between valid slots</li>
 <li>It applies any specified margins and rounding</li>
 </ol>
-<p><em>Note on adaptive headroom:</em> The solver automatically adjusts headroom based on read-valid gapiness to help ensure credits are available even when reads arrive in bursts rather than uniformly.</p>
+<p><em>Note on adaptive headroom:</em> The solver automatically adjusts headroom based on
+read-valid gapiness to help ensure credits are available even when reads arrive
+in bursts rather than uniformly.</p>
 <h3 id="cbfc-parameters">CBFC Parameters<a class="headerlink" href="#cbfc-parameters" title="Permanent link">&para;</a></h3>
-<p>CBFC parameters include all <a href="#common-parameters">common parameters</a> plus these CBFC-specific parameters:</p>
+<p>CBFC parameters include all <a href="#common-parameters">common parameters</a> plus these
+CBFC-specific parameters:</p>
 <table>
 <thead>
 <tr>
@@ -3203,7 +3375,8 @@ fifo-depth<span class="w"> </span>my_spec.yaml<span class="w"> </span>--verbosit
 </tbody>
 </table>
 <h3 id="cbfc-results">CBFC Results<a class="headerlink" href="#cbfc-results" title="Permanent link">&para;</a></h3>
-<p>CBFC results include all <a href="#common-results">common results</a> plus these CBFC-specific results:</p>
+<p>CBFC results include all <a href="#common-results">common results</a> plus these
+CBFC-specific results:</p>
 <table>
 <thead>
 <tr>
@@ -3231,70 +3404,101 @@ fifo-depth<span class="w"> </span>my_spec.yaml<span class="w"> </span>--verbosit
 <p>Auto mode (<code>cred_max="auto"</code> and <code>cred_init="auto"</code>) is recommended because:</p>
 <ol>
 <li>
-<p><strong>Optimal Credit Sizing</strong>: The solver finds the minimal credit configuration that satisfies your traffic requirements, avoiding over-provisioning of credit counters or pools.</p>
+<p><strong>Optimal Credit Sizing</strong>: The solver finds the minimal credit configuration
+   that satisfies your traffic requirements, avoiding over-provisioning of credit
+   counters or pools.</p>
 </li>
 <li>
-<p><strong>Correct Startup Credits</strong>: The solver automatically accounts for credit return latency and startup requirements, ensuring sufficient initial credits to achieve desired throughput before the first credits return.</p>
+<p><strong>Correct Startup Credits</strong>: The solver automatically accounts for credit
+   return latency and startup requirements, ensuring sufficient initial credits
+   to achieve desired throughput before the first credits return.</p>
 </li>
 <li>
-<p><strong>Adaptive to Traffic Patterns</strong>: The solver analyzes your specific write/read profiles and latencies to determine appropriate credit values, rather than requiring manual calculation.</p>
+<p><strong>Adaptive to Traffic Patterns</strong>: The solver analyzes your specific write/read
+   profiles and latencies to determine appropriate credit values, rather than
+   requiring manual calculation.</p>
 </li>
 <li>
-<p><strong>Built-in Headroom</strong>: Adaptive headroom is automatically added based on read-valid gapiness, providing protection against traffic burstiness.</p>
+<p><strong>Built-in Headroom</strong>: Adaptive headroom is automatically added based on
+   read-valid gapiness, providing protection against traffic burstiness.</p>
 </li>
 </ol>
 <p><strong>When to Use Manual Mode:</strong></p>
 <p>Manual mode is useful when:</p>
 <ul>
 <li>You have pre-existing credit protocol specifications that must be validated</li>
-<li>Hardware constraints dictate specific credit pool sizes (e.g., power-of-2 counter widths)</li>
+<li>Hardware constraints dictate specific credit pool sizes (e.g., power-of-2
+  counter widths)</li>
 <li>You want to verify that a proposed credit configuration is sufficient</li>
 </ul>
 <p><strong>Recommendations:</strong></p>
 <ul>
-<li>Consider starting with auto mode to understand the minimal credit requirements for your traffic pattern</li>
-<li>Use <code>cred_headroom</code> (default: 2) to add safety margin beyond the computed minimum</li>
-<li>Apply <code>cred_rounding="power2"</code> if your hardware prefers power-of-2 credit pool sizes</li>
-<li>Use <code>cred_margin_type</code> and <code>cred_margin_val</code> to add implementation margin to credit values</li>
+<li>Consider starting with auto mode to understand the minimal credit requirements
+  for your traffic pattern</li>
+<li>Use <code>cred_headroom</code> (default: 2) to add safety margin beyond the computed
+  minimum</li>
+<li>Apply <code>cred_rounding="power2"</code> if your hardware prefers power-of-2 credit pool
+  sizes</li>
+<li>Use <code>cred_margin_type</code> and <code>cred_margin_val</code> to add implementation margin to
+  credit values</li>
 </ul>
 <hr />
 <h2 id="cdc-solver">CDC Solver<a class="headerlink" href="#cdc-solver" title="Permanent link">&para;</a></h2>
 <h3 id="cdc-purpose">CDC Purpose<a class="headerlink" href="#cdc-purpose" title="Permanent link">&para;</a></h3>
-<p>The CDC solver handles FIFO depth sizing when the write and read interfaces operate in different clock domains. It implements a two-stage approach:</p>
+<p>The CDC solver handles FIFO depth sizing when the write and read interfaces
+operate in different clock domains. It implements a two-stage approach:</p>
 <ol>
-<li><strong>Small CDC FIFO</strong>: Handles clock domain crossing with Gray-coded pointers and synchronizer latency</li>
+<li><strong>Small CDC FIFO</strong>: Handles clock domain crossing with Gray-coded pointers and
+   synchronizer latency</li>
 <li><strong>Large synchronous FIFO</strong>: Buffers traffic patterns in a single clock domain</li>
 </ol>
 <p>This separation is preferred over a single asynchronous FIFO because:</p>
 <ul>
 <li>Gray counter logic is simpler for small, power-of-2 depths</li>
 <li>Most buffering depth can use simpler synchronous FIFO logic</li>
-<li>The CDC solver calculates both the small CDC depth and initial conditions for the downstream synchronous solver</li>
+<li>The CDC solver calculates both the small CDC depth and initial conditions for
+  the downstream synchronous solver</li>
 </ul>
 <h3 id="cdc-overview">CDC Overview<a class="headerlink" href="#cdc-overview" title="Permanent link">&para;</a></h3>
 <p>The CDC solver computes three critical values:</p>
 <ol>
 <li><strong><code>depth</code></strong> - The required small CDC FIFO buffer depth</li>
-<li><strong><code>base_sync_fifo_depth</code></strong> - The minimum depth for the large synchronous FIFO based on long-term rate mismatch</li>
-<li><strong><code>rd_sync_cycles_in_wr</code></strong> - Read-domain synchronization latency converted to write-domain cycles</li>
+<li><strong><code>base_sync_fifo_depth</code></strong> - The minimum depth for the large synchronous FIFO
+   based on long-term rate mismatch</li>
+<li><strong><code>rd_sync_cycles_in_wr</code></strong> - Read-domain synchronization latency converted to
+   write-domain cycles</li>
 </ol>
-<p>These values enable a two-stage solution: the small CDC FIFO handles clock domain crossing, while the computed parameters inform stage 2's solution of the large synchronous FIFO.</p>
+<p>These values enable a two-stage solution: the small CDC FIFO handles clock domain
+crossing, while the computed parameters inform stage 2's solution of the large
+synchronous FIFO.</p>
 <p><strong>Analytic Solution vs. CP-SAT:</strong></p>
-<p>Unlike other solvers (Ready/Valid, XON/XOFF, CBFC, Replay) which use CP-SAT constraint programming, the CDC solver uses closed-form analytical formulas. This works because:</p>
+<p>Unlike other solvers (Ready/Valid, XON/XOFF, CBFC, Replay) which use CP-SAT
+constraint programming, the CDC solver uses closed-form analytical formulas. This
+works because:</p>
 <ul>
-<li><strong>Well-defined latencies</strong>: Synchronization stages, Gray code delays, and phase relationships have deterministic bounds</li>
-<li><strong>Independent components</strong>: Synchronizer depth, phase margin, and PPM drift can be calculated separately and summed</li>
-<li><strong>No optimization needed</strong>: There are no tunable parameters to optimize (like thresholds or credits) — the physics of clock domain crossing determines the requirements</li>
-<li><strong>Computational efficiency</strong>: Analytic formulas execute instantly, while CP-SAT would add unnecessary overhead for a problem with a unique deterministic solution</li>
+<li><strong>Well-defined latencies</strong>: Synchronization stages, Gray code delays, and phase
+  relationships have deterministic bounds</li>
+<li><strong>Independent components</strong>: Synchronizer depth, phase margin, and PPM drift can
+  be calculated separately and summed</li>
+<li><strong>No optimization needed</strong>: There are no tunable parameters to optimize (like
+  thresholds or credits) — the physics of clock domain crossing determines the
+  requirements</li>
+<li><strong>Computational efficiency</strong>: Analytic formulas execute instantly, while CP-SAT
+  would add unnecessary overhead for a problem with a unique deterministic
+  solution</li>
 </ul>
 <p>The CDC depth calculation sums three components:</p>
 <ul>
-<li><strong>Synchronizer depth</strong>: Latency for pointer synchronization across clock domains (<code>sync_stages + ptr_gray_extra</code> converted to items)</li>
-<li><strong>Phase margin depth</strong>: One read-cycle worth of items to account for unknown initial phase relationship between clocks</li>
-<li><strong>PPM drift depth</strong>: Accumulated frequency drift over the horizon in both write and read domains</li>
+<li><strong>Synchronizer depth</strong>: Latency for pointer synchronization across clock
+  domains (<code>sync_stages + ptr_gray_extra</code> converted to items)</li>
+<li><strong>Phase margin depth</strong>: One read-cycle worth of items to account for unknown
+  initial phase relationship between clocks</li>
+<li><strong>PPM drift depth</strong>: Accumulated frequency drift over the horizon in both write
+  and read domains</li>
 </ul>
 <h3 id="cdc-parameters">CDC Parameters<a class="headerlink" href="#cdc-parameters" title="Permanent link">&para;</a></h3>
-<p>CDC parameters include all <a href="#common-parameters">common parameters</a> plus these CDC-specific parameters:</p>
+<p>CDC parameters include all <a href="#common-parameters">common parameters</a> plus these
+CDC-specific parameters:</p>
 <table>
 <thead>
 <tr>
@@ -3403,45 +3607,69 @@ fifo-depth<span class="w"> </span>my_spec.yaml<span class="w"> </span>--verbosit
 <p>Results are saved in file <code>cdc_results_scalars.json</code> in the output directory.</p>
 <h3 id="cdc-recommendations">CDC Recommendations<a class="headerlink" href="#cdc-recommendations" title="Permanent link">&para;</a></h3>
 <p><strong>Margin and Rounding Strategy:</strong></p>
-<p>CDC FIFOs should typically be small and power-of-2 sized for efficient Gray counter implementation. However, automatic margin and rounding can lead to excessive sizing:</p>
+<p>CDC FIFOs should typically be small and power-of-2 sized for efficient Gray
+counter implementation. However, automatic margin and rounding can lead to
+excessive sizing:</p>
 <ul>
-<li>If the solver computes a depth of 13 and you specify 25% margin with power-of-2 rounding, the result will be 32 (potentially excessive)</li>
-<li><strong>Recommended approach</strong>: Set <code>margin_val=0</code> and <code>rounding="none"</code> initially, review the computed depth, then manually select an appropriate power-of-2 size</li>
-<li>For critical applications, consider adding 1-2 entries of margin, then rounding up to the next power-of-2</li>
+<li>If the solver computes a depth of 13 and you specify 25% margin with
+  power-of-2 rounding, the result will be 32 (potentially excessive)</li>
+<li><strong>Recommended approach</strong>: Set <code>margin_val=0</code> and <code>rounding="none"</code> initially,
+  review the computed depth, then manually select an appropriate power-of-2 size</li>
+<li>For critical applications, consider adding 1-2 entries of margin, then rounding
+  up to the next power-of-2</li>
 </ul>
 <p><strong>Clock Domain Selection:</strong></p>
-<p>The <code>big_fifo_domain</code> parameter determines which clock domain is used for the large synchronous FIFO in stage 2:</p>
+<p>The <code>big_fifo_domain</code> parameter determines which clock domain is used for the
+large synchronous FIFO in stage 2:</p>
 <ul>
-<li>Set <code>big_fifo_domain="write"</code> (default) when the write clock is faster or when traffic patterns are naturally specified in write-domain cycles</li>
-<li>Set <code>big_fifo_domain="read"</code> when the read clock is faster, as this may reduce the total depth of the large synchronous FIFO</li>
-<li>The CDC FIFO depth is independent of this choice; only the stage 2 synchronous FIFO is affected</li>
+<li>Set <code>big_fifo_domain="write"</code> (default) when the write clock is faster or when
+  traffic patterns are naturally specified in write-domain cycles</li>
+<li>Set <code>big_fifo_domain="read"</code> when the read clock is faster, as this may reduce
+  the total depth of the large synchronous FIFO</li>
+<li>The CDC FIFO depth is independent of this choice; only the stage 2 synchronous
+  FIFO is affected</li>
 </ul>
 <p><strong>PPM Tolerance Specification:</strong></p>
 <ul>
-<li>Set <code>wr_clk_ppm</code> and <code>rd_clk_ppm</code> to match your oscillator specifications (e.g., 100 ppm for typical crystals)</li>
+<li>Set <code>wr_clk_ppm</code> and <code>rd_clk_ppm</code> to match your oscillator specifications
+  (e.g., 100 ppm for typical crystals)</li>
 <li>Omit or set to 0 if clocks are derived from the same source (frequency-locked)</li>
-<li>PPM drift accumulates over the horizon, so larger windows require proportionally more depth</li>
+<li>PPM drift accumulates over the horizon, so larger windows require
+  proportionally more depth</li>
 <li>Higher PPM values add safety margin but increase CDC FIFO size</li>
 </ul>
 <p><strong>Synchronizer Stage Configuration:</strong></p>
 <ul>
-<li>Default <code>sync_stages=2</code> is standard for most applications and provides sufficient MTBF (Mean Time Between Failures)</li>
-<li>Use <code>sync_stages=3</code> for very high-speed designs or stringent reliability requirements</li>
-<li><code>ptr_gray_extra=1</code> (default) accounts for Gray code sampling uncertainty; typically no need to change</li>
-<li>Increasing these values improves reliability but increases synchronization latency and CDC depth</li>
+<li>Default <code>sync_stages=2</code> is standard for most applications and provides
+  sufficient MTBF (Mean Time Between Failures)</li>
+<li>Use <code>sync_stages=3</code> for very high-speed designs or stringent reliability
+  requirements</li>
+<li><code>ptr_gray_extra=1</code> (default) accounts for Gray code sampling uncertainty;
+  typically no need to change</li>
+<li>Increasing these values improves reliability but increases synchronization
+  latency and CDC depth</li>
 </ul>
 <p><strong>Analysis Window:</strong></p>
 <ul>
-<li>Use <code>window_cycles="auto"</code> (default) to inherit from the main <code>horizon</code> or layered profile specification</li>
-<li>Manually specify <code>window_cycles</code> only if you need a different horizon than the synchronous FIFO</li>
-<li>The window should cover the longest traffic burst or congestion period you want to handle</li>
+<li>Use <code>window_cycles="auto"</code> (default) to inherit from the main <code>horizon</code> or
+  layered profile specification</li>
+<li>Manually specify <code>window_cycles</code> only if you need a different horizon than the
+  synchronous FIFO</li>
+<li>The window should cover the longest traffic burst or congestion period you want
+  to handle</li>
 </ul>
 <hr />
 <h2 id="replay-solver">Replay Solver<a class="headerlink" href="#replay-solver" title="Permanent link">&para;</a></h2>
 <h3 id="replay-purpose">Replay Purpose<a class="headerlink" href="#replay-purpose" title="Permanent link">&para;</a></h3>
-<p>Models replay buffers that hold unacknowledged (in-flight) data until acknowledgements (ACKs) arrive after a round-trip time (RTT). This is needed for protocols that require retransmission capability, where data must be kept until confirmed receipt.</p>
+<p>Models replay buffers that hold unacknowledged (in-flight) data until
+acknowledgements (ACKs) arrive after a round-trip time (RTT). This is needed for
+protocols that require retransmission capability, where data must be kept until
+confirmed receipt.</p>
 <h3 id="replay-overview">Replay Overview<a class="headerlink" href="#replay-overview" title="Permanent link">&para;</a></h3>
-<p>The replay FIFO model uses a CP-SAT formulation for consistency with other <code>fifo_depth_*</code> solvers. For the standard deterministic case (fixed RTT, single sender, continuous transmission at <code>w_max</code>), the solution is equivalent to the classic bandwidth–delay product (BDP):</p>
+<p>The replay FIFO model uses a CP-SAT formulation for consistency with other
+<code>fifo_depth_*</code> solvers. For the standard deterministic case (fixed RTT, single
+sender, continuous transmission at <code>w_max</code>), the solution is equivalent to the
+classic bandwidth–delay product (BDP):</p>
 <div class="codehilite"><pre><span></span><code>peak_inflight = min(rtt, horizon - rtt) × w_max
 </code></pre></div>
 
@@ -3449,10 +3677,13 @@ fifo-depth<span class="w"> </span>my_spec.yaml<span class="w"> </span>--verbosit
 <ul>
 <li>Writes transmit data into the replay buffer</li>
 <li>Acknowledgements arrive exactly <code>rtt</code> cycles after the corresponding write</li>
-<li>No new writes occur in the final <code>rtt</code> cycles (ensuring the buffer drains to zero by the horizon)</li>
+<li>No new writes occur in the final <code>rtt</code> cycles (ensuring the buffer drains to
+  zero by the horizon)</li>
 <li>The buffer must accommodate all in-flight (unacknowledged) data</li>
 </ul>
-<p>While the current implementation produces the same result as the analytical BDP formula, the CP-SAT solver serves as a reference implementation and extensibility placeholder for more complex future variants such as:</p>
+<p>While the current implementation produces the same result as the analytical BDP
+formula, the CP-SAT solver serves as a reference implementation and extensibility
+placeholder for more complex future variants such as:</p>
 <ul>
 <li>Variable <code>rtt[t]</code> (jitter, retry delays)</li>
 <li>Credit windows smaller than BDP</li>
@@ -3462,10 +3693,16 @@ fifo-depth<span class="w"> </span>my_spec.yaml<span class="w"> </span>--verbosit
 <li>Non-uniform <code>w_max</code> (burst shaping)</li>
 <li>Overlapping atomic tail semantics</li>
 </ul>
-<p>Future extensions will leverage this solver framework to capture those non-trivial dynamics without requiring new analytical derivations.</p>
+<p>Future extensions will leverage this solver framework to capture those
+non-trivial dynamics without requiring new analytical derivations.</p>
 <h3 id="replay-parameters">Replay Parameters<a class="headerlink" href="#replay-parameters" title="Permanent link">&para;</a></h3>
-<p>The Replay FIFO is fundamentally different from the previously described Ready / Valid, XON/XOFF, and CBFC FIFOs. It <strong>only supports flat specs</strong> (not layered profiles) and models the transmission/acknowledgement pattern directly. Layered replay is not currently supported because replay buffers inherently depend on temporal ACK structure rather than transaction/burst layering.</p>
-<p>Replay supports the <a href="#common-parameters">common parameters</a> <code>fifo_type</code>, <code>margin_type</code>, <code>margin_val</code>, and <code>rounding</code> and these replay-specific parameters:</p>
+<p>The Replay FIFO is fundamentally different from the previously described Ready /
+Valid, XON/XOFF, and CBFC FIFOs. It <strong>only supports flat specs</strong> (not layered
+profiles) and models the transmission/acknowledgement pattern directly. Layered
+replay is not currently supported because replay buffers inherently depend on
+temporal ACK structure rather than transaction/burst layering.</p>
+<p>Replay supports the <a href="#common-parameters">common parameters</a> <code>fifo_type</code>,
+<code>margin_type</code>, <code>margin_val</code>, and <code>rounding</code> and these replay-specific parameters:</p>
 <table>
 <thead>
 <tr>
@@ -3508,10 +3745,14 @@ fifo-depth<span class="w"> </span>my_spec.yaml<span class="w"> </span>--verbosit
 </tbody>
 </table>
 <h3 id="replay-results">Replay Results<a class="headerlink" href="#replay-results" title="Permanent link">&para;</a></h3>
-<p>The replay solver results are fundamentally the same as the <a href="#common-results">common FIFO results</a> in principle, but use more precise terminology specific to replay buffers. In a replay buffer context:</p>
+<p>The replay solver results are fundamentally the same as the
+<a href="#common-results">common FIFO results</a> in principle, but use more precise
+terminology specific to replay buffers. In a replay buffer context:</p>
 <ul>
-<li><strong>Occupancy</strong> (occ) → <strong>Inflight</strong> (infl): The amount of data that has been transmitted but not yet acknowledged</li>
-<li><strong>Read</strong> (r) → <strong>Acknowledgement</strong> (ack/a): The signal indicating data has been received and can be removed from the replay buffer</li>
+<li><strong>Occupancy</strong> (occ) → <strong>Inflight</strong> (infl): The amount of data that has been
+transmitted but not yet acknowledged</li>
+<li><strong>Read</strong> (r) → <strong>Acknowledgement</strong> (ack/a): The signal indicating data has
+been received and can be removed from the replay buffer</li>
 <li><strong>Write</strong> (w) remains <strong>Write</strong> (w): The transmission of new data</li>
 </ul>
 <p>The mapping between common FIFO results and replay-specific results is:</p>
@@ -3552,49 +3793,80 @@ fifo-depth<span class="w"> </span>my_spec.yaml<span class="w"> </span>--verbosit
 </tbody>
 </table>
 <p><strong>Why CP-SAT Yields the Same Result as the BDP Equation:</strong></p>
-<p>The CP-SAT solver produces the same result as the analytical bandwidth–delay product (BDP) calculation because of the specific constraints in the current Replay model:</p>
+<p>The CP-SAT solver produces the same result as the analytical bandwidth–delay
+product (BDP) calculation because of the specific constraints in the current
+Replay model:</p>
 <ol>
 <li>
-<p><strong>Deterministic Acknowledgements:</strong> Every write at cycle <code>t</code> generates an acknowledgement at cycle <code>t + rtt</code>. This creates a perfectly predictable in-flight pattern.</p>
+<p><strong>Deterministic Acknowledgements:</strong> Every write at cycle <code>t</code> generates an
+   acknowledgement at cycle <code>t + rtt</code>. This creates a perfectly predictable
+   in-flight pattern.</p>
 </li>
 <li>
-<p><strong>Maximum Transmission Rate:</strong> The solver maximizes the objective (peak in-flight data) by transmitting at <code>w_max</code> continuously during the valid transmission window.</p>
+<p><strong>Maximum Transmission Rate:</strong> The solver maximizes the objective (peak
+   in-flight data) by transmitting at <code>w_max</code> continuously during the valid
+   transmission window.</p>
 </li>
 <li>
-<p><strong>Drain Constraint:</strong> The requirement that no writes occur in the final <code>rtt</code> cycles (ensuring <code>inflight[horizon] == 0</code>) creates a symmetric ramp-up and ramp-down pattern.</p>
+<p><strong>Drain Constraint:</strong> The requirement that no writes occur in the final <code>rtt</code>
+   cycles (ensuring <code>inflight[horizon] == 0</code>) creates a symmetric ramp-up and
+   ramp-down pattern.</p>
 </li>
 <li>
-<p><strong>Peak Occurs at Predictable Time:</strong> Under continuous transmission at <code>w_max</code>, in-flight data accumulates linearly until either:</p>
+<p><strong>Peak Occurs at Predictable Time:</strong> Under continuous transmission at <code>w_max</code>,
+   in-flight data accumulates linearly until either:</p>
 </li>
 <li>Time <code>rtt</code> (first acknowledgements arrive), or</li>
 <li>Time <code>horizon - rtt</code> (last writes that will be acknowledged before horizon)</li>
 </ol>
 <p>The peak is therefore <code>min(rtt, horizon - rtt) × w_max</code>.</p>
 <ol>
-<li><strong>No Alternative Strategies:</strong> The CP-SAT solver explores the solution space but finds no transmission pattern that exceeds this peak. Any change from continuous transmission at <code>w_max</code> (e.g., pausing or reducing transmission rate) would only reduce the in-flight accumulation.</li>
+<li><strong>No Alternative Strategies:</strong> The CP-SAT solver explores the solution space
+   but finds no transmission pattern that exceeds this peak. Any change from
+   continuous transmission at <code>w_max</code> (e.g., pausing or reducing transmission
+   rate) would only reduce the in-flight accumulation.</li>
 </ol>
-<p>The CP-SAT formulation serves as a <strong>reference implementation</strong> that validates the analytical formula and provides a foundation for future extensions where analytical solutions may not exist (variable RTT, multiple senders, flow control, etc.).</p>
+<p>The CP-SAT formulation serves as a <strong>reference implementation</strong> that validates
+the analytical formula and provides a foundation for future extensions where
+analytical solutions may not exist (variable RTT, multiple senders, flow control,
+etc.).</p>
 <hr />
 <h2 id="advanced-topics">Advanced Topics<a class="headerlink" href="#advanced-topics" title="Permanent link">&para;</a></h2>
 <h3 id="performance-considerations">Performance Considerations<a class="headerlink" href="#performance-considerations" title="Permanent link">&para;</a></h3>
 <p>Solver runtime depends on several factors:</p>
 <ul>
-<li><strong>Horizon Length:</strong> Longer horizons increase the number of variables and constraints, leading to longer solve times. For layered specs, auto-computed horizons that cover many periods can significantly increase runtime. Layered specs generate multiple periodicities whose least common multiple (LCM) determines the horizon, which directly increases solver variables.</li>
-<li><strong>Layer Complexity:</strong> Each additional layer (cycle, transaction, burst, stream) increases the combinatorial space the solver must explore. Deeply layered profiles with many bursts or streams are more computationally intensive.</li>
-<li><strong>Spec Type:</strong> Flat specs are typically solved in seconds, as they have fewer variables and a simpler structure. Layered specs, especially with large horizons or many periods, may take from seconds to several minutes.</li>
-<li><strong>Traffic Burstiness:</strong> Highly bursty or imbalanced profiles can create more challenging optimization problems, increasing runtime.</li>
-<li><strong>Parameter Choices:</strong> Using <code>"auto"</code> for horizon or specifying a large number of periods can unintentionally create very large problem sizes. Manually limiting the horizon or simplifying profiles can improve performance.</li>
+<li><strong>Horizon Length:</strong> Longer horizons increase the number of variables and
+  constraints, leading to longer solve times. For layered specs, auto-computed
+  horizons that cover many periods can significantly increase runtime. Layered
+  specs generate multiple periodicities whose least common multiple (LCM)
+  determines the horizon, which directly increases solver variables.</li>
+<li><strong>Layer Complexity:</strong> Each additional layer (cycle, transaction, burst, stream)
+  increases the combinatorial space the solver must explore. Deeply layered
+  profiles with many bursts or streams are more computationally intensive.</li>
+<li><strong>Spec Type:</strong> Flat specs are typically solved in seconds, as they have fewer
+  variables and a simpler structure. Layered specs, especially with large
+  horizons or many periods, may take from seconds to several minutes.</li>
+<li><strong>Traffic Burstiness:</strong> Highly bursty or imbalanced profiles can create more
+  challenging optimization problems, increasing runtime.</li>
+<li><strong>Parameter Choices:</strong> Using <code>"auto"</code> for horizon or specifying a large number
+  of periods can unintentionally create very large problem sizes. Manually
+  limiting the horizon or simplifying profiles can improve performance.</li>
 </ul>
 <p><strong>Recommendations for Efficient Solving:</strong></p>
 <ul>
 <li>Consider starting with flat specs or small horizons to validate basic behavior.</li>
-<li>Use layered specs for detailed analysis, but minimize the number of periods and layers where possible.</li>
-<li>If solve time is excessive, consider reducing the horizon, simplifying the traffic profile, or using fewer bursts/streams.</li>
+<li>Use layered specs for detailed analysis, but minimize the number of periods and
+  layers where possible.</li>
+<li>If solve time is excessive, consider reducing the horizon, simplifying the
+  traffic profile, or using fewer bursts/streams.</li>
 <li>Monitor solver logs for warnings about horizon sufficiency or problem size.</li>
 </ul>
-<p>In most practical cases, flat and moderately layered specs solve in under a minute. Only highly complex, deeply layered, or very long-horizon cases should require longer runtimes.</p>
+<p>In most practical cases, flat and moderately layered specs solve in under a
+minute. Only highly complex, deeply layered, or very long-horizon cases should
+require longer runtimes.</p>
 <h3 id="how-layers-compose">How Layers Compose<a class="headerlink" href="#how-layers-compose" title="Permanent link">&para;</a></h3>
-<p>The tool builds a binary valid pattern (0/1 sequence) by composing layers from innermost (transaction) to outermost (stream):</p>
+<p>The tool builds a binary valid pattern (0/1 sequence) by composing layers from
+innermost (transaction) to outermost (stream):</p>
 <ul>
 <li><strong>Transaction period</strong> = <code>valid_cycles</code> + <code>gap_cycles</code></li>
 <li><strong>Burst</strong> = <code>transactions_per_burst</code> transactions + <code>gap_cycles</code></li>
@@ -3602,24 +3874,32 @@ fifo-depth<span class="w"> </span>my_spec.yaml<span class="w"> </span>--verbosit
 <li><strong>Overall period</strong> = LCM of write and read stream periods</li>
 </ul>
 <p><strong>Worst-Case Pattern Generation:</strong></p>
-<p>The tool uses different strategies based on whether the profile has a single burst or multiple bursts, implementing patterns from FIFO depth calculation literature to create maximum congestion:</p>
+<p>The tool uses different strategies based on whether the profile has a single
+burst or multiple bursts, implementing patterns from FIFO depth calculation
+literature to create maximum congestion:</p>
 <p><strong>For Write Profiles (maximizing FIFO fill):</strong></p>
 <p><em>Single Burst (<code>bursts_per_stream == 1</code>):</em></p>
 <ul>
-<li><strong>Uniform valid-first pattern</strong>: All transactions use valid cycles followed by gap cycles</li>
+<li><strong>Uniform valid-first pattern</strong>: All transactions use valid cycles followed by
+  gap cycles</li>
 <li>Maximizes clustering of valid cycles within the burst for safe depth estimation</li>
 <li>No burst boundaries exist to optimize</li>
 </ul>
 <p><em>Multiple Bursts (<code>bursts_per_stream &gt; 1</code>):</em></p>
 <ul>
-<li><strong>Transaction-level alternation</strong>: Transactions within each burst alternate between gap-first and valid-first patterns to achieve valid clustering at burst boundaries<ul>
-<li>Pattern choice depends on burst index parity and <code>transactions_per_burst</code> parity</li>
+<li><strong>Transaction-level alternation</strong>: Transactions within each burst alternate
+  between gap-first and valid-first patterns to achieve valid clustering at burst
+  boundaries<ul>
+<li>Pattern choice depends on burst index parity and <code>transactions_per_burst</code>
+  parity</li>
 <li>Odd-indexed bursts are configured to end with valid cycles</li>
 <li>Even-indexed bursts ≥ 2 are configured to start with valid cycles</li>
 </ul>
 </li>
-<li><strong>Burst-level alternation</strong>: Bursts place gaps strategically to concentrate data in the middle of the observation window<ul>
-<li>First burst (index 0): gap followed by transactions (I,D) - places idle at start</li>
+<li><strong>Burst-level alternation</strong>: Bursts place gaps strategically to concentrate
+  data in the middle of the observation window<ul>
+<li>First burst (index 0): gap followed by transactions (I,D) - places idle at
+  start</li>
 <li>Last burst: transactions followed by gap (D,I) - places idle at end</li>
 <li>Middle bursts alternate:<ul>
 <li>Odd-indexed middle bursts: transactions followed by gap (D,I)</li>
@@ -3638,14 +3918,17 @@ fifo-depth<span class="w"> </span>my_spec.yaml<span class="w"> </span>--verbosit
 <p><strong>For Read Profiles (maximizing FIFO drain delay):</strong></p>
 <p><em>Single Burst (<code>bursts_per_stream == 1</code>):</em></p>
 <ul>
-<li><strong>Uniform gap-first pattern</strong>: All transactions use gap cycles followed by valid cycles</li>
+<li><strong>Uniform gap-first pattern</strong>: All transactions use gap cycles followed by
+valid cycles</li>
 <li>Maximizes delay by front-loading idle cycles within the burst</li>
 </ul>
 <p><em>Multiple Bursts (<code>bursts_per_stream &gt; 1</code>):</em></p>
 <ul>
-<li><strong>Transaction-level alternation</strong>: Transactions alternate to cluster idle cycles at boundaries<ul>
+<li><strong>Transaction-level alternation</strong>: Transactions alternate to cluster idle
+cycles at boundaries<ul>
 <li>Alternation pattern based on combined (burst_index + transaction_index) parity</li>
-<li>Even parity: valid-first then gap (boundary with next gap-first forms larger idle)</li>
+<li>Even parity: valid-first then gap (boundary with next gap-first forms
+larger idle)</li>
 <li>Odd parity: gap-first then valid</li>
 </ul>
 </li>
@@ -3654,32 +3937,43 @@ fifo-depth<span class="w"> </span>my_spec.yaml<span class="w"> </span>--verbosit
 <p><strong>Causality Preservation:</strong></p>
 <ul>
 <li>Write patterns never start with gaps (first burst begins with transactions)</li>
-<li>Read patterns include warmup rotation based on write latency to ensure reads occur after writes</li>
+<li>Read patterns include warmup rotation based on write latency to ensure reads
+  occur after writes</li>
 <li>Guarantees cumulative writes ≥ cumulative reads at all times</li>
 </ul>
-<p>This hybrid approach (uniform for single burst, alternating for multi-burst) ensures conservative FIFO depth estimates across all configurations.</p>
+<p>This hybrid approach (uniform for single burst, alternating for multi-burst)
+ensures conservative FIFO depth estimates across all configurations.</p>
 <hr />
 <h2 id="faq">FAQ<a class="headerlink" href="#faq" title="Permanent link">&para;</a></h2>
-<p>If you encounter performance issues, the first four questions may be helpful to review first.</p>
+<p>If you encounter performance issues, the first four questions may be helpful to
+review first.</p>
 <h3 id="why-does-the-solver-sometimes-take-several-minutes-to-run">Why does the solver sometimes take several minutes to run?<a class="headerlink" href="#why-does-the-solver-sometimes-take-several-minutes-to-run" title="Permanent link">&para;</a></h3>
 <p>Solver runtime is dominated by:</p>
 <ul>
 <li><strong>Horizon length</strong> — longer windows → more variables → longer solve time</li>
-<li><strong>Layer complexity</strong> — cycle + transaction + burst + stream generates deeply nested patterns</li>
-<li><strong>Burstiness / imbalance</strong> — highly adversarial patterns increase the CP-SAT search space</li>
-<li><strong>XON/XOFF auto-threshold search</strong> — exploring multiple <code>(xon, xoff)</code> candidates can multiply solve time</li>
+<li><strong>Layer complexity</strong> — cycle + transaction + burst + stream generates deeply
+  nested patterns</li>
+<li><strong>Burstiness / imbalance</strong> — highly adversarial patterns increase the CP-SAT
+  search space</li>
+<li><strong>XON/XOFF auto-threshold search</strong> — exploring multiple <code>(xon, xoff)</code> candidates
+  can multiply solve time</li>
 </ul>
-<p>Flat specifications typically solve in seconds. Layered profiles with multiple streams/periods can take minutes. This is normal and expected based on CP-SAT complexity.</p>
+<p>Flat specifications typically solve in seconds. Layered profiles with multiple
+streams/periods can take minutes. This is normal and expected based on CP-SAT
+complexity.</p>
 <hr />
 <h3 id="why-does-horizon-auto-sometimes-produce-very-large-horizons">Why does <code>horizon: auto</code> sometimes produce very large horizons?<a class="headerlink" href="#why-does-horizon-auto-sometimes-produce-very-large-horizons" title="Permanent link">&para;</a></h3>
-<p>Because the tool must ensure it covers <em>all</em> worst-case alignments between the write and read patterns. The auto logic includes:</p>
+<p>Because the tool must ensure it covers <em>all</em> worst-case alignments between the
+write and read patterns. The auto logic includes:</p>
 <ul>
 <li>multiple full pattern periods (<code>kmin_blocks</code>)</li>
 <li>blind window coverage (<code>blind_window_cycles</code>)</li>
 <li>LCM of read/write stream periods</li>
 <li>safety padding</li>
 </ul>
-<p>This produces a horizon long enough to ensure correctness. If runtime is too long, you may manually set a smaller horizon—but note that making it too small may underestimate FIFO depth.</p>
+<p>This produces a horizon long enough to ensure correctness. If runtime is too
+long, you may manually set a smaller horizon—but note that making it too small
+may underestimate FIFO depth.</p>
 <hr />
 <h3 id="why-does-the-depth-equal-sum_w_max-for-flat-readyvalid">Why does the depth equal <code>sum_w_max</code> for flat ready/valid?<a class="headerlink" href="#why-does-the-depth-equal-sum_w_max-for-flat-readyvalid" title="Permanent link">&para;</a></h3>
 <p>Flat ready/valid has:</p>
@@ -3722,7 +4016,8 @@ fifo-depth<span class="w"> </span>my_spec.yaml<span class="w"> </span>--verbosit
 <li>hysteresis constraints limit low values</li>
 <li>low <code>xoff</code> would not be feasible</li>
 </ul>
-<p>The solver must leave <em>headroom above xoff</em> to absorb data written during the reaction latency.</p>
+<p>The solver must leave <em>headroom above xoff</em> to absorb data written during the
+reaction latency.</p>
 <p>So <code>xoff</code> increases when mathematically required for correctness.</p>
 <hr />
 <h3 id="why-are-thresholds-or-credits-ignored-when-using-auto-mode">Why are thresholds or credits ignored when using auto mode?<a class="headerlink" href="#why-are-thresholds-or-credits-ignored-when-using-auto-mode" title="Permanent link">&para;</a></h3>
@@ -3800,7 +4095,8 @@ fifo-depth<span class="w"> </span>my_spec.yaml<span class="w"> </span>--verbosit
 <li>phase uncertainty</li>
 <li>PPM drift</li>
 </ul>
-<p>These have strict analytic bounds and no adversarial scheduling. Closed-form computation is exact and instantaneous.</p>
+<p>These have strict analytic bounds and no adversarial scheduling. Closed-form
+computation is exact and instantaneous.</p>
 <hr />
 <h3 id="why-does-rounding-sometimes-jump-depth-by-a-large-factor">Why does rounding sometimes jump depth by a large factor?<a class="headerlink" href="#why-does-rounding-sometimes-jump-depth-by-a-large-factor" title="Permanent link">&para;</a></h3>
 <p>Two features cause this:</p>
@@ -3838,7 +4134,8 @@ round to power of 2 → 32
 <li>Then schedules writes/reads adversarially within those masks</li>
 <li>Maximizes occupancy</li>
 </ol>
-<p>This leads to witness patterns that are mathematically valid but may not always follow expected patterns. The witness ensures correctness for the computed FIFO depth.</p>
+<p>This leads to witness patterns that are mathematically valid but may not always
+follow expected patterns. The witness ensures correctness for the computed FIFO depth.</p>
 <hr />
 <h2 id="appendix">Appendix<a class="headerlink" href="#appendix" title="Permanent link">&para;</a></h2>
 <h3 id="key-classes">Key Classes<a class="headerlink" href="#key-classes" title="Permanent link">&para;</a></h3>
@@ -3885,11 +4182,17 @@ round to power of 2 → 32
 </ul>
 <hr />
 <h2 id="literature">Literature<a class="headerlink" href="#literature" title="Permanent link">&para;</a></h2>
-<p>[1] W. Dally and B. Towles, <em>Principles and Practices of Interconnection Networks</em>. San Francisco, CA: Morgan Kaufmann, 2004.</p>
-<p>[2] A. DeJans Jr, <em>The MILP Optimization Handbook: An Introduction to Linear and Integer Programming for Practitioners</em>. Bit Bros LLC, 2025.</p>
-<p>[3] C. Soviani and S. A. Edwards, "FIFO sizing for high-performance pipelines," in <em>Proc. 16th Int. Workshop Logic Synth.</em>, San Diego, CA, 2007.</p>
-<p>[4] R. Lu and C. K. Koh, "Performance optimization of latency insensitive systems through buffer queue sizing of communications channels," in <em>Proc. Int. Conf. Comput. Aided Design</em>, San Jose, CA, 2003.</p>
-<p>[5] "Calculation of FIFO depth - made easy." Accessed: Nov. 23, 2025. [Online]. Available: <a href="https://hardwaregeeksblog.wordpress.com/wp-content/uploads/2016/12/fifodepthcalculationmadeeasy2.pdf">https://hardwaregeeksblog.wordpress.com/wp-content/uploads/2016/12/fifodepthcalculationmadeeasy2.pdf</a></p>
+<p>[1] W. Dally and B. Towles, <em>Principles and Practices of Interconnection
+Networks</em>. San Francisco, CA: Morgan Kaufmann, 2004.</p>
+<p>[2] A. DeJans Jr, <em>The MILP Optimization Handbook: An Introduction to Linear
+and Integer Programming for Practitioners</em>. Bit Bros LLC, 2025.</p>
+<p>[3] C. Soviani and S. A. Edwards, "FIFO sizing for high-performance pipelines,"
+in <em>Proc. 16th Int. Workshop Logic Synth.</em>, San Diego, CA, 2007.</p>
+<p>[4] R. Lu and C. K. Koh, "Performance optimization of latency insensitive
+systems through buffer queue sizing of communications channels," in <em>Proc. Int.
+Conf. Comput. Aided Design</em>, San Jose, CA, 2003.</p>
+<p>[5] "Calculation of FIFO depth - made easy." Accessed: Nov. 23, 2025. [Online].
+Available: <a href="https://hardwaregeeksblog.wordpress.com/wp-content/uploads/2016/12/fifodepthcalculationmadeeasy2.pdf">https://hardwaregeeksblog.wordpress.com/wp-content/uploads/2016/12/fifodepthcalculationmadeeasy2.pdf</a></p>
 <hr />
 <h2 id="licensing">Licensing<a class="headerlink" href="#licensing" title="Permanent link">&para;</a></h2>
 <p>See the <code>LICENSES</code> directory at the repository root.</p>

@@ -973,7 +973,13 @@ SPDX-License-Identifier: MIT
 <!--- This file: docs/pkt_quantize.md -->
 
 <h1 id="packet-quantization-calculator">Packet Quantization Calculator<a class="headerlink" href="#packet-quantization-calculator" title="Permanent link">&para;</a></h1>
-<p>The <code>pkt-quantize</code> tool calculates bandwidth and packet rate metrics for packet-based interfaces where packets are quantized to bus beats. Given bus width, clock frequency, and minimum processing cycles, it computes performance across a range of packet sizes and generates tables, CSV files, and plots. The tool assumes packets cannot share a bus beat (e.g., AXI-Stream). There are protocols like AMBA CXS that allow multiple packets per beat. Such protocols are not subject to the quantization effects modeled by this tool.</p>
+<p>The <code>pkt-quantize</code> tool calculates bandwidth and packet rate metrics for
+packet-based interfaces where packets are quantized to bus beats. Given bus
+width, clock frequency, and minimum processing cycles, it computes performance
+across a range of packet sizes and generates tables, CSV files, and plots. The
+tool assumes packets cannot share a bus beat (e.g., AXI-Stream). There are
+protocols like AMBA CXS that allow multiple packets per beat. Such protocols
+are not subject to the quantization effects modeled by this tool.</p>
 <hr />
 <h2 id="getting-started">Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
 <h3 id="set-up-and-install-the-environment">Set Up and Install the Environment<a class="headerlink" href="#set-up-and-install-the-environment" title="Permanent link">&para;</a></h3>
@@ -985,7 +991,8 @@ make<span class="w"> </span>py-install-all
 
 <h3 id="run-examples">Run Examples<a class="headerlink" href="#run-examples" title="Permanent link">&para;</a></h3>
 <div class="codehilite"><pre><span></span><code>pkt-quantize
-pkt-quantize<span class="w"> </span>--bus-width<span class="w"> </span><span class="m">64</span><span class="w"> </span>--clk-freq<span class="w"> </span><span class="m">1</span>.5e9<span class="w"> </span>--min-cycles<span class="w"> </span><span class="m">2</span><span class="w"> </span>--min-size<span class="w"> </span><span class="m">64</span><span class="w"> </span>--max-size<span class="w"> </span><span class="m">512</span>
+pkt-quantize<span class="w"> </span>--bus-width<span class="w"> </span><span class="m">64</span><span class="w"> </span>--clk-freq<span class="w"> </span><span class="m">1</span>.5e9<span class="w"> </span>--min-cycles<span class="w"> </span><span class="m">2</span><span class="w"> </span>--min-size<span class="w"> </span><span class="m">64</span>
+--max-size<span class="w"> </span><span class="m">512</span>
 </code></pre></div>
 
 <h3 id="examine-outputs">Examine Outputs<a class="headerlink" href="#examine-outputs" title="Permanent link">&para;</a></h3>

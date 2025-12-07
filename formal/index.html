@@ -1201,8 +1201,12 @@ SPDX-License-Identifier: MIT
 
 <h1 id="reusable-asic-designs-rad-formal">Reusable ASIC Designs (RAD) – Formal<a class="headerlink" href="#reusable-asic-designs-rad-formal" title="Permanent link">&para;</a></h1>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>The <strong>Reusable ASIC Designs (RAD)</strong> environment includes a formal verification flow built with open‑source tools. Formal verification works together with RAD's linting, synthesis, and DV flows. It uses math to prove that key safety properties are correct in each design.</p>
-<p>The <a href="../design/">RAD Design</a> flow checks <strong>structure and synthesis</strong>. The <a href="./">RAD Formal</a> flow checks <strong>logic</strong> for <em>all possible</em> input sequences.</p>
+<p>The <strong>Reusable ASIC Designs (RAD)</strong> environment includes a formal verification
+flow built with open‑source tools. Formal verification works together with RAD's
+linting, synthesis, and DV flows. It uses math to prove that key safety
+properties are correct in each design.</p>
+<p>The <a href="../design/">RAD Design</a> flow checks <strong>structure and synthesis</strong>. The <a href="./">RAD
+Formal</a> flow checks <strong>logic</strong> for <em>all possible</em> input sequences.</p>
 <p>The RAD Formal methodology focuses on:</p>
 <ul>
 <li><strong>Practical properties</strong> that match the implementation</li>
@@ -1210,7 +1214,8 @@ SPDX-License-Identifier: MIT
 <li><strong>Reusable SBY templates</strong></li>
 <li><strong>Repeatable Make‑based automation</strong></li>
 </ul>
-<p>This document describes a flow that fits naturally <em>after initial RTL and design‑side checks</em> and <em>before <a href="../dv/">DV</a> simulation</em>.</p>
+<p>This document describes a flow that fits naturally <em>after initial RTL and
+design‑side checks</em> and <em>before <a href="../dv/">DV</a> simulation</em>.</p>
 <h3 id="audience">Audience<a class="headerlink" href="#audience" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>ASIC RTL designers</strong> adding formal checks to RAD IP</li>
@@ -1246,7 +1251,8 @@ make<span class="w"> </span>py-install-all
 <div class="codehilite"><pre><span></span><code>make<span class="w"> </span>deps
 </code></pre></div>
 
-<p>This shows any missing tools. Installation steps depend on your platform and are not covered in this document.</p>
+<p>This shows any missing tools. Installation steps depend on your platform and
+are not covered in this document.</p>
 <h3 id="run-examples">Run Examples<a class="headerlink" href="#run-examples" title="Permanent link">&para;</a></h3>
 <div class="codehilite"><pre><span></span><code>make<span class="w"> </span><span class="nv">DESIGN</span><span class="o">=</span>rad_async_fifo<span class="w"> </span>formal
 make<span class="w"> </span><span class="nv">DESIGN</span><span class="o">=</span>rad_async_fifo<span class="w"> </span>formal-cover
@@ -1309,7 +1315,8 @@ make<span class="w"> </span><span class="nv">DESIGN</span><span class="o">=</spa
 <li>Templates from proven designs like <code>rad_async_fifo</code> can serve as a starting point.</li>
 <li>Review existing formal collateral for examples.</li>
 </ol>
-<p>See also: <a href="#formal-verification-flow">Formal Verification Flow</a> and <a href="#formal-coverage-flow">Formal Coverage Flow</a>.</p>
+<p>See also: <a href="#formal-verification-flow">Formal Verification Flow</a> and <a href="#formal-coverage-flow">Formal
+Coverage Flow</a>.</p>
 <hr />
 <h2 id="formal-verification-flow">Formal Verification Flow<a class="headerlink" href="#formal-verification-flow" title="Permanent link">&para;</a></h2>
 <h3 id="formal-testbench-design_formal_topsv">Formal Testbench: <code>&lt;design&gt;_formal_top.sv</code><a class="headerlink" href="#formal-testbench-design_formal_topsv" title="Permanent link">&para;</a></h3>
@@ -1417,7 +1424,12 @@ make<span class="w"> </span><span class="nv">DESIGN</span><span class="o">=</spa
 <hr />
 <h2 id="formal-coverage-flow">Formal Coverage Flow<a class="headerlink" href="#formal-coverage-flow" title="Permanent link">&para;</a></h2>
 <p><strong>Create the Coverage Configuration: <code>&lt;design&gt;_cover.sby</code></strong></p>
-<p>The coverage <code>.sby</code> file is almost the same as the <a href="#symbiyosys-configuration-designsby">verification configuration</a>. The main difference is in the <code>[options]</code> section: use <code>mode cover</code> instead of <code>mode prove</code> (see <a href="#difference-between-formal-and-formal-cover">FAQ #5</a>). Coverage mode finds traces that meet the <code>cover</code> statements in your formal testbench. This is useful for:</p>
+<p>The coverage <code>.sby</code> file is almost the same as the
+<a href="#symbiyosys-configuration-designsby">verification configuration</a>. The main
+difference is in the <code>[options]</code> section: use <code>mode cover</code> instead of <code>mode
+prove</code> (see <a href="#difference-between-formal-and-formal-cover">FAQ #5</a>). Coverage
+mode finds traces that meet the <code>cover</code> statements in your formal testbench.
+This is useful for:</p>
 <ul>
 <li>Creating traces.</li>
 <li>Checking reachability.</li>
@@ -1434,7 +1446,8 @@ make<span class="w"> </span><span class="nv">DESIGN</span><span class="o">=</spa
 <hr />
 <h2 id="faq">FAQ<a class="headerlink" href="#faq" title="Permanent link">&para;</a></h2>
 <h3 id="why-use-formal-if-simulation-passes">Why use formal if simulation passes?<a class="headerlink" href="#why-use-formal-if-simulation-passes" title="Permanent link">&para;</a></h3>
-<p>Formal checks <em>all</em> legal input sequences. It works together with <a href="../dv/">simulation testing</a>. It can help find:</p>
+<p>Formal checks <em>all</em> legal input sequences. It works together with <a href="../dv/">simulation
+testing</a>. It can help find:</p>
 <ul>
 <li>Underflow/overflow.</li>
 <li>Race conditions.</li>
@@ -1467,7 +1480,8 @@ make<span class="w"> </span><span class="nv">DESIGN</span><span class="o">=</spa
 <h3 id="which-solvers-should-i-use">Which solvers should I use?<a class="headerlink" href="#which-solvers-should-i-use" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong><a href="https://github.com/Boolector/boolector">Boolector</a></strong> (recommended to start).</li>
-<li><a href="https://yices.csl.sri.com/">Yices</a> or <a href="https://github.com/Z3Prover/z3">Z3</a> can help if Boolector does not support something.</li>
+<li><a href="https://yices.csl.sri.com/">Yices</a> or <a href="https://github.com/Z3Prover/z3">Z3</a>
+can help if Boolector does not support something.</li>
 </ul>
 <hr />
 <h3 id="difference-between-formal-and-formal-cover">Difference between <code>formal</code> and <code>formal-cover</code>?<a class="headerlink" href="#difference-between-formal-and-formal-cover" title="Permanent link">&para;</a></h3>

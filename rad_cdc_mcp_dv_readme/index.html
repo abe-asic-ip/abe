@@ -1229,14 +1229,20 @@ SPDX-License-Identifier: MIT
 
 <h1 id="rad_cdc_mcp-dv-guide"><code>rad_cdc_mcp</code> — DV Guide<a class="headerlink" href="#rad_cdc_mcp-dv-guide" title="Permanent link">&para;</a></h1>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>This verification environment implements a <strong>dual-agent architecture</strong> to properly model the independent source and destination clock domains of the rad_cdc_mcp dual-clock Multi-Cycle Path (MCP) synchronizer.</p>
+<p>This verification environment implements a <strong>dual-agent architecture</strong> to
+properly model the independent source and destination clock domains of the
+rad_cdc_mcp dual-clock Multi-Cycle Path (MCP) synchronizer.</p>
 <h2 id="design-rationale">Design Rationale<a class="headerlink" href="#design-rationale" title="Permanent link">&para;</a></h2>
 <p>The rad_cdc_mcp RTL has:</p>
 <ul>
-<li><strong>a-domain (source)</strong>: Operates on <code>aclk</code>, uses <code>arst_n</code>, controls <code>asend</code> and <code>adatain</code>, observes <code>aready</code></li>
-<li><strong>b-domain (destination)</strong>: Operates on <code>bclk</code>, uses <code>brst_n</code>, controls <code>bload</code>, observes <code>bdata</code> and <code>bvalid</code></li>
+<li><strong>a-domain (source)</strong>: Operates on <code>aclk</code>, uses <code>arst_n</code>, controls <code>asend</code>
+and <code>adatain</code>, observes <code>aready</code></li>
+<li><strong>b-domain (destination)</strong>: Operates on <code>bclk</code>, uses <code>brst_n</code>, controls
+<code>bload</code>, observes <code>bdata</code> and <code>bvalid</code></li>
 </ul>
-<p>These domains are <strong>independent</strong> - in a real system, they would be controlled by separate blocks that only see their respective interface signals. This fundamental architectural constraint led to the dual-agent design.</p>
+<p>These domains are <strong>independent</strong> - in a real system, they would be controlled
+by separate blocks that only see their respective interface signals. This
+fundamental architectural constraint led to the dual-agent design.</p>
 <hr />
 <h2 id="dual-agent-architecture">Dual-Agent Architecture<a class="headerlink" href="#dual-agent-architecture" title="Permanent link">&para;</a></h2>
 <h3 id="agent-0-a-domain-source">Agent 0: a-domain (Source)<a class="headerlink" href="#agent-0-a-domain-source" title="Permanent link">&para;</a></h3>
@@ -1391,7 +1397,8 @@ SPDX-License-Identifier: MIT
 <h3 id="why-dual-agents">Why Dual Agents?<a class="headerlink" href="#why-dual-agents" title="Permanent link">&para;</a></h3>
 <p>Rejected alternatives:</p>
 <ol>
-<li>❌ Single sequence controlling both domains - unrealistic, violates clock domain separation</li>
+<li>❌ Single sequence controlling both domains - unrealistic, violates clock
+domain separation</li>
 <li>❌ Dual sequences with single agent - complexity in driver/sequencer routing</li>
 <li>❌ Single sequence with dual clock driver - doesn't model real system behavior</li>
 <li>✅ <strong>Dual agents</strong> - clean separation, matches real system architecture</li>
@@ -1400,7 +1407,8 @@ SPDX-License-Identifier: MIT
 <ul>
 <li><strong>Protocol enforcement</strong> separate from <strong>stimulus generation</strong></li>
 <li>a-domain (source) must respect <code>aready</code> to ensure MCP can accept data</li>
-<li>b-domain (destination) can assert <code>bload</code> freely; data validity is checked via <code>bvalid</code></li>
+<li>b-domain (destination) can assert <code>bload</code> freely; data validity is checked
+  via <code>bvalid</code></li>
 <li>Sequences focus on test patterns (random, burst, corner cases)</li>
 <li>Drivers ensure protocol correctness at the interface level</li>
 <li>Models real hardware behavior: protocol is enforced at interface level</li>

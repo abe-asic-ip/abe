@@ -1323,14 +1323,17 @@ SPDX-License-Identifier: MIT
 
 <h1 id="reusable-asic-designs-rad-design">Reusable ASIC Designs (RAD) – Design<a class="headerlink" href="#reusable-asic-designs-rad-design" title="Permanent link">&para;</a></h1>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>The <strong>Reusable ASIC Designs (RAD)</strong> environment provides a consistent, high‑quality foundation for building reusable SystemVerilog IP within the <strong>ABE</strong> project. <strong>RAD focuses on RTL quality</strong>. RAD helps designs achieve:</p>
+<p>The <strong>Reusable ASIC Designs (RAD)</strong> environment provides a consistent,
+high‑quality foundation for building reusable SystemVerilog IP within the
+<strong>ABE</strong> project. <strong>RAD focuses on RTL quality</strong>. RAD helps designs achieve:</p>
 <ul>
 <li><strong>Consistency</strong> across modules</li>
 <li><strong>Clean structure</strong> for simulation, lint, formal, and synthesis</li>
 <li><strong>Compatibility</strong> with open‑source tools</li>
 <li><strong>Readiness</strong> for verification</li>
 </ul>
-<p>This document describes the <strong>design workflow</strong>. It covers what happens <em>after writing RTL</em> and <em>before <a href="../formal/">formal verification</a> and <a href="../dv/">DV</a></em>.</p>
+<p>This document describes the <strong>design workflow</strong>. It covers what happens <em>after
+writing RTL</em> and <em>before <a href="../formal/">formal verification</a> and <a href="../dv/">DV</a></em>.</p>
 <h3 id="audience">Audience<a class="headerlink" href="#audience" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>ASIC architects and RTL designers</strong> producing reusable IP</li>
@@ -1344,8 +1347,10 @@ SPDX-License-Identifier: MIT
 </ul>
 <h3 id="key-features">Key Features<a class="headerlink" href="#key-features" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Unified Make targets for <a href="#rtl-formatting-with-verible">RTL formatting</a>, <a href="#rtl-linting-with-verible">linting</a>, and <a href="#synthesis-flow">synthesis</a></li>
-<li><a href="https://github.com/chipsalliance/verible">Verible</a>‑based SystemVerilog formatting and linting</li>
+<li>Unified Make targets for <a href="#rtl-formatting-with-verible">RTL formatting</a>,
+<a href="#rtl-linting-with-verible">linting</a>, and <a href="#synthesis-flow">synthesis</a></li>
+<li><a href="https://github.com/chipsalliance/verible">Verible</a>‑based SystemVerilog
+formatting and linting</li>
 <li><a href="https://verilator.org">Verilator</a>‑based SystemVerilog linting</li>
 <li><a href="https://github.com/YosysHQ/yosys">Yosys</a>‑based synthesis flow (via <a href="https://github.com/zachjs/sv2v">sv2v</a>)</li>
 <li>Standardized <a href="#directory-structure">directory structure</a> and naming</li>
@@ -1365,7 +1370,8 @@ make<span class="w"> </span>py-install-all
 <div class="codehilite"><pre><span></span><code>make<span class="w"> </span>deps-design
 </code></pre></div>
 
-<p>This prints any missing host‑side tools. Installation is platform‑specific and outside the scope of this document.</p>
+<p>This prints any missing host‑side tools. Installation is platform‑specific and
+outside the scope of this document.</p>
 <h3 id="run-examples">Run Examples<a class="headerlink" href="#run-examples" title="Permanent link">&para;</a></h3>
 <div class="codehilite"><pre><span></span><code>make<span class="w"> </span><span class="nv">DESIGN</span><span class="o">=</span>rad_async_fifo<span class="w"> </span>rtl-format
 make<span class="w"> </span><span class="nv">DESIGN</span><span class="o">=</span>rad_async_fifo<span class="w"> </span>rtl-lint-verible
@@ -1420,7 +1426,8 @@ make<span class="w"> </span>synth-help
 
 <hr />
 <h2 id="guidelines-for-creating-new-rad-rtl-designs">Guidelines for Creating New RAD RTL Designs<a class="headerlink" href="#guidelines-for-creating-new-rad-rtl-designs" title="Permanent link">&para;</a></h2>
-<p>These guidelines help maintain consistency and tooling compatibility across the RAD library:</p>
+<p>These guidelines help maintain consistency and tooling compatibility across the
+RAD library:</p>
 <h3 id="directory-structure">Directory Structure<a class="headerlink" href="#directory-structure" title="Permanent link">&para;</a></h3>
 <p>Create designs under:</p>
 <div class="codehilite"><pre><span></span><code>src/abe/rad/rad_&lt;design&gt;/rtl/
@@ -1447,7 +1454,10 @@ make<span class="w"> </span>synth-help
 <li>Include directories</li>
 <li>Compile-time defines</li>
 </ul>
-<p>Every tool (<a href="https://verilator.org">Verilator</a>, <a href="https://github.com/chipsalliance/verible">Verible</a>, <a href="https://github.com/zachjs/sv2v">sv2v</a>, <a href="https://github.com/YosysHQ/yosys">Yosys</a>, DV) uses the same <code>srclist.f</code>.</p>
+<p>Every tool (<a href="https://verilator.org">Verilator</a>,
+<a href="https://github.com/chipsalliance/verible">Verible</a>,
+<a href="https://github.com/zachjs/sv2v">sv2v</a>,
+<a href="https://github.com/YosysHQ/yosys">Yosys</a>, DV) uses the same <code>srclist.f</code>.</p>
 <h3 id="timescale-and-shared-headers">Timescale And Shared Headers<a class="headerlink" href="#timescale-and-shared-headers" title="Permanent link">&para;</a></h3>
 <p>RTL should include the shared timescale:</p>
 <div class="codehilite"><pre><span></span><code><span class="no">`include</span><span class="w"> </span><span class="s">&quot;rad_timescale.svh&quot;</span>
@@ -1469,9 +1479,11 @@ make<span class="w"> </span>synth-help
 <li>Name the clock <code>clk</code></li>
 <li>Use an active-low reset named <code>rst_n</code></li>
 </ul>
-<p>The DV base classes assume these names, minimizing verification effort. This convention also maintains consistency across all RAD IP.</p>
+<p>The DV base classes assume these names, minimizing verification effort. This
+convention also maintains consistency across all RAD IP.</p>
 <h3 id="reference-design">Reference Design<a class="headerlink" href="#reference-design" title="Permanent link">&para;</a></h3>
-<p><code>rad_async_fifo</code> is a complete example. It shows the recommended <a href="#directory-structure">directory structure</a>, conventions, and Make integration.</p>
+<p><code>rad_async_fifo</code> is a complete example. It shows the recommended <a href="#directory-structure">directory
+structure</a>, conventions, and Make integration.</p>
 <hr />
 <h2 id="static-rtl-tools">Static RTL Tools<a class="headerlink" href="#static-rtl-tools" title="Permanent link">&para;</a></h2>
 <h3 id="rtl-formatting-with-verible">RTL Formatting With Verible<a class="headerlink" href="#rtl-formatting-with-verible" title="Permanent link">&para;</a></h3>
@@ -1507,10 +1519,12 @@ make<span class="w"> </span>synth-help
 <div class="codehilite"><pre><span></span><code>make<span class="w"> </span><span class="nv">DESIGN</span><span class="o">=</span>&lt;design&gt;<span class="w"> </span>rtl-lint-verilator
 </code></pre></div>
 
-<p><a href="https://verilator.org">Verilator</a> linting is important because RAD DV uses <a href="https://verilator.org">Verilator</a> as the default simulator.</p>
+<p><a href="https://verilator.org">Verilator</a> linting is important because RAD DV uses
+<a href="https://verilator.org">Verilator</a> as the default simulator.</p>
 <hr />
 <h2 id="synthesis-flow">Synthesis Flow<a class="headerlink" href="#synthesis-flow" title="Permanent link">&para;</a></h2>
-<p><a href="https://github.com/YosysHQ/yosys">Yosys</a> synthesis checks that designs can be synthesized and provides statistics.</p>
+<p><a href="https://github.com/YosysHQ/yosys">Yosys</a> synthesis checks that designs can be
+synthesized and provides statistics.</p>
 <h3 id="endtoend-flow">End‑to‑End Flow<a class="headerlink" href="#endtoend-flow" title="Permanent link">&para;</a></h3>
 <ol>
 <li><strong><a href="https://github.com/zachjs/sv2v">sv2v</a></strong> converts SystemVerilog → Verilog</li>
@@ -1581,7 +1595,8 @@ make<span class="w"> </span>synth-help
 <p><a href="https://verilator.org">Verilator</a> checks <strong>meaning</strong> (like a compiler).
 <a href="https://github.com/chipsalliance/verible">Verible</a> checks <strong>structure and style</strong>.
 They work together to find different types of errors.</p>
-<p>See <a href="#rtl-linting-with-verible">RTL Linting – Verible</a> and <a href="#rtl-linting-with-verilator">RTL Linting – Verilator</a> for details.</p>
+<p>See <a href="#rtl-linting-with-verible">RTL Linting – Verible</a> and <a href="#rtl-linting-with-verilator">RTL Linting –
+Verilator</a> for details.</p>
 <hr />
 <h3 id="should-every-rad-design-go-through-synthesis">Should every RAD design go through synthesis?<a class="headerlink" href="#should-every-rad-design-go-through-synthesis" title="Permanent link">&para;</a></h3>
 <p>Yes. Running synthesis early has several benefits:</p>
@@ -1593,7 +1608,9 @@ They work together to find different types of errors.</p>
 <p>See <a href="#synthesis-flow">Synthesis Flow</a> for details.</p>
 <hr />
 <h3 id="why-does-synthesis-use-sv2v">Why does synthesis use <a href="https://github.com/zachjs/sv2v">sv2v</a>?<a class="headerlink" href="#why-does-synthesis-use-sv2v" title="Permanent link">&para;</a></h3>
-<p><a href="https://github.com/YosysHQ/yosys">Yosys</a> provides excellent Verilog support. <code>sv2v</code> enables consistent conversion from SystemVerilog to Verilog, allowing us to use <a href="https://github.com/YosysHQ/yosys">Yosys</a> effectively.</p>
+<p><a href="https://github.com/YosysHQ/yosys">Yosys</a> provides excellent Verilog support.
+<code>sv2v</code> enables consistent conversion from SystemVerilog to Verilog, allowing us
+to use <a href="https://github.com/YosysHQ/yosys">Yosys</a> effectively.</p>
 <p>See <a href="#endtoend-flow">End‑to‑End Flow</a> for details.</p>
 <hr />
 <h3 id="what-if-my-module-needs-vendor-specific-cells">What if my module needs vendor-specific cells?<a class="headerlink" href="#what-if-my-module-needs-vendor-specific-cells" title="Permanent link">&para;</a></h3>
