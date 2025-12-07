@@ -28,9 +28,9 @@ The **ABE Uarch FIFO Depth Tool** computes the *optimal* FIFO depth and flow-con
 ### Key Features
 
 - Unified solver supporting major flow-control protocols:
-  - Ready / Valid
-  - XON/XOFF
-  - Credit-Based Flow Control (CBFC)
+    - Ready / Valid
+    - XON/XOFF
+    - Credit-Based Flow Control (CBFC)
 - Layered traffic profile input (cycle, transaction, burst, or stream).
 - Uses a deterministic algorithm to construct the worst-case write and read profiles.
 - Uses a mathematical solver (CP-SAT) to find the worst peak occupancy.
@@ -150,10 +150,10 @@ The write profile generator creates patterns that produce the densest possible w
 
 - Transactions inside a burst alternate between `valid-first` and `gap-first` to create long, contiguous data regions.
 - Bursts with data (D) and idles (I) are arranged using an `(I,D)` / `(D,I)` envelope based on the number of bursts:
-  - `s_cnt = 1`: `(D,I)`
-  - `s_cnt = 2`: `(I,D) (D,I)`
-  - `s_cnt = 3`: `(I,D) (D,I) (D,I)`
-  - `s_cnt = 4`: `(I,D) (D,I) (I,D) (D,I)`
+    - `s_cnt = 1`: `(D,I)`
+    - `s_cnt = 2`: `(I,D) (D,I)`
+    - `s_cnt = 3`: `(I,D) (D,I) (D,I)`
+    - `s_cnt = 4`: `(I,D) (D,I) (I,D) (D,I)`
 - This places idles at the start and end of the stream, while concentrating data in the interior.
 - For multi-burst streams, boundaries are constructed to create `...1 | 1...` transitions (“Case-4” behavior), known to maximize FIFO occupancy.
 
@@ -179,11 +179,11 @@ Then, a **cycle-accurate CP-SAT optimization** stage determines **exactly when**
 - **Non-negativity**
   `occ[t] ≥ 0`
 - **Throughput constraints**
-  - total writes = `sum_w`
-  - total reads  = `sum_r`
+    - total writes = `sum_w`
+    - total reads  = `sum_r`
 - **Latency constraints**
-  - `wr_latency`, `rd_latency`
-  - synchronizer delays (CDC)
+    - `wr_latency`, `rd_latency`
+    - synchronizer delays (CDC)
 
 The solver’s objective is to **maximize the peak occupancy** under these constraints.
 
@@ -529,11 +529,11 @@ In ABE, “Ready / Valid” is a shorthand name for a generic producer/consumer 
 This mode applies to two common architectural situations:
 
 - Backpressured systems (e.g., actual Ready/Valid handshake)
-  - Overflow is prevented by deasserting ready.
-  - If the traffic pattern would overflow the FIFO, that means the design will be forced to stall the producer and miss performance goals.
+    - Overflow is prevented by deasserting ready.
+    - If the traffic pattern would overflow the FIFO, that means the design will be forced to stall the producer and miss performance goals.
 - Drop-tolerant systems (no backpressure)
-  - Overflow results in dropped data.
-  - If the traffic pattern would overflow the FIFO, that means the system will drop data that should not be dropped.
+    - Overflow results in dropped data.
+    - If the traffic pattern would overflow the FIFO, that means the system will drop data that should not be dropped.
 
 Despite these architectural differences, the FIFO depth requirement is the same:
 
@@ -1054,19 +1054,19 @@ The tool uses different strategies based on whether the profile has a single bur
 *Multiple Bursts (`bursts_per_stream > 1`):*
 
 - **Transaction-level alternation**: Transactions within each burst alternate between gap-first and valid-first patterns to achieve valid clustering at burst boundaries
-  - Pattern choice depends on burst index parity and `transactions_per_burst` parity
-  - Odd-indexed bursts are configured to end with valid cycles
-  - Even-indexed bursts ≥ 2 are configured to start with valid cycles
+    - Pattern choice depends on burst index parity and `transactions_per_burst` parity
+    - Odd-indexed bursts are configured to end with valid cycles
+    - Even-indexed bursts ≥ 2 are configured to start with valid cycles
 - **Burst-level alternation**: Bursts place gaps strategically to concentrate data in the middle of the observation window
-  - First burst (index 0): gap followed by transactions (I,D) - places idle at start
-  - Last burst: transactions followed by gap (D,I) - places idle at end
-  - Middle bursts alternate:
-    - Odd-indexed middle bursts: transactions followed by gap (D,I)
-    - Even-indexed middle bursts: gap followed by transactions (I,D)
-  - Creates worst-case patterns by concentrating data centrally:
-    - 2 bursts: (I,D)(D,I)
-    - 3 bursts: (I,D)(D,I)(D,I)
-    - 4 bursts: (I,D)(D,I)(I,D)(D,I)
+    - First burst (index 0): gap followed by transactions (I,D) - places idle at start
+    - Last burst: transactions followed by gap (D,I) - places idle at end
+    - Middle bursts alternate:
+        - Odd-indexed middle bursts: transactions followed by gap (D,I)
+        - Even-indexed middle bursts: gap followed by transactions (I,D)
+    - Creates worst-case patterns by concentrating data centrally:
+        - 2 bursts: (I,D)(D,I)
+        - 3 bursts: (I,D)(D,I)(D,I)
+        - 4 bursts: (I,D)(D,I)(I,D)(D,I)
 
 **For Read Profiles (maximizing FIFO drain delay):**
 
@@ -1078,9 +1078,9 @@ The tool uses different strategies based on whether the profile has a single bur
 *Multiple Bursts (`bursts_per_stream > 1`):*
 
 - **Transaction-level alternation**: Transactions alternate to cluster idle cycles at boundaries
-  - Alternation pattern based on combined (burst_index + transaction_index) parity
-  - Even parity: valid-first then gap (boundary with next gap-first forms larger idle)
-  - Odd parity: gap-first then valid
+    - Alternation pattern based on combined (burst_index + transaction_index) parity
+    - Even parity: valid-first then gap (boundary with next gap-first forms larger idle)
+    - Odd parity: gap-first then valid
 - **Burst-level alternation**: All burst gaps placed at start to maximize read delay
 
 **Causality Preservation:**

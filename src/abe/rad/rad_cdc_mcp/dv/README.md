@@ -31,15 +31,15 @@ These domains are **independent** - in a real system, they would be controlled b
 - **Reset**: `arst_n`
 - **Driver**: `RadCdcMcpWriteDriver` - Drives `asend`, `adatain` on `aclk` edges
 - **Monitors**:
-  - `RadCdcMcpWriteMonitorIn` - Samples `asend`, `adatain` on `aclk`
-  - `RadCdcMcpWriteMonitorOut` - Samples `aready` on `aclk`
+    - `RadCdcMcpWriteMonitorIn` - Samples `asend`, `adatain` on `aclk`
+    - `RadCdcMcpWriteMonitorOut` - Samples `aready` on `aclk`
 - **Item**: `RadCdcMcpWriteItem`
-  - Inputs: `asend`, `adatain`
-  - Outputs: `aready` (feedback from DUT)
+    - Inputs: `asend`, `adatain`
+    - Outputs: `aready` (feedback from DUT)
 - **Sequence**: `RadCdcMcpWriteSequence`
-  - Generates random send transactions with configurable probability (default 0.7)
-  - Protocol enforcement handled by driver, not sequence
-  - Generates random `adatain` values within configured data width
+    - Generates random send transactions with configurable probability (default 0.7)
+    - Protocol enforcement handled by driver, not sequence
+    - Generates random `adatain` values within configured data width
 
 ### Agent 1: b-domain (Destination)
 
@@ -47,14 +47,14 @@ These domains are **independent** - in a real system, they would be controlled b
 - **Reset**: `brst_n`
 - **Driver**: `RadCdcMcpReadDriver` - Drives `bload` on `bclk` edges
 - **Monitors**:
-  - `RadCdcMcpReadMonitorIn` - Samples `bload` on `bclk`
-  - `RadCdcMcpReadMonitorOut` - Samples `bdata`, `bvalid` on `bclk`
+    - `RadCdcMcpReadMonitorIn` - Samples `bload` on `bclk`
+    - `RadCdcMcpReadMonitorOut` - Samples `bdata`, `bvalid` on `bclk`
 - **Item**: `RadCdcMcpReadItem`
-  - Inputs: `bload`
-  - Outputs: `bdata`, `bvalid` (feedback from DUT)
+    - Inputs: `bload`
+    - Outputs: `bdata`, `bvalid` (feedback from DUT)
 - **Sequence**: `RadCdcMcpReadSequence`
-  - Generates random load transactions with configurable probability (default 0.7)
-  - Protocol enforcement not required (driver does not implement backpressure)
+    - Generates random load transactions with configurable probability (default 0.7)
+    - Protocol enforcement not required (driver does not implement backpressure)
 
 ---
 
@@ -216,29 +216,29 @@ Rejected alternatives:
 ### Transaction Items
 
 - `rad_cdc_mcp_item.py` - Contains both transaction classes:
-  - `RadCdcMcpWriteItem` - a-domain (asend, adatain, aready)
-  - `RadCdcMcpReadItem` - b-domain (bload, bdata, bvalid)
+    - `RadCdcMcpWriteItem` - a-domain (asend, adatain, aready)
+    - `RadCdcMcpReadItem` - b-domain (bload, bdata, bvalid)
 
 ### Drivers
 
 - `rad_cdc_mcp_driver.py` - Contains both driver classes:
-  - `RadCdcMcpWriteDriver` - Drives a-domain inputs on aclk with backpressure
-  - `RadCdcMcpReadDriver` - Drives b-domain inputs on bclk (no backpressure)
+    - `RadCdcMcpWriteDriver` - Drives a-domain inputs on aclk with backpressure
+    - `RadCdcMcpReadDriver` - Drives b-domain inputs on bclk (no backpressure)
 
 ### Sequences
 
 - `rad_cdc_mcp_sequence.py` - Contains both sequence classes:
-  - `RadCdcMcpWriteSequence` - Generates send transactions
-  - `RadCdcMcpReadSequence` - Generates load transactions
+    - `RadCdcMcpWriteSequence` - Generates send transactions
+    - `RadCdcMcpReadSequence` - Generates load transactions
 
 ### Monitors
 
 - `rad_cdc_mcp_monitor_in.py` - Contains both input monitor classes:
-  - `RadCdcMcpWriteMonitorIn` - Samples asend, adatain on aclk
-  - `RadCdcMcpReadMonitorIn` - Samples bload on bclk
+    - `RadCdcMcpWriteMonitorIn` - Samples asend, adatain on aclk
+    - `RadCdcMcpReadMonitorIn` - Samples bload on bclk
 - `rad_cdc_mcp_monitor_out.py` - Contains both output monitor classes:
-  - `RadCdcMcpWriteMonitorOut` - Samples aready on aclk
-  - `RadCdcMcpReadMonitorOut` - Samples bdata, bvalid on bclk
+    - `RadCdcMcpWriteMonitorOut` - Samples aready on aclk
+    - `RadCdcMcpReadMonitorOut` - Samples bdata, bvalid on bclk
 
 ### Environment & Test
 

@@ -125,13 +125,13 @@ make DESIGN=rad_<design> formal-cover
 
 - Start with a template from an existing design.
 - Customize these parts for your design:
-  - Driver
-  - Monitors
-  - Item
-  - Reference model
-  - Sequence
-  - Coverage
-  - Tests
+    - Driver
+    - Monitors
+    - Item
+    - Reference model
+    - Sequence
+    - Coverage
+    - Tests
 - Run tests and regressions to verify your design works correctly.
 
 ---

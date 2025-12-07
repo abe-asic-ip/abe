@@ -650,17 +650,17 @@ For designs with multiple independent clock domains or requiring separate agents
 How you implement monitors depends on output timing and protocol complexity:
 
 - **Simple registered outputs**: Use `BaseMonitorOut` directly
-  - Example: `rad_cdc_sync` - output updates same cycle, sampled at standard timing
+    - Example: `rad_cdc_sync` - output updates same cycle, sampled at standard timing
 
 - **Pipelined registered outputs**: Extend `BaseMonitorOut` with cycle tracking
-  - Example: `rad_cdc_mcp` - `bdata` updates one cycle after `bload && bvalid`
-  - Monitor uses `_prev_load_pending` to track when valid data is available
-  - Only emits transactions when actual data transfer completes
+    - Example: `rad_cdc_mcp` - `bdata` updates one cycle after `bload && bvalid`
+    - Monitor uses `_prev_load_pending` to track when valid data is available
+    - Only emits transactions when actual data transfer completes
 
 - **Conditional sampling**: Override `run_phase()` to filter transactions
-  - Examples: Both `rad_async_fifo` and `rad_cdc_mcp`
-  - Only send transactions to analysis port when transfer conditions are met
-  - Prevents scoreboard from checking invalid/idle cycles
+    - Examples: Both `rad_async_fifo` and `rad_cdc_mcp`
+    - Only send transactions to analysis port when transfer conditions are met
+    - Prevents scoreboard from checking invalid/idle cycles
 
 Most simple designs have registered outputs and can use `BaseMonitorOut` unchanged. For pipelined protocols or conditional sampling, reference the existing benches for patterns.
 
@@ -669,31 +669,31 @@ Most simple designs have registered outputs and can use `BaseMonitorOut` unchang
 Customize these design-specific files:
 
 - **Item** (`rad_<design>_item.py`): Define input and output fields
-  - Implement `_in_fields()` and `_out_fields()` methods
-  - Add any design-specific constraints or configuration parameters
+    - Implement `_in_fields()` and `_out_fields()` methods
+    - Add any design-specific constraints or configuration parameters
 
 - **Driver** (`rad_<design>_driver.py`): Drive design inputs with proper timing
-  - Set `initial_dut_input_values` for reset state
-  - Implement `drive_item()` to apply transactions on drive edges
-  - Handle backpressure or protocol requirements
+    - Set `initial_dut_input_values` for reset state
+    - Implement `drive_item()` to apply transactions on drive edges
+    - Handle backpressure or protocol requirements
 
 - **Monitors** (`rad_<design>_monitor_in.py`, `rad_<design>_monitor_out.py`): Observe design signals
-  - Input monitor: Sample inputs for reference model
-  - Output monitor: Sample outputs for scoreboard comparison
-  - Implement `sample_dut()` to capture signal values
+    - Input monitor: Sample inputs for reference model
+    - Output monitor: Sample outputs for scoreboard comparison
+    - Implement `sample_dut()` to capture signal values
 
 - **Reference Model** (`rad_<design>_ref_model.py`): Compute expected behavior
-  - Implement `calc_exp()` to predict design outputs from inputs
-  - Maintain internal state matching design behavior
-  - Handle `reset_change()` for proper state initialization
+    - Implement `calc_exp()` to predict design outputs from inputs
+    - Maintain internal state matching design behavior
+    - Handle `reset_change()` for proper state initialization
 
 - **Sequence** (`rad_<design>_sequence.py`): Generate stimulus patterns
-  - Implement `set_item_inputs()` to randomize or set input field values
-  - Configure sequence length via `RAD_<DESIGN>_SEQ_LEN` environment variable
+    - Implement `set_item_inputs()` to randomize or set input field values
+    - Configure sequence length via `RAD_<DESIGN>_SEQ_LEN` environment variable
 
 - **Coverage** (`rad_<design>_coverage.py`): Define functional coverage
-  - Use `@CoverPoint` decorators from [cocotb-coverage](https://github.com/mciepluc/cocotb-coverage)
-  - Implement `write()` method to sample coverage from transactions
+    - Use `@CoverPoint` decorators from [cocotb-coverage](https://github.com/mciepluc/cocotb-coverage)
+    - Implement `write()` method to sample coverage from transactions
 
 ### 3. Develop Tests
 

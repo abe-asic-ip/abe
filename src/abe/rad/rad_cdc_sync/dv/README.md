@@ -31,15 +31,15 @@ The DUT performs a single function: synchronizing an asynchronous signal into th
 - **Reset**: `rst_n`
 - **Driver**: `RadCdcSyncDriver` - Drives `async_i` with timing jitter relative to `clk` edges
 - **Monitors**:
-  - `RadCdcSyncMonitorIn` - Samples `async_i` on `clk` (for reference model input)
-  - `RadCdcSyncMonitorOut` - Samples `sync_o` on `clk` (synchronized output)
+    - `RadCdcSyncMonitorIn` - Samples `async_i` on `clk` (for reference model input)
+    - `RadCdcSyncMonitorOut` - Samples `sync_o` on `clk` (synchronized output)
 - **Item**: `RadCdcSyncItem`
-  - Inputs: `async_i`, `delay_ps` (pre-toggle jitter)
-  - Outputs: `sync_o` (synchronized output from DUT)
+    - Inputs: `async_i`, `delay_ps` (pre-toggle jitter)
+    - Outputs: `sync_o` (synchronized output from DUT)
 - **Sequence**: `RadCdcSyncSequence`
-  - Generates toggling pattern with timing jitter to stress metastability
-  - Enforces visible transitions (state alternates 0 → 1 → 0 → 1)
-  - Applies random delay in ±20% window around half clock period
+    - Generates toggling pattern with timing jitter to stress metastability
+    - Enforces visible transitions (state alternates 0 → 1 → 0 → 1)
+    - Applies random delay in ±20% window around half clock period
 
 ---
 

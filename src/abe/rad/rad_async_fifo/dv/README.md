@@ -31,15 +31,15 @@ These domains are **independent** - in a real system, they would be controlled b
 - **Reset**: `wrst_n`
 - **Driver**: `RadAsyncFifoWriteDriver` - Drives `winc`, `wdata` on `wclk` edges
 - **Monitors**:
-  - `RadAsyncFifoWriteMonitorIn` - Samples `winc`, `wdata` on `wclk`
-  - `RadAsyncFifoWriteMonitorOut` - Samples `wfull` on `wclk`
+    - `RadAsyncFifoWriteMonitorIn` - Samples `winc`, `wdata` on `wclk`
+    - `RadAsyncFifoWriteMonitorOut` - Samples `wfull` on `wclk`
 - **Item**: `RadAsyncFifoWriteItem`
-  - Inputs: `winc`, `wdata`
-  - Outputs: `wfull` (feedback from DUT)
+    - Inputs: `winc`, `wdata`
+    - Outputs: `wfull` (feedback from DUT)
 - **Sequence**: `RadAsyncFifoWriteSequence`
-  - Generates random write transactions with configurable probability (default 0.7)
-  - Protocol enforcement handled by driver, not sequence
-  - Generates random `wdata` values within configured data width
+    - Generates random write transactions with configurable probability (default 0.7)
+    - Protocol enforcement handled by driver, not sequence
+    - Generates random `wdata` values within configured data width
 
 ### Agent 1: Read Domain
 
@@ -47,14 +47,14 @@ These domains are **independent** - in a real system, they would be controlled b
 - **Reset**: `rrst_n`
 - **Driver**: `RadAsyncFifoReadDriver` - Drives `rinc` on `rclk` edges
 - **Monitors**:
-  - `RadAsyncFifoReadMonitorIn` - Samples `rinc` on `rclk`
-  - `RadAsyncFifoReadMonitorOut` - Samples `rdata`, `rempty` on `rclk`
+    - `RadAsyncFifoReadMonitorIn` - Samples `rinc` on `rclk`
+    - `RadAsyncFifoReadMonitorOut` - Samples `rdata`, `rempty` on `rclk`
 - **Item**: `RadAsyncFifoReadItem`
-  - Inputs: `rinc`
-  - Outputs: `rdata`, `rempty` (feedback from DUT)
+    - Inputs: `rinc`
+    - Outputs: `rdata`, `rempty` (feedback from DUT)
 - **Sequence**: `RadAsyncFifoReadSequence`
-  - Generates random read transactions with configurable probability (default 0.7)
-  - Protocol enforcement handled by driver, not sequence
+    - Generates random read transactions with configurable probability (default 0.7)
+    - Protocol enforcement handled by driver, not sequence
 
 ---
 
@@ -224,29 +224,29 @@ Rejected alternatives:
 ### Transaction Items
 
 - `rad_async_fifo_item.py` - Contains both transaction classes:
-  - `RadAsyncFifoWriteItem` - Write domain (winc, wdata, wfull)
-  - `RadAsyncFifoReadItem` - Read domain (rinc, rdata, rempty)
+    - `RadAsyncFifoWriteItem` - Write domain (winc, wdata, wfull)
+    - `RadAsyncFifoReadItem` - Read domain (rinc, rdata, rempty)
 
 ### Drivers
 
 - `rad_async_fifo_driver.py` - Contains both driver classes:
-  - `RadAsyncFifoWriteDriver` - Drives write inputs on wclk
-  - `RadAsyncFifoReadDriver` - Drives read inputs on rclk
+    - `RadAsyncFifoWriteDriver` - Drives write inputs on wclk
+    - `RadAsyncFifoReadDriver` - Drives read inputs on rclk
 
 ### Sequences
 
 - `rad_async_fifo_sequence.py` - Contains both sequence classes:
-  - `RadAsyncFifoWriteSequence` - Generates write transactions
-  - `RadAsyncFifoReadSequence` - Generates read transactions
+    - `RadAsyncFifoWriteSequence` - Generates write transactions
+    - `RadAsyncFifoReadSequence` - Generates read transactions
 
 ### Monitors
 
 - `rad_async_fifo_monitor_in.py` - Contains both input monitor classes:
-  - `RadAsyncFifoWriteMonitorIn` - Samples winc, wdata on wclk
-  - `RadAsyncFifoReadMonitorIn` - Samples rinc on rclk
+    - `RadAsyncFifoWriteMonitorIn` - Samples winc, wdata on wclk
+    - `RadAsyncFifoReadMonitorIn` - Samples rinc on rclk
 - `rad_async_fifo_monitor_out.py` - Contains both output monitor classes:
-  - `RadAsyncFifoWriteMonitorOut` - Samples wfull on wclk
-  - `RadAsyncFifoReadMonitorOut` - Samples rdata, rempty on rclk
+    - `RadAsyncFifoWriteMonitorOut` - Samples wfull on wclk
+    - `RadAsyncFifoReadMonitorOut` - Samples rdata, rempty on rclk
 
 ### Environment & Test
 
