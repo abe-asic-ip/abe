@@ -10,16 +10,28 @@ SPDX-License-Identifier: MIT
 
 ## Overview
 
-The **Reusable ASIC Designs (RAD)** DV environment provides a complete, reusable, and open‑source verification framework for all RAD designs. It combines **[cocotb](https://www.cocotb.org)**, **[pyuvm](https://github.com/pyuvm/pyuvm)**, and a robust set of **shared base classes**, enabling UVM‑style verification using modern Python tooling.
+The **Reusable ASIC Designs (RAD)** DV environment provides a complete,
+reusable, and open‑source verification framework for all RAD designs. It
+combines **[cocotb](https://www.cocotb.org)**,
+**[pyuvm](https://github.com/pyuvm/pyuvm)**, and a robust set of **shared base
+classes**, enabling UVM‑style verification using modern Python tooling.
 
 RAD DV follows the ABE philosophy:
 
-- **Consistency**: All RAD designs use the same structure and DV architecture
-- **Reusability**: Shared base classes for agents, drivers, monitors, sequences, scoreboards, and coverage
+- **Consistency**: All RAD designs use the same structure and DV
+  architecture
+- **Reusability**: Shared base classes for agents, drivers, monitors,
+  sequences, scoreboards, and coverage
 - **Automation**: Make targets, regression scripts, auto‑generated benches
-- **Portability**: 100% open‑source toolchain ([cocotb](https://www.cocotb.org), [Verilator](https://verilator.org), [pyuvm](https://github.com/pyuvm/pyuvm), [pytest](https://docs.pytest.org/en/stable))
+- **Portability**: 100% open‑source toolchain
+  ([cocotb](https://www.cocotb.org), [Verilator](https://verilator.org),
+  [pyuvm](https://github.com/pyuvm/pyuvm),
+  [pytest](https://docs.pytest.org/en/stable))
 
-**[RAD Design](design.md)** ensures RTL quality, **[RAD Formal](formal.md)** ensures logical correctness, and **[RAD DV](dv.md)** ensures *functional correctness under realistic stimulus*.
+**[RAD Design](design.md)** ensures RTL quality,
+**[RAD Formal](formal.md)** ensures logical correctness, and
+**[RAD DV](dv.md)** ensures *functional correctness under realistic
+stimulus*.
 
 ### Audience
 
@@ -60,7 +72,8 @@ make py-install-all
 
 ### Install Required Tools
 
-Install [Verilator](https://verilator.org) and a waveform viewer such as [Surfer](https://surfer-project.org) or [GTKWave](https://gtkwave.sourceforge.net).
+Install [Verilator](https://verilator.org) and a waveform viewer such as
+[Surfer](https://surfer-project.org) or [GTKWave](https://gtkwave.sourceforge.net).
 
 ### Run Examples
 
@@ -177,57 +190,106 @@ out_dv/tests/<rad_design>.<hash>.<test>.<seed>
 
 #### Methodology: UVM for Block-Level Verification
 
-UVM provides a proven, standardized methodology that is good for block-level verification. Cliff Cummings' uvmtb_template paper (see [Literature](#literature) section) shows how UVM works well for block-level testbenches.
+UVM provides a proven, standardized methodology that is good for
+block-level verification. Cliff Cummings' uvmtb_template paper (see
+[Literature](#literature) section) shows how UVM works well for
+block-level testbenches.
 
 #### Technology: cocotb/pyuvm over Verilator/SystemVerilog UVM
 
-ABE's open-source mission uses an open-source simulator. When the project began, [Verilator](https://verilator.org) did not support UVM for SystemVerilog (it does now). This made [cocotb](https://www.cocotb.org)/[pyuvm](https://github.com/pyuvm/pyuvm) a natural choice for combining UVM methodology with open-source simulation.
+ABE's open-source mission uses an open-source simulator. When the project
+began, [Verilator](https://verilator.org) did not support UVM for
+SystemVerilog (it does now). This made
+[cocotb](https://www.cocotb.org)/[pyuvm](https://github.com/pyuvm/pyuvm) a
+natural choice for combining UVM methodology with open-source simulation.
 
 #### Discipline: UVM Standard Patterns over Python Idioms
 
-Python enables design patterns not possible in SystemVerilog. Standard UVM does not support these patterns. However, RAD DV uses fewer Python-specific patterns. This keeps UVM portable and easier to read for engineers who know SystemVerilog UVM. Exception: small mixins for clock/reset infrastructure reduce repetitive code without hiding the UVM structure.
+Python enables design patterns not possible in SystemVerilog. Standard UVM
+does not support these patterns. However, RAD DV uses fewer Python-specific
+patterns. This keeps UVM portable and easier to read for engineers who know
+SystemVerilog UVM. Exception: small mixins for clock/reset infrastructure
+reduce repetitive code without hiding the UVM structure.
 
 ### Benefits
 
 #### Python Reference Models
 
-Traditional UVM testbenches implement reference models in SystemVerilog or C++ (via DPI-C). Using Python with SystemVerilog simulators is very difficult. This creates several challenges:
+Traditional UVM testbenches implement reference models in SystemVerilog or
+C++ (via DPI-C). Using Python with SystemVerilog simulators is very
+difficult. This creates several challenges:
 
-- **The translation gap**: ASIC architects often develop specifications and models in Python. Verification engineers must rewrite them in SystemVerilog or C++ for use in UVM scoreboards
-- **Maintenance creates errors**: Keeping reference models synchronized with changing Python specifications causes translation errors and extra maintenance work
-- **Missed reuse opportunities**: Python's powerful features and extensive libraries (NumPy, SciPy, etc.) cannot be used for behavioral modeling in traditional UVM
+- **The translation gap**: ASIC architects often develop specifications and
+  models in Python. Verification engineers must rewrite them in
+  SystemVerilog or C++ for use in UVM scoreboards
+- **Maintenance creates errors**: Keeping reference models synchronized with
+  changing Python specifications causes translation errors and extra
+  maintenance work
+- **Missed reuse opportunities**: Python's powerful features and extensive
+  libraries (NumPy, SciPy, etc.) cannot be used for behavioral modeling in
+  traditional UVM
 
-RAD DV solves these problems by allowing reference models to be written directly in Python with the testbench:
+RAD DV solves these problems by allowing reference models to be written
+directly in Python with the testbench:
 
-- Architects' Python specifications can often be used directly as reference models with small changes
-- Model mismatches are greatly reduced because there is no translation layer
-- Debug time can decrease—the Wilson Research Group Functional Verification Study reports that debugging is a significant portion of verification effort
+- Architects' Python specifications can often be used directly as reference
+  models with small changes
+- Model mismatches are greatly reduced because there is no translation
+  layer
+- Debug time can decrease—the Wilson Research Group Functional Verification
+  Study reports that debugging is a significant portion of verification
+  effort
 
 #### Rich Python Ecosystem
 
-Open-source simulators like [Verilator](https://verilator.org) and [Icarus Verilog](https://steveicarus.github.io/iverilog) provide basic simulation capabilities. They do not have the integrated test management, analysis, and debugging tools found in commercial products. Python's ecosystem fills this gap and gives open-source developers access to similar capabilities:
+Open-source simulators like [Verilator](https://verilator.org) and
+[Icarus Verilog](https://steveicarus.github.io/iverilog) provide basic
+simulation capabilities. They do not have the integrated test management,
+analysis, and debugging tools found in commercial products. Python's
+ecosystem fills this gap and gives open-source developers access to similar
+capabilities:
 
-- **Test management**: [pytest](https://docs.pytest.org/en/stable) for test discovery, parametrization, fixtures, and regression orchestration
-- **Data analysis**: NumPy, pandas for processing results, analyzing coverage trends, and generating metrics
-- **Visualization**: Matplotlib, seaborn for plotting coverage data, regression trends, and performance metrics
-- **Debugging and introspection**: Interactive debugging and comprehensive logging for development and debug workflows
-- **Automation and CI/CD**: Direct integration with git, reporting tools, and continuous integration pipelines
+- **Test management**: [pytest](https://docs.pytest.org/en/stable) for test
+  discovery, parametrization, fixtures, and regression orchestration
+- **Data analysis**: NumPy, pandas for processing results, analyzing
+  coverage trends, and generating metrics
+- **Visualization**: Matplotlib, seaborn for plotting coverage data,
+  regression trends, and performance metrics
+- **Debugging and introspection**: Interactive debugging and comprehensive
+  logging for development and debug workflows
+- **Automation and CI/CD**: Direct integration with git, reporting tools,
+  and continuous integration pipelines
 
 ### Known Limitations
 
-- **Simulator support**: Only [Verilator](https://verilator.org) and [Icarus Verilog](https://steveicarus.github.io/iverilog) are currently supported. While [cocotb](https://www.cocotb.org) supports many commercial simulators (VCS, Questa, Xcelium, etc.), integration into RAD DV requires access to licenses for testing and validation.
-- **Sequential test execution**: Regression tests run one at a time instead of in parallel. This makes large test suites run slower
-- **Third-party VIP integration**: Does not integrate with commercial VIP or third-party AIP
+- **Simulator support**: Only [Verilator](https://verilator.org) and
+  [Icarus Verilog](https://steveicarus.github.io/iverilog) are currently
+  supported. While [cocotb](https://www.cocotb.org) supports many
+  commercial simulators (VCS, Questa, Xcelium, etc.), integration into RAD
+  DV requires access to licenses for testing and validation.
+- **Sequential test execution**: Regression tests run one at a time instead
+  of in parallel. This makes large test suites run slower
+- **Third-party VIP integration**: Does not integrate with commercial VIP
+  or third-party AIP
 
 ### Future Enhancements
 
-- **Additional simulator support**: Expand beyond [Verilator](https://verilator.org) and [Icarus Verilog](https://steveicarus.github.io/iverilog)
-- **Parallel test execution**: Enable concurrent test runs for faster regression completion
-- **Multi-agent single-clock example**: Example bench demonstrating single clock/reset domain with multiple agents (multiple interfaces)
-- **Code coverage integration**: Example using [Verilator](https://verilator.org)'s coverage capabilities
-- **Constrained randomization**: Example using [cocotb-coverage](https://github.com/mciepluc/cocotb-coverage) for constraint-based stimulus generation
-- **Functional coverage workflows**: Examples demonstrating coverage database merging, cross-coverage, and coverage-driven verification
-- **Standard protocol libraries**: Pre-built reusable agents for common bus protocols (AXI, APB, AHB, etc.)
+- **Additional simulator support**: Expand beyond
+  [Verilator](https://verilator.org) and
+  [Icarus Verilog](https://steveicarus.github.io/iverilog)
+- **Parallel test execution**: Enable concurrent test runs for faster
+  regression completion
+- **Multi-agent single-clock example**: Example bench demonstrating single
+  clock/reset domain with multiple agents (multiple interfaces)
+- **Code coverage integration**: Example using
+  [Verilator](https://verilator.org)'s coverage capabilities
+- **Constrained randomization**: Example using
+  [cocotb-coverage](https://github.com/mciepluc/cocotb-coverage) for
+  constraint-based stimulus generation
+- **Functional coverage workflows**: Examples demonstrating coverage
+  database merging, cross-coverage, and coverage-driven verification
+- **Standard protocol libraries**: Pre-built reusable agents for common bus
+  protocols (AXI, APB, AHB, etc.)
 
 ---
 
@@ -256,9 +318,13 @@ Located under:
 src/abe/rad/shared/dv/
 ```
 
-RAD DV environments use classic UVM patterns implemented in Python via [pyuvm](https://github.com/pyuvm/pyuvm) and [cocotb](https://www.cocotb.org). All testbenches inherit from reusable base classes that provide standard verification infrastructure.
+RAD DV environments use classic UVM patterns implemented in Python via
+[pyuvm](https://github.com/pyuvm/pyuvm) and [cocotb](https://www.cocotb.org).
+All testbenches inherit from reusable base classes that provide standard
+verification infrastructure.
 
-The following table summarizes the shared base classes. See the module docstrings for detailed usage.
+The following table summarizes the shared base classes. See the module
+docstrings for detailed usage.
 
 | File | Description |
 |------|-------------|
@@ -328,17 +394,24 @@ The RAD DV environment includes five main tools under:
 src/abe/rad/tools/
 ```
 
-The following sections describe the tools at a high level. See the module docstrings for more detail.
+The following sections describe the tools at a high level. See the module
+docstrings for more detail.
 
 ### 1. `dv` — Main Front-End (Runs a Single Test)
 
 #### `dv` Purpose
 
-- Verify RTL designs using [cocotb](https://www.cocotb.org) + [pyuvm](https://github.com/pyuvm/pyuvm) + [pytest](https://docs.pytest.org/en/stable) framework
-- Support multiple simulators ([Verilator](https://verilator.org), [Icarus Verilog](https://steveicarus.github.io/iverilog)) with configurable waveform generation (FST, VCD)
-- Execute single or multi-seed regression testing with automatic result tracking
+- Verify RTL designs using [cocotb](https://www.cocotb.org) +
+  [pyuvm](https://github.com/pyuvm/pyuvm) +
+  [pytest](https://docs.pytest.org/en/stable) framework
+- Support multiple simulators ([Verilator](https://verilator.org),
+  [Icarus Verilog](https://steveicarus.github.io/iverilog)) with configurable
+  waveform generation (FST, VCD)
+- Execute single or multi-seed regression testing with automatic result
+  tracking
 - Generate test manifests for build/test reproducibility and caching
-- Provide flexible build/test orchestration via `--cmd` (build-only, test-only, or both)
+- Provide flexible build/test orchestration via `--cmd` (build-only,
+  test-only, or both)
 
 #### `dv` Typical Usage
 
@@ -377,7 +450,10 @@ Output directory:
 <outdir>/builds/<rad_design>.<hash>
 ```
 
-The hash is a 10-character SHA-1 fingerprint computed from build-affecting parameters: simulator type, waveform settings (enabled/format), and user build arguments. This ensures identical build configurations reuse the same directory while different configurations get separate builds.
+The hash is a 10-character SHA-1 fingerprint computed from build-affecting
+parameters: simulator type, waveform settings (enabled/format), and user build
+arguments. This ensures identical build configurations reuse the same directory
+while different configurations get separate builds.
 
 Key files:
 
@@ -412,7 +488,8 @@ Key files:
 - Execute YAML-defined regression test suites with strict configuration management
 - Apply global default arguments to all jobs with per-job override capability
 - Run multiple test jobs one at a time with automatic pass/fail tracking
-- Generate colored summary reports with copy-pasteable replay commands for failed tests
+- Generate colored summary reports with copy-pasteable replay commands for
+failed tests
 - Let `dv` handle seeds for consistent multi-seed support
 
 #### `dv-regress` Typical Usage
@@ -435,7 +512,9 @@ make DESIGN=rad_cdc_sync dv-regress-design
 
 #### `dv-regress-all` Purpose
 
-Searches all directories for `dv_regress.yaml` files in the repository and runs each regression using `dv-regress`. All regressions share the same output directory for unified result tracking.
+Searches all directories for `dv_regress.yaml` files in the repository and runs
+each regression using `dv-regress`. All regressions share the same output
+directory for unified result tracking.
 
 #### `dv-regress-all` Typical Usage
 
@@ -457,7 +536,8 @@ make dv-regress-all
 
 #### `dv-report` Purpose
 
-Scans test output directories for manifest files and generates an organized report of expected/unexpected passes and failures with copy-pasteable replay commands.
+Scans test output directories for manifest files and generates an organized
+report of expected/unexpected passes and failures with copy-pasteable replay commands.
 
 #### `dv-report` Typical Usage
 
@@ -505,7 +585,8 @@ dv-make-bench <rad_design> 'George Nakashima'
 
 ## Regression Guidelines
 
-The `dv_regress.yaml` file defines regression test jobs using YAML. Each bench includes this file to enable `dv-regress` execution.
+The `dv_regress.yaml` file defines regression test jobs using YAML. Each bench
+includes this file to enable `dv-regress` execution.
 
 ### Schema
 
@@ -529,7 +610,8 @@ Each job's `args` can be:
 - **List of strings**: `["--design=rad_foo", "--test=test_rad_foo"]`
 - **Single string**: `"--design=rad_foo --test=test_rad_foo"`
 
-Arguments are passed directly to `dv`, supporting all `dv` command-line options (see [`dv` Arguments](#dv-arguments) table).
+Arguments are passed directly to `dv`, supporting all `dv` command-line options
+(see [`dv` Arguments](#dv-arguments) table).
 
 ### Common Patterns
 
@@ -603,14 +685,16 @@ jobs:
 3. **Seeds**: Use `--nseeds` for random seeds or `--seeds` for explicit values
 4. **Build variants**: Use `--build-arg` for RTL compilation flags
 5. **Defaults**: Use global defaults to reduce repetition across jobs
-6. **Job args override defaults**: Per-job arguments take precedence over global defaults
+6. **Job args override defaults**: Per-job arguments take precedence over
+global defaults
 
 #### Example Files
 
 See existing regression files for reference:
 
 - `src/abe/rad/rad_async_fifo/dv/dv_regress.yaml` - Simple single-job regression
-- `src/abe/rad/rad_cdc_sync/dv/dv_regress.yaml` - Multiple configurations including negative tests
+- `src/abe/rad/rad_cdc_sync/dv/dv_regress.yaml` - Multiple configurations
+including negative tests
 - `src/abe/rad/rad_cdc_mcp/dv/dv_regress.yaml` - Basic pattern
 
 ---
@@ -638,11 +722,13 @@ For designs with a single clock/reset domain and a single agent:
 
 #### Multi-Clock / Multi-Agent Designs
 
-For designs with multiple independent clock domains or requiring separate agents per domain:
+For designs with multiple independent clock domains or requiring separate
+agents per domain:
 
 1. Copy the bench most similar to your design (`rad_cdc_mcp` or `rad_async_fifo`)
 2. Rename all files and classes to match your design
-3. Customize the agent count, clock configurations, and reset routing in the environment and test classes.
+3. Customize the agent count, clock configurations, and reset routing in the
+environment and test classes.
 4. See the README.md files in these benches for dual-agent architecture patterns
 
 #### Output Timing Considerations
@@ -662,7 +748,9 @@ How you implement monitors depends on output timing and protocol complexity:
     - Only send transactions to analysis port when transfer conditions are met
     - Prevents scoreboard from checking invalid/idle cycles
 
-Most simple designs have registered outputs and can use `BaseMonitorOut` unchanged. For pipelined protocols or conditional sampling, reference the existing benches for patterns.
+Most simple designs have registered outputs and can use `BaseMonitorOut`
+unchanged. For pipelined protocols or conditional sampling, reference the
+existing benches for patterns.
 
 ### 2. Implement Core Components
 
@@ -677,7 +765,8 @@ Customize these design-specific files:
     - Implement `drive_item()` to apply transactions on drive edges
     - Handle backpressure or protocol requirements
 
-- **Monitors** (`rad_<design>_monitor_in.py`, `rad_<design>_monitor_out.py`): Observe design signals
+- **Monitors** (`rad_<design>_monitor_in.py`, `rad_<design>_monitor_out.py`):
+Observe design signals
     - Input monitor: Sample inputs for reference model
     - Output monitor: Sample outputs for scoreboard comparison
     - Implement `sample_dut()` to capture signal values
@@ -718,7 +807,8 @@ class RadCdcSyncBaseTest(BaseTest):
 
 **Multi-clock example:**
 
-For designs with multiple clocks/resets, create clock and reset drivers in the test. Reference `rad_cdc_mcp` and `rad_async_fifo`.
+For designs with multiple clocks/resets, create clock and reset drivers in the
+test. Reference `rad_cdc_mcp` and `rad_async_fifo`.
 
 ### 4. Create Regression Configuration
 
@@ -746,13 +836,17 @@ make DESIGN=rad_<design> dv-regress-design
 
 **Evaluate coverage:**
 
-Current RAD examples use simple counters logged during `report_phase()`. Check test logs for coverage summaries:
+Current RAD examples use simple counters logged during `report_phase()`. Check
+test logs for coverage summaries:
 
 ```bash
 grep -A5 "Coverage summary" out_dv/tests/*/test.log
 ```
 
-**Note:** The `BaseCoverage` class supports [cocotb-coverage](https://github.com/mciepluc/cocotb-coverage) with `@CoverPoint` decorators for database-driven coverage collection and merging. To use this feature:
+**Note:** The `BaseCoverage` class supports
+[cocotb-coverage](https://github.com/mciepluc/cocotb-coverage) with
+`@CoverPoint` decorators for database-driven coverage collection and merging.
+To use this feature:
 
 1. Import decorators: `from cocotb_coverage.coverage import CoverPoint, CoverCross`
 2. Decorate the `sample()` method with coverpoints
@@ -783,7 +877,8 @@ Complete the bench documentation:
 Yes, with caveats:
 
 - [cocotb](https://www.cocotb.org) supports VCS, Questa, Xcelium, and others
-- RAD DV tools (`dv`, `dv-regress`) currently only configure [Verilator](https://verilator.org) and [Icarus Verilog](https://steveicarus.github.io/iverilog)
+- RAD DV tools (`dv`, `dv-regress`) currently only configure
+[Verilator](https://verilator.org) and [Icarus Verilog](https://steveicarus.github.io/iverilog)
 - Extending to commercial simulators requires license access for testing
 
 The testbench code itself is simulator-agnostic.
@@ -792,7 +887,8 @@ The testbench code itself is simulator-agnostic.
 
 ### Why do regression tests run sequentially instead of in parallel?
 
-Parallel execution is a [future enhancement](#future-enhancements). For faster regressions, consider:
+Parallel execution is a [future enhancement](#future-enhancements). For faster
+regressions, consider:
 
 - Running multiple `dv-regress` instances on different machines
 - Reducing `--nseeds` for smoke testing
@@ -809,13 +905,18 @@ UVM provides:
 - **Familiar structure** for verification engineers
 - **Reusability** across designs through base classes
 
-Pure [cocotb](https://www.cocotb.org) is excellent for simple testbenches. For complex block-level verification, RAD DV benefits from UVM's structural framework.
+Pure [cocotb](https://www.cocotb.org) is excellent for simple testbenches. For
+complex block-level verification, RAD DV benefits from UVM's structural framework.
 
 ---
 
 ### Can I use SystemVerilog assertions with RAD DV?
 
-Yes. SVA assertions in RTL are fully supported by [Verilator](https://verilator.org) and [Icarus Verilog](https://steveicarus.github.io/iverilog). They complement the Python testbench by checking protocol compliance and design constraints at the RTL level. See also [RAD Formal](formal.md) for property-based verification.
+Yes. SVA assertions in RTL are fully supported by
+[Verilator](https://verilator.org) and
+[Icarus Verilog](https://steveicarus.github.io/iverilog). They complement the
+Python testbench by checking protocol compliance and design constraints at the
+RTL level. See also [RAD Formal](formal.md) for property-based verification.
 
 ---
 
@@ -836,7 +937,8 @@ See Cliff Cummings' "Applying stimulus and sampling outputs" paper ([Literature]
 
 1. **Check the test log**: `out_dv/tests/<test_dir>/test.log`
 2. **Enable verbose logging**: `dv --design=<design> --test=<test> --verbosity=debug`
-3. **View waveforms**: `dv --design=<design> --test=<test> --waves=1`, then `surfer out_dv/tests/*/waves.fst`
+3. **View waveforms**: `dv --design=<design> --test=<test> --waves=1`, then
+`surfer out_dv/tests/*/waves.fst`
 4. **Add debug logging**: Use `self.logger.debug()` in components
 5. **Check manifest**: Review `out_dv/tests/<test_dir>/manifest.json` for test configuration
 
@@ -896,19 +998,30 @@ Add debug logging to both reference model and monitors to trace mismatches.
 
 ## Literature
 
-[1] R. Salemi, *Python for RTL Verification: A Complete Course in Python, cocotb, and pyuvm*. Boston, MA: Boston Light Press, 2022.
+[1] R. Salemi, *Python for RTL Verification: A Complete Course in Python,
+cocotb, and pyuvm*. Boston, MA: Boston Light Press, 2022.
 
-[2] B. Hunter, *Advanced UVM*. North Charleston, SC: CreateSpace Independent Publishing Platform, 2016.
+[2] B. Hunter, *Advanced UVM*. North Charleston, SC: CreateSpace
+Independent Publishing Platform, 2016.
 
-[3] C. E. Cummings, "uvmtb_template files—An efficient and rapid way to create UVM testbenches," in *Proc. Synopsys Users Group (SNUG)*, Silicon Valley, CA, 2025.
+[3] C. E. Cummings, "uvmtb_template files—An efficient and rapid way to
+create UVM testbenches," in *Proc. Synopsys Users Group (SNUG)*, Silicon
+Valley, CA, 2025.
 
-[4] C. E. Cummings, "Applying stimulus and sampling outputs—UVM verification testing techniques," in *Proc. Synopsys Users Group (SNUG)*, Austin, TX, 2016.
+[4] C. E. Cummings, "Applying stimulus and sampling outputs—UVM
+verification testing techniques," in *Proc. Synopsys Users Group (SNUG)*,
+Austin, TX, 2016.
 
-[5] C. E. Cummings, "OVM/UVM scoreboards—Fundamental architectures," in *Proc. Synopsys Users Group (SNUG)*, Silicon Valley, CA, 2013.
+[5] C. E. Cummings, "OVM/UVM scoreboards—Fundamental architectures," in
+*Proc. Synopsys Users Group (SNUG)*, Silicon Valley, CA, 2013.
 
-[6] C. E. Cummings, "The OVM/UVM factory and factory overrides—How they work and why they are important," in *Proc. Synopsys Users Group (SNUG)*, San Jose, CA, 2012.
+[6] C. E. Cummings, "The OVM/UVM factory and factory overrides—How they
+work and why they are important," in *Proc. Synopsys Users Group (SNUG)*,
+San Jose, CA, 2012.
 
-[7] C. E. Cummings and T. Fitzpatrick, "OVM and UVM techniques for terminating tests," in *Proc. Design and Verification Conf. (DVCon)*, San Jose, CA, 2011.
+[7] C. E. Cummings and T. Fitzpatrick, "OVM and UVM techniques for
+terminating tests," in *Proc. Design and Verification Conf. (DVCon)*, San
+Jose, CA, 2011.
 
 ---
 
