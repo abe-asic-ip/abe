@@ -142,7 +142,8 @@ based FIFO optimization in action
 [RAD Formal](docs/formal.md#install-required-tools), and
 [RAD DV](docs/dv.md#install-required-tools) for details.
 5. **Explore a [RAD](#reusable-asic-designs-rad) design** to experience
-[RTL](docs/design.md), [synthesis](docs/design.md), [formal](docs/formal.md), and [DV](docs/dv.md)
+[RTL](docs/design.md), [synthesis](docs/design.md), [formal](docs/formal.md),
+and [DV](docs/dv.md)
 flows firsthand
 6. **[Run a test](docs/dv.md#run-examples)** with
 [`dv`](docs/dv.md#1-dv-main-front-end-runs-a-single-test) and a
