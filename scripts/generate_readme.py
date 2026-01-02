@@ -23,7 +23,9 @@ def generate_readme() -> None:
         content = f.read()
 
     repo_link = "**[See the git repository](https://github.com/abe-asic-ip/abe)**"
-    docs_link = "📚 **[Read the full documentation](https://abe-asic-ip.github.io/abe/)**"
+    docs_link = (
+        "📚 **[Read the full documentation](https://abe-asic-ip.github.io/abe/)**"
+    )
 
     # Swap the repository link for the GitHub Pages documentation link in README.md
     content = content.replace(repo_link, docs_link, 1)
