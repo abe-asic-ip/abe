@@ -36,19 +36,25 @@ module rad_cdc_sync #(
   int unsigned              tmp_u;
   int unsigned              rand_seed_q = rad_cdc_meta_cfg_pkg::CDC_RAND_SEED;
   realtime                  last_async_change_tu;  // tu = time units
+  realtime                  last_clk_edge_tu;
   bit                       hold_window_open;
 
   localparam realtime TsetupTu = real'(rad_cdc_meta_cfg_pkg::CDC_T_SETUP) / 1ns;
+  localparam realtime TholdTu = real'(rad_cdc_meta_cfg_pkg::CDC_T_HOLD) / 1ns;
 
   initial begin
     $display("%m: SIMULATE_METASTABILITY: STAGES=%0d, RESET=%b", STAGES, RESET);
     if ($value$plusargs("RAD_CDC_RAND_SEED=%d", tmp_u)) rand_seed_q = tmp_u;
     void'($urandom(rand_seed_q));
+    last_async_change_tu = 0;
+    last_clk_edge_tu = 0;
+    hold_window_open = 1'b0;
   end
 
   always @(async_i) begin
-    last_async_change_tu <= $realtime;
-    if (hold_window_open) begin
+    last_async_change_tu = $realtime;
+    // Check if we're in the hold window after a clock edge
+    if (hold_window_open && (($realtime - last_clk_edge_tu) < TholdTu)) begin
       #0 shreg[0] <= logic'($urandom_range(0, 1));
       if (PRINT_INJECTION_MESSAGES)
         $display(
@@ -62,7 +68,12 @@ module rad_cdc_sync #(
     if (!rst_n) begin
       shreg <= {STAGES{RESET}};
       hold_window_open <= 1'b0;
+      last_clk_edge_tu <= 0;
     end else begin
+      last_clk_edge_tu <= $realtime;
+      hold_window_open <= 1'b1;
+
+      // Check for setup violation
       if (($realtime - last_async_change_tu) < TsetupTu) begin
         shreg[0] <= logic'($urandom_range(0, 1));
         if (PRINT_INJECTION_MESSAGES)
@@ -73,11 +84,6 @@ module rad_cdc_sync #(
       end else begin
         shreg[0] <= async_i;
       end
-
-      hold_window_open <= 1'b1;
-      fork
-        #(rad_cdc_meta_cfg_pkg::CDC_T_HOLD) hold_window_open <= 1'b0;
-      join_none
 
       for (int unsigned i = 1; i < STAGES; i++) shreg[i] <= shreg[i-1];
     end
