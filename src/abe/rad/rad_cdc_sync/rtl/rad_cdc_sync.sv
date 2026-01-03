@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2025 Hugh Walsh
+// SPDX-FileCopyrightText: 2026 Hugh Walsh
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -37,10 +37,10 @@ module rad_cdc_sync #(
   int unsigned              rand_seed_q = rad_cdc_meta_cfg_pkg::CDC_RAND_SEED;
   realtime                  last_async_change_tu;  // tu = time units
   realtime                  last_clk_edge_tu;
-  bit                       hold_window_open;
+  bit                       enable_hold_check;
 
-  localparam realtime TsetupTu = real'(rad_cdc_meta_cfg_pkg::CDC_T_SETUP) / 1ns;
-  localparam realtime TholdTu = real'(rad_cdc_meta_cfg_pkg::CDC_T_HOLD) / 1ns;
+  localparam realtime TsetupTu = rad_cdc_meta_cfg_pkg::CDC_T_SETUP;
+  localparam realtime TholdTu = rad_cdc_meta_cfg_pkg::CDC_T_HOLD;
 
   initial begin
     $display("%m: SIMULATE_METASTABILITY: STAGES=%0d, RESET=%b", STAGES, RESET);
@@ -48,13 +48,13 @@ module rad_cdc_sync #(
     void'($urandom(rand_seed_q));
     last_async_change_tu = 0;
     last_clk_edge_tu = 0;
-    hold_window_open = 1'b0;
+    enable_hold_check = 1'b0;  // Gates hold checks during reset and before 1st clock edge
   end
 
   always @(async_i) begin
     last_async_change_tu = $realtime;
     // Check if we're in the hold window after a clock edge
-    if (hold_window_open && (($realtime - last_clk_edge_tu) < TholdTu)) begin
+    if (enable_hold_check && (($realtime - last_clk_edge_tu) < TholdTu)) begin
       #0 shreg[0] <= logic'($urandom_range(0, 1));
       if (PRINT_INJECTION_MESSAGES)
         $display(
@@ -67,11 +67,11 @@ module rad_cdc_sync #(
   always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
       shreg <= {STAGES{RESET}};
-      hold_window_open <= 1'b0;
+      enable_hold_check <= 1'b0;
       last_clk_edge_tu <= 0;
     end else begin
+      enable_hold_check <= 1'b1;
       last_clk_edge_tu <= $realtime;
-      hold_window_open <= 1'b1;
 
       // Check for setup violation
       if (($realtime - last_async_change_tu) < TsetupTu) begin
