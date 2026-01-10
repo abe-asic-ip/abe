@@ -289,7 +289,7 @@ make DESIGN=<design> synth
 ### Examine Synthesis Outputs
 
 | File | Description |
-|------|-------------|
+| ------ | ------------- |
 | `<design>.v` | sv2v converted Verilog |
 | `<design>_net.v` | Gate-level netlist |
 | `<design>_net.json` | Structural JSON netlist |

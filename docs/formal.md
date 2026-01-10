@@ -177,7 +177,7 @@ See also: [SymbiYosys Configuration](#symbiyosys-configuration-designsby).
 Sections:
 
 | Section | Purpose |
-|--------|---------|
+| -------- | --------- |
 | `[options]` | Mode (`prove`), depth, multiclock |
 | `[engines]` | Solver selection (see [FAQ #4](#which-solvers-should-i-use)) |
 | `[script]` | [Yosys](https://yosyshq.readthedocs.io/projects/yosys/en/latest/cmd/smtbmc.html) steps |
@@ -202,7 +202,7 @@ make DESIGN=<design> formal
 **Examine the Output Directory: `out_formal/<design>`**
 
 | File/Directory | Description |
-|----------------|-------------|
+| ---------------- | ------------- |
 | `PASS` | Status marker file containing verification statistics and elapsed time |
 | `config.sby` | Copy of the `.sby` configuration file used for this run |
 | `engine_0/` | Engine-specific outputs including trace files (`.vcd`, `.yw`) for counterexamples |
@@ -300,7 +300,7 @@ can help if Boolector does not support something.
 ### Difference between `formal` and `formal-cover`?
 
 | Mode | Meaning |
-|------|---------|
+| ------ | --------- |
 | **prove** | Property must hold always |
 | **cover** | Scenario must be reachable |
 

@@ -327,7 +327,7 @@ The following table summarizes the shared base classes. See the module
 docstrings for detailed usage.
 
 | File | Description |
-|------|-------------|
+| ------ | ------------- |
 | `base_agent.py` | UVM agent connecting sequencer, driver, and separate input/output monitors |
 | `base_clock_driver.py` | Clock generation component with configurable period, phase, and startup delay |
 | `base_clock_mixin.py` | Shared clock configuration, signal binding, and drive edge alignment utilities |
@@ -423,7 +423,7 @@ make DESIGN=rad_async_fifo TEST=test_rad_async_fifo DV_OPTS='-seed=123' dv
 #### `dv` Arguments
 
 | Argument | Type | Required | Default | Description |
-|----------|------|----------|---------|-------------|
+| ---------- | ------ | ---------- | --------- | ------------- |
 | `--cmd` | choice | No | `both` | Run only build, only test, or both (choices: build, test, both) |
 | `--sim` | choice | No | `verilator` | Simulator to use (choices: verilator, icarus) |
 | `--outdir` | string | No | `out_dv` | Output directory for build and test artifacts |
@@ -458,7 +458,7 @@ while different configurations get separate builds.
 Key files:
 
 | File | Description |
-|------|-------------|
+| ------ | ------------- |
 | `build.log` | Complete build log from the simulator (Verilator/Icarus) |
 | `manifest.json` | Build metadata including status (started/built/failed), timestamp, simulator config, waveform settings, build arguments, and fingerprint for reproducibility |
 | `srclist.abs.f` | Absolutized source file list with include paths, generated from the design's rtl/srclist.f |
@@ -474,7 +474,7 @@ Output directory:
 Key files:
 
 | File | Description |
-|------|-------------|
+| ------ | ------------- |
 | `test.log` | Complete test execution log including cocotb/pyuvm output |
 | `manifest.json` | Test result metadata including status (PASS/FAIL), expected result, duration, replay command, build/test directories, and full context snapshot |
 | `waves.fst` or `waves.vcd` | Waveform file (if `--waves=1`) in the specified format |
@@ -502,7 +502,7 @@ make DESIGN=rad_cdc_sync dv-regress-design
 #### `dv-regress` Arguments
 
 | Argument | Type | Required | Default | Description |
-|----------|------|----------|---------|-------------|
+| ---------- | ------ | ---------- | --------- | ------------- |
 | `--file` | path | Yes | - | Path to dv_regress.yaml configuration file |
 | `--outdir` | string | No | `out_dv` | Output directory for build and test artifacts |
 
@@ -526,7 +526,7 @@ make dv-regress-all
 #### `dv-regress-all` Arguments
 
 | Argument | Type | Required | Default | Description |
-|----------|------|----------|---------|-------------|
+| ---------- | ------ | ---------- | --------- | ------------- |
 | `--roots` | list | No | `[.]` | Root directories to scan for dv_regress.yaml files (can specify multiple) |
 | `--outdir` | string | No | `out_dv` | Output directory for build and test artifacts |
 
@@ -549,7 +549,7 @@ make dv-report
 #### `dv-report` Arguments
 
 | Argument | Type | Required | Default | Description |
-|----------|------|----------|---------|-------------|
+| ---------- | ------ | ---------- | --------- | ------------- |
 | `--outdir` | string | No | `out_dv` | Output directory to scan for test results |
 
 ---
@@ -575,7 +575,7 @@ dv-make-bench <rad_design> 'George Nakashima'
 #### `dv-make-bench` Arguments
 
 | Argument | Type | Required | Default | Description |
-|----------|------|----------|---------|-------------|
+| ---------- | ------ | ---------- | --------- | ------------- |
 | `module_name` | string | Yes | - | Module name (e.g., 'rad_async_fifo' or 'RadAsyncFifo') - converted to appropriate case as needed |
 | `author` | string | Yes | - | Author name for copyright headers |
 | `--year` | int | No | Current year | Year for copyright headers |
@@ -706,7 +706,7 @@ including negative tests
 Choose a starting point based on your design's characteristics:
 
 | Template | Clocks | Agents | Best For |
-|----------|--------|--------|----------|
+| ---------- | ------ | ------ | ---------- |
 | `dv-make-bench` | 1 | 1 | Common single-clock designs with registered outputs |
 | `rad_cdc_sync` | 1 | 1 | Single-clock pipelines |
 | `rad_cdc_mcp` | 2 | 2 | Dual-clock handshake protocols (both domains registered) |

@@ -43,7 +43,8 @@ fundamental architectural constraint led to the dual-agent design.
     - Inputs: `asend`, `adatain`
     - Outputs: `aready` (feedback from DUT)
 - **Sequence**: `RadCdcMcpWriteSequence`
-    - Generates random send transactions with configurable probability (default 0.7)
+    - Generates random send transactions with configurable probability (default
+    0.7)
     - Protocol enforcement handled by driver, not sequence
     - Generates random `adatain` values within configured data width
 
@@ -59,7 +60,8 @@ fundamental architectural constraint led to the dual-agent design.
     - Inputs: `bload`
     - Outputs: `bdata`, `bvalid` (feedback from DUT)
 - **Sequence**: `RadCdcMcpReadSequence`
-    - Generates random load transactions with configurable probability (default 0.7)
+    - Generates random load transactions with configurable probability (default
+    0.7)
     - Protocol enforcement not required (driver does not implement backpressure)
 
 ---

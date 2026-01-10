@@ -6,7 +6,7 @@ SPDX-License-Identifier: MIT
 
 <!--- This file: docs/index.md -->
 
-# ABE: A Better Environment for ASIC IP Development
+# ABE: A Better Environment for Open-Source ASIC IP Development
 
 [![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -15,17 +15,17 @@ SPDX-License-Identifier: MIT
 [![Documentation](https://img.shields.io/badge/docs-github%20pages-blue.svg)](https://abe-asic-ip.github.io/abe/)
 [![REUSE Compliance](https://img.shields.io/badge/REUSE-compliant-green.svg)](https://reuse.software/)
 
-ABE ("A Better Environment") is a lightweight, modern environment for ASIC IP
-development. It combines microarchitecture tools, reusable RTL designs,
-synthesis, formal verification, and Python-based design verification (DV). ABE
-runs on free and open-source tools.
+ABE ("A Better Environment") is a lightweight, modern environment for
+open-source ASIC IP development. It combines microarchitecture tools, reusable
+RTL designs, synthesis, formal verification, and Python-based design
+verification (DV). ABE runs on free and open-source tools.
 
 The goal is simple: **make block-level ASIC development easier, clearer, and
 more productive** for professional engineers, students, researchers, and enthusiasts.
 
 **[See the git repository](https://github.com/abe-asic-ip/abe)**
 
-Welcome to ABE — a better environment for ASIC IP development.
+Welcome to ABE — a better environment for open-source ASIC IP development.
 
 ---
 
@@ -142,8 +142,8 @@ based FIFO optimization in action
 [RAD Formal](formal.md#install-required-tools), and
 [RAD DV](dv.md#install-required-tools) for details.
 5. **Explore a [RAD](#reusable-asic-designs-rad) design** to experience
-[RTL](design.md), [synthesis](design.md), [formal](formal.md), and [DV](dv.md)
-flows firsthand
+[RTL](design.md), [synthesis](design.md), [formal](formal.md),
+and [DV](dv.md) flows firsthand
 6. **[Run a test](dv.md#run-examples)** with
 [`dv`](dv.md#1-dv-main-front-end-runs-a-single-test) and a
 ([cocotb](https://www.cocotb.org) + [pyuvm](https://github.com/pyuvm/pyuvm)) bench
@@ -236,7 +236,7 @@ Multi-Cycle Path formulations, and asynchronous FIFOs.
 Ready to dive deeper? Here's your map to everything ABE has to offer:
 
 | Document | Description |
-|----------|-------------|
+| ---------- | ------------- |
 | [FIFO Depth Tool](fifo_depth.md) | CP-SAT based tool for computing minimal FIFO depths and flow-control parameters |
 | [Packet Quantization Calculator](pkt_quantize.md) | Packet quantization calculator for performance metrics and bus analysis |
 | [ABE Python Development](python_dev.md) | Python development environment setup and tooling |
@@ -277,8 +277,8 @@ ABE currently supports [Verilator](https://verilator.org) and
 [Icarus Verilog](https://steveicarus.github.io/iverilog). While
 [cocotb](https://www.cocotb.org) works with commercial simulators, ABE's test
 infrastructure would need updates to support them. Contributors with simulator
-access can extend the [`dv`](dv.md#1-dv-main-front-end-runs-a-single-test) tool
-and submit changes to the repository.
+access can extend the [`dv`](dv.md#1-dv-main-front-end-runs-a-single-test)
+tool and submit changes to the repository.
 
 ---
 

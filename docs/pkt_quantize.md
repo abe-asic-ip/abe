@@ -62,8 +62,8 @@ out_arch_pkt_quantize/*
 ## Command Line Options
 
 | Option | Description | Default |
-|--------|-------------|---------|
-| `--bus-width` | Bus width (bytes) | `128`|
+| -------- | ------------- | --------- |
+| `--bus-width` | Bus width (bytes) | `128` |
 | `--clk-freq` | Clock frequency (Hz) | `1.1e9` |
 | `--min-cycles` | Minimum clock cycles to process a packet | `1` |
 | `--min-size` | Minimum packet size (bytes) | `64` |
@@ -78,7 +78,7 @@ out_arch_pkt_quantize/*
 ## Outputs
 
 | File | Description |
-|------|-------------|
+| -------- | ------------- |
 | `table_<config>_abbrev.txt` | Abbreviated table of results (Markdown-style) |
 | `table_<config>_full.txt` | Full table of results (Markdown-style) |
 | `table_<config>.csv` | CSV-formatted results |

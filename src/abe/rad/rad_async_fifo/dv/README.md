@@ -60,7 +60,8 @@ fundamental architectural constraint led to the dual-agent design.
     - Inputs: `rinc`
     - Outputs: `rdata`, `rempty` (feedback from DUT)
 - **Sequence**: `RadAsyncFifoReadSequence`
-    - Generates random read transactions with configurable probability (default 0.7)
+    - Generates random read transactions with configurable probability (default
+    0.7)
     - Protocol enforcement handled by driver, not sequence
 
 ---

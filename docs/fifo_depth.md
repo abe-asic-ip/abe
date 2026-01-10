@@ -47,14 +47,14 @@ synchronous storage.
 #### Flat vs. Layered Specifications
 
 | Spec Type | Description | Use Case |
-|----------|-------------|----------|
-| Flat     | Direct FIFO parameters, explicit bounds on total read/write data over a fixed window. | Simple, well-understood traffic or spreadsheet migration |
-| Layered  | Hierarchical profiles (cycle, transaction, burst, stream), tool derives worst-case from structure. | Complex, protocol-specific, or bursty traffic |
+| ---------- | ------------- | ---------- |
+| Flat | Direct FIFO parameters, explicit bounds on total read/write data over a fixed window. | Simple, well-understood traffic or spreadsheet migration |
+| Layered | Hierarchical profiles (cycle, transaction, burst, stream), tool derives worst-case from structure. | Complex, protocol-specific, or bursty traffic |
 
 #### When to Use Flat vs Layered
 
-| Traffic Type | Recommended Spec Type|
-|--------------|----------------------|
+| Traffic Type | Recommended Spec Type |
+| -------------- | ---------------------- |
 | Simple burst with known bounds | Flat |
 | Protocol-modeled behavior | Layered |
 | Unknown or exploratory behavior | Layered |
@@ -239,7 +239,7 @@ realistic horizons.
 The hybrid method combines the strengths of both:
 
 | Component | Purpose | Strength |
-|----------|---------|----------|
+| ---------- | --------- | ---------- |
 | **Deterministic Worst-Case Mask Builder** | Shapes adversarial write/read behavior | Fast, structured, captures known worst-case patterns |
 | **CP-SAT Optimization** | Finds the mathematically worst alignment and firing schedule | Exact, global maximum of occupancy |
 
@@ -300,7 +300,7 @@ Common data structures are defined in `fifo_depth_base.py`.
 ### File Overview
 
 | File | Description |
-|------|--------------|
+| ------ | -------------- |
 | `fifo_depth.py` | Top-level orchestrator, CLI entrypoint |
 | `fifo_depth_base.py` | Common models and solver framework |
 | `fifo_depth_utils.py` | Shared helper functions |
@@ -320,7 +320,7 @@ Common data structures are defined in `fifo_depth_base.py`.
 The `fifo-depth` tool accepts the following command-line arguments:
 
 | Argument | Type | Required | Default | Description |
-|----------|------|----------|---------|-------------|
+| ---------- | ------ | ---------- | --------- | ------------- |
 | `spec` | positional | Yes | — | One or more YAML/JSON spec file path(s). You can specify multiple files. |
 | `--outdir` | optional | No | See description | Output directory for results files (JSON, CSV, PNG) and log file. If not specified, outputs to "out_uarch_fd_\<spec-stem\>, where \<spec-stem\> is the stem of the spec file. |
 | `--results-name` | optional | No | See description | Prefix for results filenames. The default prefix is the name of the solver results class. |
@@ -349,7 +349,7 @@ fifo-depth my_spec.yaml --verbosity debug
 Two YAML specification forms are supported:
 
 | Type | Description |
-|------|--------------|
+| ------ | -------------- |
 | **Flat** | Direct FIFO parameters (simple cases). |
 | **Layered** | Hierarchical read/write profiles (cycle, transaction, burst, stream). |
 
@@ -430,7 +430,7 @@ mechanisms.
 All solvers use these YAML parameters:
 
 | Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
+| --------- | ------ | ---------- | --------- | ------------- |
 | `fifo_type` | string | Yes | — | FIFO protocol type. Choices: `ready_valid`, `xon_xoff`, `cbfc`, `replay`, `cdc`. |
 | `margin_type` | string | No | `"absolute"` | Type of margin to apply. Choices: `percentage`, `absolute`. |
 | `margin_val` | int | No | `0` | Margin value (non-negative). Interpreted based on `margin_type`. |
@@ -442,7 +442,7 @@ The Ready / Valid, XON / XOFF, and CBFC solvers use these YAML parameters for
 flat specs:
 
 | Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
+| --------- | ------ | ---------- | --------- | ------------- |
 | `horizon` | int | Yes | — | Number of cycles to model (positive integer). |
 | `wr_latency` | int | No | `0` | Write latency in cycles (non-negative). |
 | `rd_latency` | int | No | `0` | Read latency in cycles (non-negative). |
@@ -459,7 +459,7 @@ The Ready / Valid, XON / XOFF, and CBFC solvers use these YAML parameters for
 layered specs:
 
 | Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
+| ----------- | ------ | ---------- | --------- | ------------- |
 | `horizon` | int or string | No | `"auto"` | Number of cycles to model. Can be `"auto"` (recommended) to automatically compute based on `overall_period`, `blind_window_cycles`, and `kmin_blocks`, or a user-specified positive integer (will be rounded up to multiple of `overall_period`). |
 | `wr_latency` | int | No | `0` | Write latency in cycles (non-negative). |
 | `rd_latency` | int | No | `0` | Read latency in cycles (non-negative). |
@@ -488,7 +488,7 @@ inter-stream gaps
 **Layer Parameters:**
 
 | Layer | Parameter | Type | Required | Default | Description |
-|-------|-----------|------|----------|---------|-------------|
+| ------- | ----------- | ------ | ---------- | --------- | ------------- |
 | **Cycle** | `cycle.max_items_per_cycle` | int | No | `1` | Maximum data items that can be transferred in a single cycle (≥ 1). |
 | **Transaction** | `transaction.valid_cycles` | int | Yes | — | Number of active cycles in a transaction (≥ 0). |
 | **Transaction** | `transaction.gap_cycles` | int | Yes | — | Number of idle cycles in a transaction (≥ 0). |
@@ -530,7 +530,7 @@ This creates a write pattern where:
 ## Outputs
 
 | File | Description |
-|------|--------------|
+| ------ | -------------- |
 | `results_scalars.json` | Key numeric results (depth, thresholds, margins) |
 | `results_witness.csv` | Read/write occupancy sequence producing worst-case depth |
 | `results_plot.png` | Graphical witness visualization |
@@ -559,7 +559,7 @@ Example console output:
 The Ready / Valid, XON/XOFF, and CBFC solvers produce these common results:
 
 | Field | Type | Description |
-|-------|------|-------------|
+| ------- | ------ | ------------- |
 | `basic_checks_pass` | bool | Internal validation flag showing whether the solver's self-consistency checks passed. When `true`, the results are valid. When `false`, an error occurred (e.g., peak occupancy mismatch in witness sequences) and the tool will raise an exception. |
 | `msg` | str | Informational message about the solution method. For CP-SAT solvers, typically empty. For CDC solver, contains `"Analytic results."` to indicate closed-form calculation was used instead of constraint programming. |
 | `depth` | int | Recommended minimum FIFO depth. Starts with `occ_peak`, then adds: `atomic_tail` (if applicable), CDC synchronizer depth (if applicable), margin (percentage or absolute), and rounding (power-of-2 if specified). This is the final value for FIFO sizing. |
@@ -788,7 +788,7 @@ XON / XOFF parameters include all [common parameters](#common-parameters) plus
 these XON / XOFF-specific parameters:
 
 | Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
+| --------- | ------ | ---------- | --------- | ------------- |
 | `atomic_tail` | int | No | `0` | Number of data items in the final atomic write transaction that cannot be interrupted (non-negative). When the writer begins this tail transaction, it must complete even if XOFF is asserted. |
 | `react_latency` | int | No | `0` | Latency in cycles for the writer to react to XOFF assertion and stop writing (non-negative). Data continues to be written during this reaction period. |
 | `resume_latency` | int | No | `0` | Latency in cycles for the writer to resume writing after XON assertion (non-negative). No data is written during this resume period. |
@@ -809,7 +809,7 @@ XON / XOFF results include all [common results](#common-results) plus these XON
 / XOFF-specific results:
 
 | Result | Description |
-|--------|-------------|
+| -------- | ------------- |
 | `xon` | Computed or validated XON threshold - the FIFO occupancy level at which flow control is de-asserted to resume writing |
 | `xoff` | Computed or validated XOFF threshold - the FIFO occupancy level at which flow control is asserted to pause writing |
 | `throughput` | Achieved write throughput as a ratio in [0.0, 1.0], normalized to (horizon * w_max). It is populated by the solver after witness extraction. |
@@ -933,7 +933,7 @@ CBFC parameters include all [common parameters](#common-parameters) plus these
 CBFC-specific parameters:
 
 | Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
+| ----------- | ------ | ---------- | --------- | ------------- |
 | `cred_max` | int or "auto" | No | `"auto"` | Maximum credit pool size (non-negative). When `"auto"`, solver optimizes this value. |
 | `cred_init` | int or "auto" | No | `"auto"` | Initial credit count at start (non-negative). When `"auto"`, solver optimizes this value. Must be ≤ `cred_max`. |
 | `cred_gran` | int | No | `1` | Credit granularity - number of data units per credit (non-negative). |
@@ -950,7 +950,7 @@ CBFC results include all [common results](#common-results) plus these
 CBFC-specific results:
 
 | Result | Description |
-|--------|-------------|
+| ----------- | ------------- |
 | `cred_max` | Computed or validated maximum credit pool size |
 | `cred_init` | Computed or validated initial credit count |
 | `throughput` | Achieved write throughput as a ratio in [0.0, 1.0], normalized to (horizon * w_max). It is populated by the solver after witness extraction. |
@@ -1062,7 +1062,7 @@ CDC parameters include all [common parameters](#common-parameters) plus these
 CDC-specific parameters:
 
 | Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
+| ----------- | ------ | ---------- | --------- | ------------- |
 | `wr_clk_freq` | int or str | Yes | - | Write clock frequency. Can be specified as integer Hz (e.g., `1000000000` for 1 GHz) or string with units (e.g., `"1.1 GHz"`, `"100 MHz"`). Must be positive. |
 | `rd_clk_freq` | int or str | Yes | - | Read clock frequency. Can be specified as integer Hz or string with units. Must be positive. |
 | `big_fifo_domain` | str | No | `"write"` | Clock domain for the large synchronous FIFO in stage 2: `"write"` or `"read"`. Determines which domain's cycles are used for the `horizon` and traffic pattern analysis. |
@@ -1077,7 +1077,7 @@ CDC-specific parameters:
 The CDC-specific results are:
 
 | Result | Description |
-|--------|-------------|
+| -------- | ------------- |
 | `depth` | Required small CDC FIFO buffer depth (after margin and rounding). Sum of `synchronizer_depth`, `phase_margin_depth`, and `ppm_drift_depth`. |
 | `synchronizer_depth` | Depth component for synchronization latency. Accounts for `sync_stages` and `ptr_gray_extra` cycles converted from read domain to write domain and scaled by items per cycle. |
 | `phase_margin_depth` | Depth component for clock phase uncertainty. Accounts for one read cycle of uncertainty due to unknown relative phase between write and read clocks. |
@@ -1200,7 +1200,7 @@ Replay supports the [common parameters](#common-parameters) `fifo_type`,
 `margin_type`, `margin_val`, and `rounding` and these replay-specific parameters:
 
 | Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
+| --------- | ------ | ---------- | --------- | ------------- |
 | `horizon` | int | Yes | — | Number of cycles to model (positive integer). Must be ≥ `rtt`. |
 | `w_max` | int | No | `1` | Maximum write (transmit) data per cycle (non-negative). Represents the maximum bandwidth of the sender. |
 | `atomic_tail` | int | No | `0` | Additional buffer space to reserve beyond the computed in-flight peak (non-negative). Useful for protocol-specific padding or alignment requirements. |
@@ -1221,7 +1221,7 @@ been received and can be removed from the replay buffer
 The mapping between common FIFO results and replay-specific results is:
 
 | Common Result | Replay Result | Description |
-|---------------|--------------|-------------|
+| --------------- | -------------- | ------------- |
 | `depth` | `depth` | Required buffer depth |
 | `occ_peak` | `infl_peak` | Peak inflight data (maximum unacknowledged transmissions) |
 | `w_seq` | `w_seq` | Write (transmit) sequence over time |
@@ -1629,7 +1629,8 @@ Because the solver:
 3. Maximizes occupancy
 
 This leads to witness patterns that are mathematically valid but may not always
-follow expected patterns. The witness ensures correctness for the computed FIFO depth.
+follow expected patterns. The witness ensures correctness for the computed FIFO
+depth.
 
 ---
 
@@ -1638,7 +1639,7 @@ follow expected patterns. The witness ensures correctness for the computed FIFO 
 ### Key Classes
 
 | Class | Defined In | Role |
-|-------|-------------|------|
+| ------- | ------------- | ------ |
 | `FifoSolver` | `fifo_depth_base.py` | Abstract base class for all solvers |
 | `FifoParams` | `fifo_depth_base.py` | Parameter model validated from YAML |
 | `FifoResults` | `fifo_depth_base.py` | Container for solver results |
