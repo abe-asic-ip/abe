@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2025 Hugh Walsh
+# SPDX-FileCopyrightText: 2026 Hugh Walsh
 #
 # SPDX-License-Identifier: MIT
 
@@ -337,30 +337,31 @@ class CbfcSolver(FifoSolver):
         cp_sat_model = cp_model.CpModel()
 
         # Setup base variables
-        w = [cp_sat_model.NewIntVar(0, w_max, f"w_{t}") for t in range(horizon)]
-        r = [cp_sat_model.NewIntVar(0, r_max, f"r_{t}") for t in range(horizon)]
+        w = [cp_sat_model.new_int_var(0, w_max, f"w_{t}") for t in range(horizon)]
+        r = [cp_sat_model.new_int_var(0, r_max, f"r_{t}") for t in range(horizon)]
         occ = [
-            cp_sat_model.NewIntVar(0, occ_max, f"occ_{t}") for t in range(horizon + 1)
+            cp_sat_model.new_int_var(0, occ_max, f"occ_{t}") for t in range(horizon + 1)
         ]
-        peak = cp_sat_model.NewIntVar(0, occ_max, "peak")
+        peak = cp_sat_model.new_int_var(0, occ_max, "peak")
 
         # CBFC-specific variables
         cred = [
-            cp_sat_model.NewIntVar(0, cred_max, f"cred_{t}") for t in range(horizon + 1)
+            cp_sat_model.new_int_var(0, cred_max, f"cred_{t}")
+            for t in range(horizon + 1)
         ]
         ret = [
-            cp_sat_model.NewIntVar(0, r_max * cred_gran, f"ret_{t}")
+            cp_sat_model.new_int_var(0, r_max * cred_gran, f"ret_{t}")
             for t in range(horizon)
         ]
 
         # Add constraints
 
-        cp_sat_model.Add(occ[0] == 0)
-        cp_sat_model.Add(cred[0] == cred_init)
+        cp_sat_model.add(occ[0] == 0)
+        cp_sat_model.add(cred[0] == cred_init)
 
         for t in range(horizon):
-            cp_sat_model.Add(w[t] <= params.w_max * self.write_valid[t])
-            cp_sat_model.Add(r[t] <= params.r_max * self.read_valid[t])
+            cp_sat_model.add(w[t] <= params.w_max * self.write_valid[t])
+            cp_sat_model.add(r[t] <= params.r_max * self.read_valid[t])
 
         w_eff: List[cp_model.IntVar | None] = [None] * horizon
         r_eff: List[cp_model.IntVar | None] = [None] * horizon
@@ -368,50 +369,50 @@ class CbfcSolver(FifoSolver):
             w_eff[t] = w[t - wr_latency] if t >= wr_latency else None
             r_eff[t] = r[t - rd_latency] if t >= rd_latency else None
             if w_eff[t] is None and r_eff[t] is None:
-                cp_sat_model.Add(occ[t + 1] == occ[t])
+                cp_sat_model.add(occ[t + 1] == occ[t])
             elif w_eff[t] is not None and r_eff[t] is None:
                 w_val = w_eff[t]
                 assert w_val is not None
-                cp_sat_model.Add(occ[t + 1] == occ[t] + w_val)
+                cp_sat_model.add(occ[t + 1] == occ[t] + w_val)
             elif r_eff[t] is not None and w_eff[t] is None:
                 r_val = r_eff[t]
                 assert r_val is not None
-                cp_sat_model.Add(occ[t + 1] == occ[t] - r_val)
+                cp_sat_model.add(occ[t + 1] == occ[t] - r_val)
             elif w_eff[t] is not None and r_eff[t] is not None:
                 w_val = w_eff[t]
                 r_val = r_eff[t]
                 assert w_val is not None and r_val is not None
-                cp_sat_model.Add(occ[t + 1] == occ[t] + w_val - r_val)
+                cp_sat_model.add(occ[t + 1] == occ[t] + w_val - r_val)
 
         for t in range(horizon):
             src_idx = t - cred_ret_latency
             if src_idx >= 0 and r_eff[src_idx] is not None:
                 r_val = r_eff[src_idx]
                 assert r_val is not None
-                cp_sat_model.Add(ret[t] == cred_gran * r_val)
+                cp_sat_model.add(ret[t] == cred_gran * r_val)
             else:
-                cp_sat_model.Add(ret[t] == 0)
+                cp_sat_model.add(ret[t] == 0)
 
         for t in range(horizon):
-            cp_sat_model.Add(cred[t + 1] == cred[t] - w[t] + ret[t])
+            cp_sat_model.add(cred[t + 1] == cred[t] - w[t] + ret[t])
 
         for t in range(horizon):
-            cp_sat_model.Add(w[t] <= cred[t])
+            cp_sat_model.add(w[t] <= cred[t])
 
-        cp_sat_model.Add(sum(w) >= sum_w_min)
-        cp_sat_model.Add(sum(w) <= sum_w_max)
-        cp_sat_model.Add(sum(r) >= sum_r_min)
-        cp_sat_model.Add(sum(r) <= sum_r_max)
+        cp_sat_model.add(sum(w) >= sum_w_min)
+        cp_sat_model.add(sum(w) <= sum_w_max)
+        cp_sat_model.add(sum(r) >= sum_r_min)
+        cp_sat_model.add(sum(r) <= sum_r_max)
 
-        cp_sat_model.AddMaxEquality(peak, occ[1:])
+        cp_sat_model.add_max_equality(peak, occ[1:])
 
         # Create a solver
         solver = make_solver(max_time_s=15.0, workers=8)
 
         # Solve to maximize peak
-        cp_sat_model.Maximize(peak)
+        cp_sat_model.maximize(peak)
         status = solver.Solve(cp_sat_model)
-        if status not in (cp_model.OPTIMAL, cp_model.FEASIBLE):  # type: ignore
+        if status not in (cp_model.OPTIMAL, cp_model.FEASIBLE):
             status_name = solver.StatusName(status)
             raise RuntimeError(
                 f"Solve max peak failed with status={status} ({status_name})"
@@ -419,13 +420,13 @@ class CbfcSolver(FifoSolver):
         peak_star = int(solver.Value(peak))
 
         # Solve to find the earliest time of the peak
-        cp_sat_model.Add(peak == peak_star)
+        cp_sat_model.add(peak == peak_star)
         _, t_star = self.add_earliest_peak_tiebreak(
             cp_sat_model, peak, occ, start_index=1
         )
-        cp_sat_model.Minimize(t_star)
+        cp_sat_model.minimize(t_star)
         status = solver.Solve(cp_sat_model)
-        if status not in (cp_model.OPTIMAL, cp_model.FEASIBLE):  # type: ignore
+        if status not in (cp_model.OPTIMAL, cp_model.FEASIBLE):
             status_name = solver.StatusName(status)
             raise RuntimeError(
                 f"Solve earliest peak time failed with status={status} ({status_name})"
@@ -682,15 +683,15 @@ class CbfcSolver(FifoSolver):
         with the credit pool recurrence under (ci, cm)."""
         h = p.horizon
         m = cp_model.CpModel()
-        w = [m.NewIntVar(0, p.w_max, f"w_{t}") for t in range(h)]
-        r = [m.NewIntVar(0, p.r_max, f"r_{t}") for t in range(h)]
-        cred = [m.NewIntVar(0, cm, f"cred_{t}") for t in range(h + 1)]
-        ret = [m.NewIntVar(0, p.r_max * p.cred_gran, f"ret_{t}") for t in range(h)]
+        w = [m.new_int_var(0, p.w_max, f"w_{t}") for t in range(h)]
+        r = [m.new_int_var(0, p.r_max, f"r_{t}") for t in range(h)]
+        cred = [m.new_int_var(0, cm, f"cred_{t}") for t in range(h + 1)]
+        ret = [m.new_int_var(0, p.r_max * p.cred_gran, f"ret_{t}") for t in range(h)]
 
         # caps
         for t in range(h):
-            m.Add(w[t] <= p.w_max * self.write_valid[t])
-            m.Add(r[t] <= p.r_max * self.read_valid[t])
+            m.add(w[t] <= p.w_max * self.write_valid[t])
+            m.add(r[t] <= p.r_max * self.read_valid[t])
 
         # returns (respect rd_latency and cred_ret_latency)
         r_eff: List[cp_model.IntVar | None] = [None] * h
@@ -700,26 +701,26 @@ class CbfcSolver(FifoSolver):
         for t in range(h):
             v = t - p.cred_ret_latency
             if v >= 0 and r_eff[v] is not None:
-                m.Add(ret[t] == p.cred_gran * r_eff[v])  # type: ignore
+                m.add(ret[t] == p.cred_gran * r_eff[v])  # type: ignore
             else:
-                m.Add(ret[t] == 0)
+                m.add(ret[t] == 0)
 
         # credit pool
-        m.Add(cred[0] == ci)
+        m.add(cred[0] == ci)
         for t in range(h):
-            m.Add(cred[t + 1] == cred[t] - w[t] + ret[t])
-            m.Add(w[t] <= cred[t])  # cannot write more than current credits
+            m.add(cred[t + 1] == cred[t] - w[t] + ret[t])
+            m.add(w[t] <= cred[t])  # cannot write more than current credits
 
         # sums
-        m.Add(sum(w) >= p.sum_w_min)
-        m.Add(sum(w) <= p.sum_w_max)
-        m.Add(sum(r) >= p.sum_r_min)
-        m.Add(sum(r) <= p.sum_r_max)
+        m.add(sum(w) >= p.sum_w_min)
+        m.add(sum(w) <= p.sum_w_max)
+        m.add(sum(r) >= p.sum_r_min)
+        m.add(sum(r) <= p.sum_r_max)
 
         # We only need feasibility.
         s = make_solver(max_time_s=5.0, workers=8)
         status = s.Solve(m)
-        return status in (cp_model.OPTIMAL, cp_model.FEASIBLE)  # type: ignore
+        return status in (cp_model.OPTIMAL, cp_model.FEASIBLE)
 
     def _get_throughput_upper_bound(  # pylint: disable=too-many-locals
         self, p: CbfcParams, cred_init_eff: int

@@ -256,52 +256,52 @@ class ReadyValidSolver(FifoSolver):
         cp_sat_model = cp_model.CpModel()
 
         # Setup base variables
-        w = [cp_sat_model.NewIntVar(0, w_max, f"w_{t}") for t in range(horizon)]
-        r = [cp_sat_model.NewIntVar(0, r_max, f"r_{t}") for t in range(horizon)]
+        w = [cp_sat_model.new_int_var(0, w_max, f"w_{t}") for t in range(horizon)]
+        r = [cp_sat_model.new_int_var(0, r_max, f"r_{t}") for t in range(horizon)]
         occ = [
-            cp_sat_model.NewIntVar(0, occ_max, f"occ_{t}") for t in range(horizon + 1)
+            cp_sat_model.new_int_var(0, occ_max, f"occ_{t}") for t in range(horizon + 1)
         ]
-        peak = cp_sat_model.NewIntVar(0, occ_max, "peak")
+        peak = cp_sat_model.new_int_var(0, occ_max, "peak")
 
         # Add common constraints (occupancy evolution, sum constraints, peak tracking)
 
         # Initial occupancy
-        cp_sat_model.Add(occ[0] == 0)
+        cp_sat_model.add(occ[0] == 0)
 
         # Gate activity by profiles (also enforces per-step caps)
         for t in range(horizon):
-            cp_sat_model.Add(w[t] <= params.w_max * self.write_valid[t])
-            cp_sat_model.Add(r[t] <= params.r_max * self.read_valid[t])
+            cp_sat_model.add(w[t] <= params.w_max * self.write_valid[t])
+            cp_sat_model.add(r[t] <= params.r_max * self.read_valid[t])
 
         # Occupancy evolution with latencies
         for t in range(horizon):
             we = w[t - wr_latency] if t >= wr_latency else None
             re = r[t - rd_latency] if t >= rd_latency else None
             if we is None and re is None:
-                cp_sat_model.Add(occ[t + 1] == occ[t])
+                cp_sat_model.add(occ[t + 1] == occ[t])
             elif we is not None and re is None:
-                cp_sat_model.Add(occ[t + 1] == occ[t] + we)
+                cp_sat_model.add(occ[t + 1] == occ[t] + we)
             elif re is not None and we is None:
-                cp_sat_model.Add(occ[t + 1] == occ[t] - re)
+                cp_sat_model.add(occ[t + 1] == occ[t] - re)
             elif we is not None and re is not None:
-                cp_sat_model.Add(occ[t + 1] == occ[t] + we - re)
+                cp_sat_model.add(occ[t + 1] == occ[t] + we - re)
 
         # Sum constraints
-        cp_sat_model.Add(sum(w) >= params.sum_w_min)
-        cp_sat_model.Add(sum(w) <= params.sum_w_max)
-        cp_sat_model.Add(sum(r) >= params.sum_r_min)
-        cp_sat_model.Add(sum(r) <= params.sum_r_max)
+        cp_sat_model.add(sum(w) >= params.sum_w_min)
+        cp_sat_model.add(sum(w) <= params.sum_w_max)
+        cp_sat_model.add(sum(r) >= params.sum_r_min)
+        cp_sat_model.add(sum(r) <= params.sum_r_max)
 
         # Peak tracking
-        cp_sat_model.AddMaxEquality(peak, occ[1:])
+        cp_sat_model.add_max_equality(peak, occ[1:])
 
         # Create a solver
         cp_sat_solver = make_solver(max_time_s=15.0, workers=8)
 
         # Solve to maximize peak
-        cp_sat_model.Maximize(peak)
+        cp_sat_model.maximize(peak)
         status = cp_sat_solver.Solve(cp_sat_model)
-        if status not in (cp_model.OPTIMAL, cp_model.FEASIBLE):  # type: ignore
+        if status not in (cp_model.OPTIMAL, cp_model.FEASIBLE):
             status_name = cp_sat_solver.StatusName(status)
             raise RuntimeError(
                 f"Solve max peak failed with status={status} ({status_name})"
@@ -309,13 +309,13 @@ class ReadyValidSolver(FifoSolver):
         peak_star = int(cp_sat_solver.Value(peak))
 
         # Solve to find the earliest time of the peak
-        cp_sat_model.Add(peak == peak_star)
+        cp_sat_model.add(peak == peak_star)
         _, t_star = self.add_earliest_peak_tiebreak(
             cp_sat_model, peak, occ, start_index=1
         )
-        cp_sat_model.Minimize(t_star)
+        cp_sat_model.minimize(t_star)
         status = cp_sat_solver.Solve(cp_sat_model)
-        if status not in (cp_model.OPTIMAL, cp_model.FEASIBLE):  # type: ignore
+        if status not in (cp_model.OPTIMAL, cp_model.FEASIBLE):
             status_name = cp_sat_solver.StatusName(status)
             raise RuntimeError(
                 f"Solve earliest peak time failed with status={status} ({status_name})"

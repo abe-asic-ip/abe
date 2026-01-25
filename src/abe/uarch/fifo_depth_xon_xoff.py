@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2025 Hugh Walsh
+# SPDX-FileCopyrightText: 2026 Hugh Walsh
 #
 # SPDX-License-Identifier: MIT
 
@@ -653,75 +653,75 @@ class XonXoffSolver(FifoSolver):  # pylint: disable=too-many-instance-attributes
         cp_sat_model = cp_model.CpModel()
 
         # Setup base variables
-        w = [cp_sat_model.NewIntVar(0, w_max, f"w_{t}") for t in range(horizon)]
-        r = [cp_sat_model.NewIntVar(0, r_max, f"r_{t}") for t in range(horizon)]
+        w = [cp_sat_model.new_int_var(0, w_max, f"w_{t}") for t in range(horizon)]
+        r = [cp_sat_model.new_int_var(0, r_max, f"r_{t}") for t in range(horizon)]
         occ = [
-            cp_sat_model.NewIntVar(0, occ_max, f"occ_{t}") for t in range(horizon + 1)
+            cp_sat_model.new_int_var(0, occ_max, f"occ_{t}") for t in range(horizon + 1)
         ]
-        peak = cp_sat_model.NewIntVar(0, occ_max, "peak")
+        peak = cp_sat_model.new_int_var(0, occ_max, "peak")
 
         # Add hints if available
         if self._w_hint is not None:
             for v, val in zip(w, self._w_hint):
-                cp_sat_model.AddHint(v, val)
+                cp_sat_model.add_hint(v, val)
         if self._r_hint is not None:
             for v, val in zip(r, self._r_hint):
-                cp_sat_model.AddHint(v, val)
+                cp_sat_model.add_hint(v, val)
         if self._occ_hint is not None:
             for v, val in zip(occ[1:], self._occ_hint):
-                cp_sat_model.AddHint(v, val)
+                cp_sat_model.add_hint(v, val)
 
         # XON/XOFF specific variables
         in_pause = [
-            cp_sat_model.NewBoolVar(f"in_pause_{t}") for t in range(horizon + 1)
+            cp_sat_model.new_bool_var(f"in_pause_{t}") for t in range(horizon + 1)
         ]
 
         # Initial occupancy
-        cp_sat_model.Add(occ[0] == 0)
+        cp_sat_model.add(occ[0] == 0)
 
         # Gate activity by profiles (also enforces per-step caps)
         for t in range(horizon):
-            cp_sat_model.Add(r[t] <= params.r_max * self.read_valid[t])
+            cp_sat_model.add(r[t] <= params.r_max * self.read_valid[t])
 
         # Occupancy evolution with latencies
         for t in range(horizon):
             we = w[t - wr_latency] if t >= wr_latency else None
             re = r[t - rd_latency] if t >= rd_latency else None
             if we is None and re is None:
-                cp_sat_model.Add(occ[t + 1] == occ[t])
+                cp_sat_model.add(occ[t + 1] == occ[t])
             elif we is not None and re is None:
-                cp_sat_model.Add(occ[t + 1] == occ[t] + we)
+                cp_sat_model.add(occ[t + 1] == occ[t] + we)
             elif re is not None and we is None:
-                cp_sat_model.Add(occ[t + 1] == occ[t] - re)
+                cp_sat_model.add(occ[t + 1] == occ[t] - re)
             elif we is not None and re is not None:
-                cp_sat_model.Add(occ[t + 1] == occ[t] + we - re)
+                cp_sat_model.add(occ[t + 1] == occ[t] + we - re)
 
         # Sum constraints
-        cp_sat_model.Add(sum(r) <= params.sum_r_max)
-        cp_sat_model.Add(sum(r) >= params.sum_r_min)
-        cp_sat_model.Add(sum(w) <= params.sum_w_max)
+        cp_sat_model.add(sum(r) <= params.sum_r_max)
+        cp_sat_model.add(sum(r) >= params.sum_r_min)
+        cp_sat_model.add(sum(w) <= params.sum_w_max)
 
         # If auto mode provided throughput target, enforce it here
         if self._throughput_abs_req is not None:
-            cp_sat_model.Add(sum(w) >= self._throughput_abs_req)
+            cp_sat_model.add(sum(w) >= self._throughput_abs_req)
 
         # Peak tracking
-        cp_sat_model.AddMaxEquality(peak, occ[1:])
+        cp_sat_model.add_max_equality(peak, occ[1:])
 
         # XON/XOFF specific constraints
 
-        cp_sat_model.Add(in_pause[0] == 0)
+        cp_sat_model.add(in_pause[0] == 0)
 
         def geq_bool(var: cp_model.IntVar, thr: int, name: str) -> cp_model.IntVar:
             """Return a boolean variable that is true if var >= thr."""
-            b = cp_sat_model.NewBoolVar(name)
-            cp_sat_model.Add(var >= thr).OnlyEnforceIf(b)
-            cp_sat_model.Add(var < thr).OnlyEnforceIf(b.Not())
+            b = cp_sat_model.new_bool_var(name)
+            cp_sat_model.add(var >= thr).only_enforce_if(b)
+            cp_sat_model.add(var < thr).only_enforce_if(b.Not())
             return b
 
         # Create throttle_active variables (in_pause delayed by react_latency)
         throttle_active = [
-            cp_sat_model.NewBoolVar(f"throttle_active[{t}]") for t in range(horizon)
+            cp_sat_model.new_bool_var(f"throttle_active[{t}]") for t in range(horizon)
         ]
 
         # Engage after react_latency; hold for resume_latency after pause clears.
@@ -742,54 +742,54 @@ class XonXoffSolver(FifoSolver):  # pylint: disable=too-many-instance-attributes
 
             if not sources:
                 # No valid sources in window yet (pre-react window at the beginning)
-                cp_sat_model.Add(throttle_active[t] == 0)
+                cp_sat_model.add(throttle_active[t] == 0)
             else:
                 # Encode throttle_active[t] <=> OR(sources)
                 # (1) OR(sources) => throttle_active[t]
                 for s in sources:
-                    cp_sat_model.AddImplication(s, throttle_active[t])
+                    cp_sat_model.add_implication(s, throttle_active[t])
                 # (2) throttle_active[t] => OR(sources)
-                cp_sat_model.AddBoolOr([throttle_active[t].Not(), *sources])
+                cp_sat_model.add_bool_or([throttle_active[t].Not(), *sources])
 
         for t in range(horizon):
             # Hysteresis gates based on occ[t]
             enter_b = geq_bool(occ[t], xoff, f"enter_{t}")  # True if occ >= xoff
             # True if occ <= xon
-            exit_b = cp_sat_model.NewBoolVar(f"exit_{t}")
+            exit_b = cp_sat_model.new_bool_var(f"exit_{t}")
             # occ <= xon  <=>  NOT(occ >= xon+1)
-            cp_sat_model.Add(occ[t] <= xon).OnlyEnforceIf(exit_b)
-            cp_sat_model.Add(occ[t] >= xon + 1).OnlyEnforceIf(exit_b.Not())
+            cp_sat_model.add(occ[t] <= xon).only_enforce_if(exit_b)
+            cp_sat_model.add(occ[t] >= xon + 1).only_enforce_if(exit_b.Not())
             # exit_b = True when occupancy drops at or below xon
             # enter_b = True when occupancy rises at or above xoff
             # (maintaining proper hysteresis band)
 
             # Base mask is always active;
             # throttle only reduces allowance within valid slots
-            cp_sat_model.Add(w[t] <= params.w_max * self.write_valid[t])
-            cp_sat_model.Add(w[t] <= w_throttle_max).OnlyEnforceIf(throttle_active[t])
+            cp_sat_model.add(w[t] <= params.w_max * self.write_valid[t])
+            cp_sat_model.add(w[t] <= w_throttle_max).only_enforce_if(throttle_active[t])
 
             # Pause state update (true hysteresis):
             # in_pause[t+1] = (in_pause[t] AND NOT exit_b) OR enter_b
             # Linearization (bounds are sufficient and non-conflicting):
-            cp_sat_model.Add(in_pause[t + 1] >= enter_b)
-            cp_sat_model.Add(in_pause[t + 1] >= in_pause[t] - exit_b)
-            cp_sat_model.Add(in_pause[t + 1] <= in_pause[t] + enter_b)
-            cp_sat_model.Add(in_pause[t + 1] <= 1 - exit_b + enter_b)
+            cp_sat_model.add(in_pause[t + 1] >= enter_b)
+            cp_sat_model.add(in_pause[t + 1] >= in_pause[t] - exit_b)
+            cp_sat_model.add(in_pause[t + 1] <= in_pause[t] + enter_b)
+            cp_sat_model.add(in_pause[t + 1] <= 1 - exit_b + enter_b)
 
             # assert in_pause rises same-cycle on enter when RL=0
             if react_latency == 0:
-                cp_sat_model.Add(in_pause[t] >= enter_b)
+                cp_sat_model.add(in_pause[t] >= enter_b)
 
         # Create a solver
         solver = make_solver(max_time_s=15.0, workers=8)
 
         if self._peak_ub is not None:
-            cp_sat_model.Add(peak <= self._peak_ub)
+            cp_sat_model.add(peak <= self._peak_ub)
 
         # Solve to maximize peak
-        cp_sat_model.Maximize(peak)
+        cp_sat_model.maximize(peak)
         status = solver.Solve(cp_sat_model)
-        if status not in (cp_model.OPTIMAL, cp_model.FEASIBLE):  # type: ignore
+        if status not in (cp_model.OPTIMAL, cp_model.FEASIBLE):
             status_name = solver.StatusName(status)
             raise RuntimeError(
                 f"Solve max peak failed with status={status} ({status_name})"
@@ -798,13 +798,13 @@ class XonXoffSolver(FifoSolver):  # pylint: disable=too-many-instance-attributes
 
         # Solve to find the earliest time of the peak
         # (always do this so auto-mode key uses t_star)
-        cp_sat_model.Add(peak == peak_star)
+        cp_sat_model.add(peak == peak_star)
         _, t_star = self.add_earliest_peak_tiebreak(
             cp_sat_model, peak, occ, start_index=1
         )
-        cp_sat_model.Minimize(t_star)
+        cp_sat_model.minimize(t_star)
         status = solver.Solve(cp_sat_model)
-        if status not in (cp_model.OPTIMAL, cp_model.FEASIBLE):  # type: ignore
+        if status not in (cp_model.OPTIMAL, cp_model.FEASIBLE):
             status_name = solver.StatusName(status)
             raise RuntimeError(
                 f"Solve earliest peak time failed with {status=} ({status_name})"

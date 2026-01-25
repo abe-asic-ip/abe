@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2025 Hugh Walsh
+# SPDX-FileCopyrightText: 2026 Hugh Walsh
 #
 # SPDX-License-Identifier: MIT
 
@@ -578,18 +578,18 @@ class FifoSolver(  # pylint: disable=too-many-instance-attributes, too-many-publ
         horizon_plus_1 = len(occ_vars)
         idx_range = range(start_index, horizon_plus_1)
 
-        y = [model.NewBoolVar(f"y_{t}") for t in idx_range]
+        y = [model.new_bool_var(f"y_{t}") for t in idx_range]
 
         # Exactly one chosen
-        model.Add(sum(y) == 1)
+        model.add(sum(y) == 1)
 
         # If y[t] is chosen, that time's occupancy must equal peak
         for b, t in zip(y, idx_range):
-            model.Add(occ_vars[t] == peak).OnlyEnforceIf(b)
+            model.add(occ_vars[t] == peak).only_enforce_if(b)
 
         # Encode t_star as a small IntVar (0..horizon)
-        t_star = model.NewIntVar(start_index, horizon_plus_1 - 1, "t_star")
-        model.Add(t_star == sum(t * y_i for t, y_i in zip(idx_range, y)))
+        t_star = model.new_int_var(start_index, horizon_plus_1 - 1, "t_star")
+        model.add(t_star == sum(t * y_i for t, y_i in zip(idx_range, y)))
 
         return y, t_star
 

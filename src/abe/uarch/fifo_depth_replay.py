@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2025 Hugh Walsh
+# SPDX-FileCopyrightText: 2026 Hugh Walsh
 #
 # SPDX-License-Identifier: MIT
 
@@ -266,50 +266,51 @@ class ReplaySolver(FifoSolver):
         cp_sat_model = cp_model.CpModel()
 
         # Setup variables
-        w = [cp_sat_model.NewIntVar(0, w_max, f"tx_{t}") for t in range(horizon)]
-        a = [cp_sat_model.NewIntVar(0, w_max, f"ack_{t}") for t in range(horizon)]
+        w = [cp_sat_model.new_int_var(0, w_max, f"tx_{t}") for t in range(horizon)]
+        a = [cp_sat_model.new_int_var(0, w_max, f"ack_{t}") for t in range(horizon)]
         infl = [
-            cp_sat_model.NewIntVar(0, infl_max, f"infl_{t}") for t in range(horizon + 1)
+            cp_sat_model.new_int_var(0, infl_max, f"infl_{t}")
+            for t in range(horizon + 1)
         ]
-        peak = cp_sat_model.NewIntVar(0, infl_max, "peak")
+        peak = cp_sat_model.new_int_var(0, infl_max, "peak")
 
         # Add constraints
 
-        cp_sat_model.Add(infl[0] == 0)
+        cp_sat_model.add(infl[0] == 0)
 
         for t in range(horizon):
             if t >= rtt_eff:
-                cp_sat_model.Add(a[t] == w[t - rtt_eff])
+                cp_sat_model.add(a[t] == w[t - rtt_eff])
             else:
-                cp_sat_model.Add(a[t] == 0)
+                cp_sat_model.add(a[t] == 0)
 
         for t in range(horizon):
-            cp_sat_model.Add(infl[t + 1] == infl[t] + w[t] - a[t])
+            cp_sat_model.add(infl[t + 1] == infl[t] + w[t] - a[t])
 
         # Forbid new sends in the last rtt_eff cycles
         # (so inflight drains to 0 by horizon)
         for t in range(max(0, horizon - rtt_eff), horizon):
-            cp_sat_model.Add(w[t] == 0)
+            cp_sat_model.add(w[t] == 0)
 
         # No inflight at end
-        cp_sat_model.Add(infl[horizon] == 0)
+        cp_sat_model.add(infl[horizon] == 0)
 
-        cp_sat_model.AddMaxEquality(peak, infl[1:])
+        cp_sat_model.add_max_equality(peak, infl[1:])
 
         # Small symmetry/branching hint: push w early and high.
-        cp_sat_model.AddDecisionStrategy(
+        cp_sat_model.add_decision_strategy(
             w,
-            cp_model.CHOOSE_FIRST,  # type: ignore[arg-type]
-            cp_model.SELECT_MAX_VALUE,  # type: ignore[arg-type]
+            cp_model.CHOOSE_FIRST,
+            cp_model.SELECT_MAX_VALUE,
         )
 
         # Create a solver
         solver = make_solver(max_time_s=15.0, workers=8)
 
         # Solve to maximize peak
-        cp_sat_model.Maximize(peak)
+        cp_sat_model.maximize(peak)
         status = solver.Solve(cp_sat_model)
-        if status not in (cp_model.OPTIMAL, cp_model.FEASIBLE):  # type: ignore
+        if status not in (cp_model.OPTIMAL, cp_model.FEASIBLE):
             status_name = solver.StatusName(status)
             raise RuntimeError(
                 f"Solve max peak failed with status={status} ({status_name})"
@@ -325,13 +326,13 @@ class ReplaySolver(FifoSolver):
             )
 
         # Solve to find the earliest time of the peak
-        cp_sat_model.Add(peak == peak_star)
+        cp_sat_model.add(peak == peak_star)
         _, t_star = self.add_earliest_peak_tiebreak(
             cp_sat_model, peak, infl, start_index=1
         )
-        cp_sat_model.Minimize(t_star)
+        cp_sat_model.minimize(t_star)
         status = solver.Solve(cp_sat_model)
-        if status not in (cp_model.OPTIMAL, cp_model.FEASIBLE):  # type: ignore
+        if status not in (cp_model.OPTIMAL, cp_model.FEASIBLE):
             status_name = solver.StatusName(status)
             raise RuntimeError(
                 f"Solve earliest peak time failed with status={status} ({status_name})"
