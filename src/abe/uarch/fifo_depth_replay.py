@@ -223,7 +223,7 @@ class ReplaySolver(FifoSolver):
 
         # --- CDC: add synchronizer delay (in write cycles) to RTT ---
         rd_sync_delay = (
-            int(self.rd_sync_cycles_in_wr) if self.rd_sync_cycles_in_wr > 0 else 0
+            int(self.wptr_cdc_cycles_in_wr) if self.wptr_cdc_cycles_in_wr > 0 else 0
         )
         rtt_eff = rtt + rd_sync_delay
 

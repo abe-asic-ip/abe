@@ -398,9 +398,9 @@ class FifoSolver(  # pylint: disable=too-many-instance-attributes, too-many-publ
         self.results_name: str | None = None
 
     @property
-    def rd_sync_cycles_in_wr(self) -> int:
+    def wptr_cdc_cycles_in_wr(self) -> int:
         """Read-domain synchronizer cycles to be added to effective rd_latency."""
-        return int(self.cdc_ctx.get("rd_sync_cycles_in_wr", 0))
+        return int(self.cdc_ctx.get("wptr_cdc_cycles_in_wr", 0))
 
     @property
     def base_sync_fifo_depth(self) -> int:
@@ -618,8 +618,8 @@ class FifoSolver(  # pylint: disable=too-many-instance-attributes, too-many-publ
             self.cdc_ctx["base_sync_fifo_depth"] = int(
                 data.get("base_sync_fifo_depth", 0)
             )
-            self.cdc_ctx["rd_sync_cycles_in_wr"] = int(
-                data.get("rd_sync_cycles_in_wr", 0)
+            self.cdc_ctx["wptr_cdc_cycles_in_wr"] = int(
+                data.get("wptr_cdc_cycles_in_wr", 0)
             )
         except (json.JSONDecodeError, KeyError, ValueError, TypeError):
             # Corrupt/partial file? Fall back to empty (no CDC effect)

@@ -354,7 +354,7 @@ class XonXoffSolver(FifoSolver):  # pylint: disable=too-many-instance-attributes
         """
         super().get_params()
         params = cast(XonXoffParams, self.params)
-        adjust_rd_latency_for_cdc(params, self.rd_sync_cycles_in_wr)
+        adjust_rd_latency_for_cdc(params, self.wptr_cdc_cycles_in_wr)
 
     def get_results(  # pylint: disable=too-many-locals, too-many-statements, too-many-branches
         self,

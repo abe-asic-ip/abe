@@ -255,7 +255,7 @@ class CbfcSolver(FifoSolver):
         """
         super().get_params()
         params = cast(CbfcParams, self.params)
-        adjust_rd_latency_for_cdc(params, self.rd_sync_cycles_in_wr)
+        adjust_rd_latency_for_cdc(params, self.wptr_cdc_cycles_in_wr)
 
     def get_results(
         self,

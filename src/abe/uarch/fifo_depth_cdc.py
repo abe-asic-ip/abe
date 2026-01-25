@@ -1,10 +1,36 @@
-# SPDX-FileCopyrightText: 2025 Hugh Walsh
+# SPDX-FileCopyrightText: 2026 Hugh Walsh
 #
 # SPDX-License-Identifier: MIT
 
 # This file: src/abe/uarch/fifo_depth_cdc.py
 
-"""Clock Domain Crossing (CDC) FIFO depth calculation."""
+"""Clock Domain Crossing (CDC) FIFO depth calculation.
+
+This solver computes the required depth for an asynchronous FIFO that bridges
+two clock domains with potentially different frequencies and PPM tolerances.
+
+The CDC buffering problem is decomposed into four independent components:
+
+  - credit_loop_depth: Steady-state round-trip latency buffering required to
+    sustain write-rate. Accounts for write pointer synchronization into
+    the read domain, read-side reaction time, read pointer synchronization back
+    to the write domain, and write-side full-flag update. This uses the approach
+    described in the book "Crack the Hardware Interview - from RTL Designers'
+    Perspective: Architecture and Micro-architecture."
+
+  - phase_margin_depth: Additional depth for unknown relative phase alignment
+    between the two clocks at reset or during free-running operation.
+
+  - ppm_drift_depth: Worst-case frequency drift over the analysis window,
+    considering PPM tolerances on both clocks.
+
+  - base_sync_fifo_depth: Long-term rate mismatch accumulation over the analysis
+    window when write frequency exceeds read frequency. This component is
+    intentionally excluded from the CDC FIFO depth and is returned separately
+    for downstream synchronous FIFO sizing.
+
+The final CDC FIFO depth is: credit_loop + phase_margin + ppm_drift.
+"""
 
 from __future__ import annotations
 
@@ -15,7 +41,7 @@ from typing import Annotated, Any, Literal, Sequence, cast
 
 import yaml
 from pint import UnitRegistry
-from pydantic import BeforeValidator, NonNegativeInt
+from pydantic import BeforeValidator, NonNegativeInt, field_validator
 
 from abe.uarch.fifo_depth_base import (
     FifoBaseModel,
@@ -33,45 +59,79 @@ from abe.utils import round_value
 logger = logging.getLogger(__name__)
 
 
-def _parse_frequency(value: str | int) -> int:
-    """Parse frequency from string with units (e.g., '1.1 GHz') or integer Hz
-    value.
+def _parse_frequency(value: str | int | float) -> int:
+    """Parse frequency from string with units (e.g., '1.1 GHz'), integer Hz
+    value, or float Hz value.
 
     Returns frequency in Hz as integer.
     """
-    if isinstance(value, int):
-        return value
+    if isinstance(value, (int, float)):
+        return int(value)
     # Parse with pint and convert to Hz
     ureg: Any = UnitRegistry()
     quantity: Any = ureg.Quantity(value)
     return int(quantity.to("Hz").magnitude)
 
 
-# Type hint that accepts str|int for input but ensures int after validation
+# Type alias for clock frequency fields. Accepts string with units (e.g., '1.1 GHz'),
+# integer Hz, or float Hz during parsing, but validates to int Hz after conversion.
 FrequencyHz = Annotated[int, BeforeValidator(_parse_frequency)]
 
 
 class CdcModel(FifoBaseModel):
-    """CDC FIFO model with clock frequencies, synchronization stages, and domain
-    configuration for YAML validation.
+    """CDC FIFO configuration model for YAML specification validation.
+
+    Attributes:
+        wr_clk_freq: Write clock frequency in Hz (accepts unit strings like '1 GHz').
+        rd_clk_freq: Read clock frequency in Hz (accepts unit strings like '1 GHz').
+        big_fifo_domain: Which clock domain hosts the main synchronous FIFO
+            ('write' or 'read'). Determines how the analysis window is interpreted.
+        wr_clk_ppm: Write clock PPM tolerance for frequency drift calculation.
+        rd_clk_ppm: Read clock PPM tolerance for frequency drift calculation.
+        wptr_inc_cycles: Write-domain cycles to increment write pointer after write.
+        wptr_sync_slip_cycles: Read-domain cycles for wptr synchronization slips.
+        wptr_sync_stages: Number of synchronizer flip-flop stages for wptr CDC.
+        rd_react_cycles: Read-domain cycles for read logic to react to new data.
+        rptr_inc_cycles: Read-domain cycles to increment read pointer after read.
+        rptr_sync_slip_cycles: Write-domain cycles for rptr synchronization slips.
+        rptr_sync_stages: Number of synchronizer flip-flop stages for rptr CDC.
+        wr_full_update_cycles: Write-domain cycles to update full flag after rptr sync.
+        window_cycles: Analysis window in cycles ('auto' or explicit count).
     """
 
     wr_clk_freq: FrequencyHz
     rd_clk_freq: FrequencyHz
     big_fifo_domain: Literal["write", "read"] = "write"
+
+    @field_validator("wr_clk_freq", "rd_clk_freq")
+    @classmethod
+    def _check_positive_frequency(cls, v: int) -> int:
+        """Ensure clock frequencies are positive to prevent division by zero."""
+        if v <= 0:
+            raise ValueError(f"Clock frequency must be positive, got {v}")
+        return v
+
     wr_clk_ppm: NonNegativeInt = 0
     rd_clk_ppm: NonNegativeInt = 0
-    sync_stages: NonNegativeInt = 2
-    ptr_gray_extra: NonNegativeInt = 1
+    wptr_inc_cycles: NonNegativeInt = 0
+    wptr_sync_slip_cycles: NonNegativeInt = 1
+    wptr_sync_stages: NonNegativeInt = 2
+    rd_react_cycles: NonNegativeInt = 1
+    rptr_inc_cycles: NonNegativeInt = 1
+    rptr_sync_slip_cycles: NonNegativeInt = 1
+    rptr_sync_stages: NonNegativeInt = 2
+    wr_full_update_cycles: NonNegativeInt = 1
     window_cycles: Literal["auto"] | NonNegativeInt = "auto"
 
 
 class CdcParams(FifoBaseParams):  # pylint: disable=too-many-instance-attributes
-    """CDC FIFO parameters including clock frequencies, synchronization stages,
-    PPM tolerances, and domain configuration for depth calculation.
+    """Runtime parameters for CDC FIFO depth calculation.
+
+    Created from a validated CdcModel instance. Provides computed properties
+    for total CDC latencies and validation of parameter constraints.
     """
 
-    def __init__(  # pylint: disable=too-many-arguments
+    def __init__(  # pylint: disable=too-many-arguments, too-many-locals
         self,
         *,
         margin_type: Literal["percentage", "absolute"] = "absolute",
@@ -82,8 +142,14 @@ class CdcParams(FifoBaseParams):  # pylint: disable=too-many-instance-attributes
         big_fifo_domain: Literal["write", "read"] = "write",
         wr_clk_ppm: int = 0,
         rd_clk_ppm: int = 0,
-        sync_stages: int = 2,
-        ptr_gray_extra: int = 1,
+        wptr_inc_cycles: int = 0,
+        wptr_sync_slip_cycles: int = 1,
+        wptr_sync_stages: int = 2,
+        rd_react_cycles: int = 1,
+        rptr_inc_cycles: int = 1,
+        rptr_sync_slip_cycles: int = 1,
+        rptr_sync_stages: int = 2,
+        wr_full_update_cycles: int = 1,
     ) -> None:
         super().__init__(
             margin_type=margin_type, margin_val=margin_val, rounding=rounding
@@ -93,8 +159,14 @@ class CdcParams(FifoBaseParams):  # pylint: disable=too-many-instance-attributes
         self.big_fifo_domain = big_fifo_domain
         self.wr_clk_ppm = wr_clk_ppm
         self.rd_clk_ppm = rd_clk_ppm
-        self.sync_stages = sync_stages
-        self.ptr_gray_extra = ptr_gray_extra
+        self.wptr_inc_cycles = wptr_inc_cycles
+        self.wptr_sync_slip_cycles = wptr_sync_slip_cycles
+        self.wptr_sync_stages = wptr_sync_stages
+        self.rd_react_cycles = rd_react_cycles
+        self.rptr_inc_cycles = rptr_inc_cycles
+        self.rptr_sync_slip_cycles = rptr_sync_slip_cycles
+        self.rptr_sync_stages = rptr_sync_stages
+        self.wr_full_update_cycles = wr_full_update_cycles
 
     @classmethod
     def from_model(cls, model: FifoBaseModel) -> "CdcParams":
@@ -110,47 +182,79 @@ class CdcParams(FifoBaseParams):  # pylint: disable=too-many-instance-attributes
             big_fifo_domain=model.big_fifo_domain,
             wr_clk_ppm=int(model.wr_clk_ppm),
             rd_clk_ppm=int(model.rd_clk_ppm),
-            sync_stages=int(model.sync_stages),
-            ptr_gray_extra=int(model.ptr_gray_extra),
+            wptr_inc_cycles=int(model.wptr_inc_cycles),
+            wptr_sync_slip_cycles=int(model.wptr_sync_slip_cycles),
+            wptr_sync_stages=int(model.wptr_sync_stages),
+            rd_react_cycles=int(model.rd_react_cycles),
+            rptr_inc_cycles=int(model.rptr_inc_cycles),
+            rptr_sync_slip_cycles=int(model.rptr_sync_slip_cycles),
+            rptr_sync_stages=int(model.rptr_sync_stages),
+            wr_full_update_cycles=int(model.wr_full_update_cycles),
         )
 
     @property
-    def rd_sync_cycles_in_rd(self) -> int:
-        """Return total read-domain cycles before newly written data becomes
-        visible, including synchronization stages and Gray code extra cycles.
+    def wptr_cdc_cycles_in_rd(self) -> int:
+        """Total read-domain cycles for write pointer to become visible to reader.
 
-        This represents the read-domain latency contribution used in downstream
-        synchronous FIFO models (CBFC, Ready/Valid, XON/XOFF, Replay).
+        Sum of metastability settling time and synchronizer pipeline stages.
+        This is the latency before the read side can "see" a new write.
         """
-        return self.sync_stages + self.ptr_gray_extra
+        return self.wptr_sync_slip_cycles + self.wptr_sync_stages
+
+    @property
+    def rptr_cdc_cycles_in_wr(self) -> int:
+        """Total write-domain cycles for read pointer to become visible to writer.
+
+        Sum of metastability settling time and synchronizer pipeline stages.
+        This is the latency before the write side can "see" freed FIFO slots.
+        """
+        return self.rptr_sync_slip_cycles + self.rptr_sync_stages
 
     def check(self) -> None:
-        """Validate CDC-specific parameter constraints including clock frequencies,
-        big_fifo_domain, synchronization stages, and Gray code extra cycles.
-        """
+        """Validate CDC-specific parameter constraints."""
         if self.wr_clk_freq <= 0:
             raise ValueError(f"{self.wr_clk_freq=}")
         if self.rd_clk_freq <= 0:
             raise ValueError(f"{self.rd_clk_freq=}")
         if self.big_fifo_domain not in ("write", "read"):
             raise ValueError(f"{self.big_fifo_domain=}")
-        if self.sync_stages < 0:
-            raise ValueError(f"{self.sync_stages=}")
-        if self.ptr_gray_extra < 0:
-            raise ValueError(f"{self.ptr_gray_extra=}")
+        if self.wptr_inc_cycles < 0:
+            raise ValueError(f"{self.wptr_inc_cycles=}")
+        if self.wptr_sync_slip_cycles < 0:
+            raise ValueError(f"{self.wptr_sync_slip_cycles=}")
+        if self.wptr_sync_stages < 0:
+            raise ValueError(f"{self.wptr_sync_stages=}")
+        if self.rd_react_cycles < 0:
+            raise ValueError(f"{self.rd_react_cycles=}")
+        if self.rptr_inc_cycles < 0:
+            raise ValueError(f"{self.rptr_inc_cycles=}")
+        if self.rptr_sync_slip_cycles < 0:
+            raise ValueError(f"{self.rptr_sync_slip_cycles=}")
+        if self.rptr_sync_stages < 0:
+            raise ValueError(f"{self.rptr_sync_stages=}")
+        if self.wr_full_update_cycles < 0:
+            raise ValueError(f"{self.wr_full_update_cycles=}")
 
 
 class CdcResults(FifoBaseResults):  # pylint: disable=too-many-instance-attributes
-    """CDC results container with depth breakdown for base capacity, synchronizer
-    latency, phase margin, and PPM drift components.
+    """Results from CDC FIFO depth calculation.
+
+    Attributes:
+        depth: Required CDC FIFO depth (credit_loop + phase_margin + ppm_drift).
+        credit_loop_depth: Depth for round-trip latency to sustain write-rate.
+        phase_margin_depth: Depth for unknown clock phase alignment.
+        ppm_drift_depth: Depth for worst-case frequency drift over the window.
+        base_sync_fifo_depth: Long-term rate mismatch depth (for downstream FIFO).
+        wptr_cdc_cycles_in_wr: Write pointer CDC latency in write-domain cycles,
+            for use by downstream synchronous FIFO sizing.
     """
 
     depth: int
-    synchronizer_depth: int
+    credit_loop_depth: int
     phase_margin_depth: int
     ppm_drift_depth: int
     base_sync_fifo_depth: int
-    rd_sync_cycles_in_wr: int
+    wptr_cdc_cycles_in_wr: int
 
     def __init__(  # pylint: disable=too-many-arguments
         self,
@@ -158,28 +262,32 @@ class CdcResults(FifoBaseResults):  # pylint: disable=too-many-instance-attribut
         basic_checks_pass: bool = False,
         msg: str = "",
         depth: int,
-        synchronizer_depth: int,
+        credit_loop_depth: int,
         phase_margin_depth: int,
         ppm_drift_depth: int,
         base_sync_fifo_depth: int,
-        rd_sync_cycles_in_wr: int,
+        wptr_cdc_cycles_in_wr: int,
     ) -> None:
         super().__init__(
             basic_checks_pass=basic_checks_pass,
             msg=msg,
         )
         self.depth = depth
-        self.synchronizer_depth = synchronizer_depth
+        self.credit_loop_depth = credit_loop_depth
         self.phase_margin_depth = phase_margin_depth
         self.ppm_drift_depth = ppm_drift_depth
         self.base_sync_fifo_depth = base_sync_fifo_depth
-        self.rd_sync_cycles_in_wr = rd_sync_cycles_in_wr
+        self.wptr_cdc_cycles_in_wr = wptr_cdc_cycles_in_wr
 
 
 class CdcSolver(FifoSolver):  # pylint: disable=too-many-instance-attributes
-    """CDC FIFO depth solver that calculates required depth for safe clock domain
-    crossing considering synchronization latency, phase uncertainty, and frequency
-    drift (PPM).
+    """CDC FIFO depth solver.
+
+    The CDC FIFO depth returned in `results.depth` is the portion that must live
+    inside the CDC FIFO itself (credit loop + phase + ppm drift). The long-term
+    mismatch term over the analysis window is returned separately as
+    `base_sync_fifo_depth` (and is intended to be carried downstream into the
+    subsequent synchronous FIFO sizing stages).
     """
 
     def __init__(self) -> None:
@@ -225,22 +333,22 @@ class CdcSolver(FifoSolver):  # pylint: disable=too-many-instance-attributes
         logger.debug("cdc_spec:\n%s", json.dumps(self.spec, indent=2))
 
     def get_results(self) -> None:
-        """Analytic CDC: compute small CDC depth + base_sync_depth."""
-
+        """Analytic CDC: compute CDC FIFO depth + base_sync_depth."""
         assert self.params is not None, "Must call get_params() first"
         params = cast(CdcParams, self.params)
 
         # 1) Long-term rate mismatch (items) over the write-domain window (NO ppm here)
         #    mismatch_per_w_cycle_items = w_items * max(0, 1 - f_rd/f_wr)
+        #    Only positive mismatch matters (write faster than read). When
+        #    rd_clk_freq > wr_clk_freq, the reader drains faster than the writer
+        #    fills, so there is no overflow risk from rate mismatch—hence zero.
         mismatch_per_w_cycle = self.wr_items_per_cycle * max(
             0.0, 1.0 - (params.rd_clk_freq / params.wr_clk_freq)
         )
         base_sync_fifo_depth = int(ceil(self.wr_window_cycles * mismatch_per_w_cycle))
 
         # 2) Small CDC components that stay in the CDC FIFO
-        synchronizer_depth = self._get_synchronizer_depth(
-            params, self.wr_items_per_cycle
-        )
+        credit_loop_depth = self._get_credit_loop_depth(params, self.wr_items_per_cycle)
         phase_margin_depth = self._get_phase_margin_depth(
             params, self.wr_items_per_cycle
         )
@@ -249,7 +357,7 @@ class CdcSolver(FifoSolver):  # pylint: disable=too-many-instance-attributes
         )
 
         # 3) CDC FIFO depth excludes the long-term mismatch
-        depth = synchronizer_depth + phase_margin_depth + ppm_drift_depth
+        depth = credit_loop_depth + phase_margin_depth + ppm_drift_depth
 
         depth = apply_margin(depth, params.margin_type, params.margin_val)
         depth = round_value(depth, params.rounding)
@@ -258,11 +366,11 @@ class CdcSolver(FifoSolver):  # pylint: disable=too-many-instance-attributes
             basic_checks_pass=True,
             msg="Analytic results.",
             depth=depth,
-            synchronizer_depth=synchronizer_depth,
+            credit_loop_depth=credit_loop_depth,
             phase_margin_depth=phase_margin_depth,
             ppm_drift_depth=ppm_drift_depth,
             base_sync_fifo_depth=base_sync_fifo_depth,
-            rd_sync_cycles_in_wr=self._get_rd_sync_cycles_in_wr(params),
+            wptr_cdc_cycles_in_wr=self._get_wptr_cdc_cycles_in_wr(params),
         )
 
     def _get_cdc_spec(self, full_spec: dict) -> dict:
@@ -321,27 +429,62 @@ class CdcSolver(FifoSolver):  # pylint: disable=too-many-instance-attributes
 
         return wr_drift_depth + rd_drift_depth_in_w
 
-    def _get_rd_sync_cycles_in_wr(self, cdc_params: CdcParams) -> int:
-        """Convert read-domain synchronization cycles to write-domain cycles using
-        clock frequency ratio.
+    def _get_wptr_cdc_cycles_in_wr(self, cdc_params: CdcParams) -> int:
+        """Convert write pointer CDC latency from read cycles to write cycles.
+
+        The write pointer takes wptr_cdc_cycles_in_rd read-domain cycles to
+        cross the CDC boundary. This method converts that latency to an
+        equivalent number of write-domain cycles using the clock frequency
+        ratio, rounded up to ensure conservative sizing.
+
+        Used by downstream synchronous FIFO solvers that need the CDC latency
+        expressed in write-domain units for their rd_latency adjustments.
         """
         return int(
             ceil(
-                cdc_params.rd_sync_cycles_in_rd
+                cdc_params.wptr_cdc_cycles_in_rd
                 * cdc_params.wr_clk_freq
                 / cdc_params.rd_clk_freq
             )
         )
 
-    def _get_synchronizer_depth(
+    def _get_credit_loop_depth(
         self, cdc_params: CdcParams, wr_items_per_cycle: int
     ) -> int:
-        """Calculate additional FIFO depth required for synchronization latency.
+        """Compute credit-loop depth for steady-state write-rate.
 
-        Converts read-domain synchronization cycles to write-domain cycles using
-        clock frequency ratio, then scales by items per cycle.
+        This uses the approach described in the book "Crack the Hardware
+        Interview - from RTL Designers' Perspective: Architecture and
+        Micro-architecture."
+
+        The credit loop represents the round-trip time for a write to be
+        acknowledged back to the producer:
+          1. wptr_inc_cycles: Update write pointer after write
+          2. wptr crosses to read domain (wptr_cdc_cycles_in_rd)
+          3. rd_react_cycles: Reader reacts and starts reading
+          4. rptr_inc_cycles: Update read pointer after read
+          5. rptr crosses to write domain (rptr_cdc_cycles_in_wr)
+          6. wr_full_update_cycles: Update full flag
+
+        The FIFO must hold (write_rate * RTT) items to sustain write-rate.
         """
-        return self._get_rd_sync_cycles_in_wr(cdc_params) * wr_items_per_cycle
+        wr_clk_cycles = (
+            cdc_params.wptr_inc_cycles
+            + cdc_params.rptr_cdc_cycles_in_wr
+            + cdc_params.wr_full_update_cycles
+        )
+        rd_clk_cycles = (
+            cdc_params.wptr_cdc_cycles_in_rd
+            + cdc_params.rd_react_cycles
+            + cdc_params.rptr_inc_cycles
+        )
+        # Convert cycles to time (seconds)
+        rtt = (wr_clk_cycles / cdc_params.wr_clk_freq) + (
+            rd_clk_cycles / cdc_params.rd_clk_freq
+        )
+        # Producer write rate (items / second)
+        write_rate = wr_items_per_cycle * cdc_params.wr_clk_freq
+        return int(ceil(write_rate * rtt))
 
     def _get_wr_items_per_cycle(self, full_spec: dict) -> int:
         """Extract maximum write items per cycle from specification.

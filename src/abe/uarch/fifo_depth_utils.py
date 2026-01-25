@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2025 Hugh Walsh
+# SPDX-FileCopyrightText: 2026 Hugh Walsh
 #
 # SPDX-License-Identifier: MIT
 
@@ -301,14 +301,14 @@ class LayeredCompileOut(NamedTuple):
     read_valid: List[int]
 
 
-def adjust_rd_latency_for_cdc(params: FifoParams, rd_sync_cycles_in_wr: int) -> None:
+def adjust_rd_latency_for_cdc(params: FifoParams, wptr_cdc_cycles_in_wr: int) -> None:
     """Adjust read latency in parameter object for CDC synchronizer cycles."""
-    if rd_sync_cycles_in_wr > 0:
-        params.rd_latency += rd_sync_cycles_in_wr
+    if wptr_cdc_cycles_in_wr > 0:
+        params.rd_latency += wptr_cdc_cycles_in_wr
         logger.info(
             "Incremented %s.rd_latency by %d for CDC.",
             params.__class__.__name__,
-            rd_sync_cycles_in_wr,
+            wptr_cdc_cycles_in_wr,
         )
 
 
