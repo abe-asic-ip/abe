@@ -1,11 +1,10 @@
-# SPDX-FileCopyrightText: 2025 Hugh Walsh
+# SPDX-FileCopyrightText: 2026 Hugh Walsh
 #
 # SPDX-License-Identifier: MIT
 
 # This file: src/abe/rad/shared/dv/base_reset_monitor.py
 
 """Base reset monitor."""
-
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2025 Hugh Walsh
+# SPDX-FileCopyrightText: 2026 Hugh Walsh
 #
 # SPDX-License-Identifier: MIT
 
@@ -11,6 +11,7 @@ handshake. It computes the depth required so the FIFO never
 overflows over the horizon, regardless of whether the surrounding
 system uses Ready/Valid backpressure or allows drops on overflow.
 """
+
 from __future__ import annotations
 
 import logging
