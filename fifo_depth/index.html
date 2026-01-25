@@ -3465,7 +3465,7 @@ operate in different clock domains. It implements a two-stage approach:</p>
 <li><strong><code>depth</code></strong> - The required small CDC FIFO buffer depth</li>
 <li><strong><code>base_sync_fifo_depth</code></strong> - The minimum depth for the large synchronous FIFO
    based on long-term rate mismatch</li>
-<li><strong><code>rd_sync_cycles_in_wr</code></strong> - Read-domain synchronization latency converted to
+<li><strong><code>wptr_cdc_cycles_in_wr</code></strong> - Write pointer CDC latency converted to
    write-domain cycles</li>
 </ol>
 <p>These values enable a two-stage solution: the small CDC FIFO handles clock domain
@@ -3489,8 +3489,10 @@ works because:</p>
 </ul>
 <p>The CDC depth calculation sums three components:</p>
 <ul>
-<li><strong>Synchronizer depth</strong>: Latency for pointer synchronization across clock
-  domains (<code>sync_stages + ptr_gray_extra</code> converted to items)</li>
+<li><strong>Credit loop depth</strong>: Steady-state round-trip latency buffering required to
+  sustain maximum write throughput. Accounts for write pointer synchronization
+  into the read domain, read-side reaction time, read pointer synchronization
+  back to the write domain, and write-side full-flag update.</li>
 <li><strong>Phase margin depth</strong>: One read-cycle worth of items to account for unknown
   initial phase relationship between clocks</li>
 <li><strong>PPM drift depth</strong>: Accumulated frequency drift over the horizon in both write
@@ -3512,17 +3514,17 @@ CDC-specific parameters:</p>
 <tbody>
 <tr>
 <td><code>wr_clk_freq</code></td>
-<td>int or str</td>
+<td>int, float, or str</td>
 <td>Yes</td>
 <td>-</td>
-<td>Write clock frequency. Can be specified as integer Hz (e.g., <code>1000000000</code> for 1 GHz) or string with units (e.g., <code>"1.1 GHz"</code>, <code>"100 MHz"</code>). Must be positive.</td>
+<td>Write clock frequency. Can be specified as integer Hz (e.g., <code>1000000000</code> for 1 GHz), float Hz, or string with units (e.g., <code>"1.1 GHz"</code>, <code>"100 MHz"</code>). Must be positive.</td>
 </tr>
 <tr>
 <td><code>rd_clk_freq</code></td>
-<td>int or str</td>
+<td>int, float, or str</td>
 <td>Yes</td>
 <td>-</td>
-<td>Read clock frequency. Can be specified as integer Hz or string with units. Must be positive.</td>
+<td>Read clock frequency. Can be specified as integer Hz, float Hz, or string with units. Must be positive.</td>
 </tr>
 <tr>
 <td><code>big_fifo_domain</code></td>
@@ -3546,18 +3548,60 @@ CDC-specific parameters:</p>
 <td>Read clock frequency tolerance in parts-per-million (non-negative). Used to calculate worst-case drift over the horizon.</td>
 </tr>
 <tr>
-<td><code>sync_stages</code></td>
+<td><code>wptr_inc_cycles</code></td>
 <td>int</td>
 <td>No</td>
-<td><code>2</code></td>
-<td>Number of synchronizer flip-flop stages for pointer crossing (non-negative). Typical values are 2-3 stages for MTBF requirements. Contributes to synchronization latency.</td>
+<td><code>0</code></td>
+<td>Write-domain cycles to increment write pointer after a write (non-negative).</td>
 </tr>
 <tr>
-<td><code>ptr_gray_extra</code></td>
+<td><code>wptr_sync_slip_cycles</code></td>
 <td>int</td>
 <td>No</td>
 <td><code>1</code></td>
-<td>Extra Gray code pointer stability margin in cycles (non-negative). Accounts for Gray counter transitions and sampling uncertainty. Typical value is 1.</td>
+<td>Read-domain cycles for write pointer synchronization slips/metastability settling (non-negative).</td>
+</tr>
+<tr>
+<td><code>wptr_sync_stages</code></td>
+<td>int</td>
+<td>No</td>
+<td><code>2</code></td>
+<td>Number of synchronizer flip-flop stages for write pointer CDC crossing (non-negative). Typical values are 2-3 stages for MTBF requirements.</td>
+</tr>
+<tr>
+<td><code>rd_react_cycles</code></td>
+<td>int</td>
+<td>No</td>
+<td><code>1</code></td>
+<td>Read-domain cycles for read logic to react after seeing new data (non-negative).</td>
+</tr>
+<tr>
+<td><code>rptr_inc_cycles</code></td>
+<td>int</td>
+<td>No</td>
+<td><code>1</code></td>
+<td>Read-domain cycles to increment read pointer after a read (non-negative).</td>
+</tr>
+<tr>
+<td><code>rptr_sync_slip_cycles</code></td>
+<td>int</td>
+<td>No</td>
+<td><code>1</code></td>
+<td>Write-domain cycles for read pointer synchronization slips/metastability settling (non-negative).</td>
+</tr>
+<tr>
+<td><code>rptr_sync_stages</code></td>
+<td>int</td>
+<td>No</td>
+<td><code>2</code></td>
+<td>Number of synchronizer flip-flop stages for read pointer CDC crossing (non-negative). Typical values are 2-3 stages for MTBF requirements.</td>
+</tr>
+<tr>
+<td><code>wr_full_update_cycles</code></td>
+<td>int</td>
+<td>No</td>
+<td><code>1</code></td>
+<td>Write-domain cycles to update the full flag after read pointer synchronization (non-negative).</td>
 </tr>
 <tr>
 <td><code>window_cycles</code></td>
@@ -3580,11 +3624,11 @@ CDC-specific parameters:</p>
 <tbody>
 <tr>
 <td><code>depth</code></td>
-<td>Required small CDC FIFO buffer depth (after margin and rounding). Sum of <code>synchronizer_depth</code>, <code>phase_margin_depth</code>, and <code>ppm_drift_depth</code>.</td>
+<td>Required small CDC FIFO buffer depth (after margin and rounding). Sum of <code>credit_loop_depth</code>, <code>phase_margin_depth</code>, and <code>ppm_drift_depth</code>.</td>
 </tr>
 <tr>
-<td><code>synchronizer_depth</code></td>
-<td>Depth component for synchronization latency. Accounts for <code>sync_stages</code> and <code>ptr_gray_extra</code> cycles converted from read domain to write domain and scaled by items per cycle.</td>
+<td><code>credit_loop_depth</code></td>
+<td>Depth component for steady-state round-trip latency. Accounts for write pointer increment, write pointer CDC crossing, read reaction, read pointer increment, read pointer CDC crossing, and full flag update—all converted to items at the write rate.</td>
 </tr>
 <tr>
 <td><code>phase_margin_depth</code></td>
@@ -3596,11 +3640,11 @@ CDC-specific parameters:</p>
 </tr>
 <tr>
 <td><code>base_sync_fifo_depth</code></td>
-<td>Minimum depth for the large synchronous FIFO in stage 2. Based on long-term rate mismatch over the window: <code>window_cycles × items_per_cycle × max(0, 1 - f_rd/f_wr)</code>.</td>
+<td>Minimum depth for the large synchronous FIFO in stage 2. Based on long-term rate mismatch over the window: <code>window_cycles × items_per_cycle × max(0, 1 - f_rd/f_wr)</code>. Only positive when write clock is faster than read clock.</td>
 </tr>
 <tr>
-<td><code>rd_sync_cycles_in_wr</code></td>
-<td>Read-domain synchronization cycles converted to write-domain cycles. Used as initial condition parameter for stage 2 synchronous FIFO solver.</td>
+<td><code>wptr_cdc_cycles_in_wr</code></td>
+<td>Write pointer CDC latency (time for write pointer to become visible in read domain) converted to write-domain cycles. Used as initial condition parameter for stage 2 synchronous FIFO solver's <code>rd_latency</code> adjustment.</td>
 </tr>
 </tbody>
 </table>
@@ -4194,6 +4238,8 @@ systems through buffer queue sizing of communications channels," in <em>Proc. In
 Conf. Comput. Aided Design</em>, San Jose, CA, 2003.</p>
 <p>[5] "Calculation of FIFO depth - made easy." Accessed: Nov. 23, 2025. [Online].
 Available: <a href="https://hardwaregeeksblog.wordpress.com/wp-content/uploads/2016/12/fifodepthcalculationmadeeasy2.pdf">https://hardwaregeeksblog.wordpress.com/wp-content/uploads/2016/12/fifodepthcalculationmadeeasy2.pdf</a></p>
+<p>[6] Chipressian, <em>Crack the Hardware Interview - from RTL Designers' Perspective:
+Architecture and Micro-architecture</em>. Middletown, DE: Chipressian Publishing, 2025.</p>
 <hr />
 <h2 id="licensing">Licensing<a class="headerlink" href="#licensing" title="Permanent link">&para;</a></h2>
 <p>See the <code>LICENSES</code> directory at the repository root.</p>
