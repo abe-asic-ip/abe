@@ -402,8 +402,7 @@ class CdcSolver(FifoSolver):  # pylint: disable=too-many-instance-attributes
         """
 
         wr_ppm = abs(cdc_params.wr_clk_ppm)
-        wr_drift_cycles = int(ceil(wr_ppm * self.wr_window_cycles / 1_000_000))
-        wr_drift_depth = wr_drift_cycles * self.wr_items_per_cycle
+        wr_drift_cycles = wr_ppm * self.wr_window_cycles / 1_000_000
 
         # In the read domain, the window is:
         #     rd_window_cycles = wr_window_cycles * (rd_clk_freq / wr_clk_freq)
@@ -413,13 +412,14 @@ class CdcSolver(FifoSolver):  # pylint: disable=too-many-instance-attributes
         #     rd_drift_cycles_in_w = rd_drift_cycles * (wr_clk_freq / rd_clk_freq)
         # Combining the above equations simplifies to
         #     rd_drift_cycles_in_w = rd_ppm * wr_window_cycles / 1_000_000
-        # Apply ceil() after all substitutions and conversions.
+        # Apply ceil() only once after summing both drift terms to avoid
+        # over-conservatism when individual components are small fractions.
 
         rd_ppm = abs(cdc_params.rd_clk_ppm)
-        rd_drift_cycles_in_w = int(ceil(rd_ppm * self.wr_window_cycles / 1_000_000))
-        rd_drift_depth_in_w = rd_drift_cycles_in_w * self.wr_items_per_cycle
+        rd_drift_cycles_in_w = rd_ppm * self.wr_window_cycles / 1_000_000
 
-        return wr_drift_depth + rd_drift_depth_in_w
+        total_drift_cycles = int(ceil(wr_drift_cycles + rd_drift_cycles_in_w))
+        return total_drift_cycles * self.wr_items_per_cycle
 
     def _get_wptr_cdc_cycles_in_wr(self, cdc_params: CdcParams) -> int:
         """Convert write pointer CDC latency from read cycles to write cycles.
