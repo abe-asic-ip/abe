@@ -1070,7 +1070,7 @@ CDC-specific parameters:
 | `big_fifo_domain` | str | No | `"write"` | Clock domain for the large synchronous FIFO in stage 2: `"write"` or `"read"`. Determines which domain's cycles are used for the `horizon` and traffic pattern analysis. |
 | `wr_clk_ppm` | int | No | `0` | Write clock frequency tolerance in parts-per-million (non-negative). Used to calculate worst-case drift over the horizon. |
 | `rd_clk_ppm` | int | No | `0` | Read clock frequency tolerance in parts-per-million (non-negative). Used to calculate worst-case drift over the horizon. |
-| `wptr_inc_cycles` | int | No | `0` | Write-domain cycles to increment write pointer after a write (non-negative). |
+| `wptr_inc_cycles` | int | No | `1` | Write-domain cycles to increment write pointer after a write (non-negative). |
 | `wptr_sync_slip_cycles` | int | No | `1` | Read-domain cycles for write pointer synchronization slips/metastability settling (non-negative). |
 | `wptr_sync_stages` | int | No | `2` | Number of synchronizer flip-flop stages for write pointer CDC crossing (non-negative). Typical values are 2-3 stages for MTBF requirements. |
 | `rd_react_cycles` | int | No | `1` | Read-domain cycles for read logic to react after seeing new data (non-negative). |

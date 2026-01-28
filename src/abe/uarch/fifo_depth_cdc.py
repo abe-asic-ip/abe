@@ -113,7 +113,7 @@ class CdcModel(FifoBaseModel):
 
     wr_clk_ppm: NonNegativeInt = 0
     rd_clk_ppm: NonNegativeInt = 0
-    wptr_inc_cycles: NonNegativeInt = 0
+    wptr_inc_cycles: NonNegativeInt = 1
     wptr_sync_slip_cycles: NonNegativeInt = 1
     wptr_sync_stages: NonNegativeInt = 2
     rd_react_cycles: NonNegativeInt = 1
@@ -142,7 +142,7 @@ class CdcParams(FifoBaseParams):  # pylint: disable=too-many-instance-attributes
         big_fifo_domain: Literal["write", "read"] = "write",
         wr_clk_ppm: int = 0,
         rd_clk_ppm: int = 0,
-        wptr_inc_cycles: int = 0,
+        wptr_inc_cycles: int = 1,
         wptr_sync_slip_cycles: int = 1,
         wptr_sync_stages: int = 2,
         rd_react_cycles: int = 1,
