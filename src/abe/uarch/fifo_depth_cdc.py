@@ -348,13 +348,9 @@ class CdcSolver(FifoSolver):  # pylint: disable=too-many-instance-attributes
         base_sync_fifo_depth = int(ceil(self.wr_window_cycles * mismatch_per_w_cycle))
 
         # 2) Small CDC components that stay in the CDC FIFO
-        credit_loop_depth = self._get_credit_loop_depth(params, self.wr_items_per_cycle)
-        phase_margin_depth = self._get_phase_margin_depth(
-            params, self.wr_items_per_cycle
-        )
-        ppm_drift_depth = self._get_ppm_drift_depth(
-            params, self.wr_window_cycles, self.wr_items_per_cycle
-        )
+        credit_loop_depth = self._get_credit_loop_depth(params)
+        phase_margin_depth = self._get_phase_margin_depth(params)
+        ppm_drift_depth = self._get_ppm_drift_depth(params)
 
         # 3) CDC FIFO depth excludes the long-term mismatch
         depth = credit_loop_depth + phase_margin_depth + ppm_drift_depth
@@ -384,9 +380,7 @@ class CdcSolver(FifoSolver):  # pylint: disable=too-many-instance-attributes
             raise ValueError("'cdc' field must be a mapping.")
         return cdc_spec
 
-    def _get_phase_margin_depth(
-        self, cdc_params: CdcParams, wr_items_per_cycle: int
-    ) -> int:
+    def _get_phase_margin_depth(self, cdc_params: CdcParams) -> int:
         """Calculate additional FIFO depth for clock phase uncertainty.
 
         Accounts for up to one read cycle of uncertainty due to unknown relative
@@ -397,11 +391,9 @@ class CdcSolver(FifoSolver):  # pylint: disable=too-many-instance-attributes
         rd_cycles_in_w = int(
             ceil(rd_cycles * cdc_params.wr_clk_freq / cdc_params.rd_clk_freq)
         )
-        return rd_cycles_in_w * wr_items_per_cycle
+        return rd_cycles_in_w * self.wr_items_per_cycle
 
-    def _get_ppm_drift_depth(
-        self, cdc_params: CdcParams, wr_window_cycles: int, wr_items_per_cycle: int
-    ) -> int:
+    def _get_ppm_drift_depth(self, cdc_params: CdcParams) -> int:
         """Calculate additional FIFO depth to absorb worst-case frequency drift
         (PPM) over the analysis window.
 
@@ -410,8 +402,8 @@ class CdcSolver(FifoSolver):  # pylint: disable=too-many-instance-attributes
         """
 
         wr_ppm = abs(cdc_params.wr_clk_ppm)
-        wr_drift_cycles = int(ceil(wr_ppm * wr_window_cycles / 1_000_000))
-        wr_drift_depth = wr_drift_cycles * wr_items_per_cycle
+        wr_drift_cycles = int(ceil(wr_ppm * self.wr_window_cycles / 1_000_000))
+        wr_drift_depth = wr_drift_cycles * self.wr_items_per_cycle
 
         # In the read domain, the window is:
         #     rd_window_cycles = wr_window_cycles * (rd_clk_freq / wr_clk_freq)
@@ -424,8 +416,8 @@ class CdcSolver(FifoSolver):  # pylint: disable=too-many-instance-attributes
         # Apply ceil() after all substitutions and conversions.
 
         rd_ppm = abs(cdc_params.rd_clk_ppm)
-        rd_drift_cycles_in_w = int(ceil(rd_ppm * wr_window_cycles / 1_000_000))
-        rd_drift_depth_in_w = rd_drift_cycles_in_w * wr_items_per_cycle
+        rd_drift_cycles_in_w = int(ceil(rd_ppm * self.wr_window_cycles / 1_000_000))
+        rd_drift_depth_in_w = rd_drift_cycles_in_w * self.wr_items_per_cycle
 
         return wr_drift_depth + rd_drift_depth_in_w
 
@@ -448,9 +440,7 @@ class CdcSolver(FifoSolver):  # pylint: disable=too-many-instance-attributes
             )
         )
 
-    def _get_credit_loop_depth(
-        self, cdc_params: CdcParams, wr_items_per_cycle: int
-    ) -> int:
+    def _get_credit_loop_depth(self, cdc_params: CdcParams) -> int:
         """Compute credit-loop depth for steady-state write-rate.
 
         This uses the approach described in the book "Crack the Hardware
@@ -483,7 +473,7 @@ class CdcSolver(FifoSolver):  # pylint: disable=too-many-instance-attributes
             rd_clk_cycles / cdc_params.rd_clk_freq
         )
         # Producer write rate (items / second)
-        write_rate = wr_items_per_cycle * cdc_params.wr_clk_freq
+        write_rate = self.wr_items_per_cycle * cdc_params.wr_clk_freq
         return int(ceil(write_rate * rtt))
 
     def _get_wr_items_per_cycle(self, full_spec: dict) -> int:
