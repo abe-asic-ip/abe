@@ -1071,11 +1071,11 @@ CDC-specific parameters:
 | `wr_clk_ppm` | int | No | `0` | Write clock frequency tolerance in parts-per-million (non-negative). Used to calculate worst-case drift over the horizon. |
 | `rd_clk_ppm` | int | No | `0` | Read clock frequency tolerance in parts-per-million (non-negative). Used to calculate worst-case drift over the horizon. |
 | `wptr_inc_cycles` | int | No | `1` | Write-domain cycles to increment write pointer after a write (non-negative). |
-| `wptr_sync_slip_cycles` | int | No | `0` | Read-domain cycles for write pointer synchronization slips/metastability settling (non-negative). |
+| `wptr_sync_latency_uncertainty` | int | No | `1` | Additional read-domain cycles for write pointer synchronizer latency uncertainty (non-negative). Accounts for ±1 cycle variation depending on when the pointer updates relative to the sampling clock edge. Default 1 covers worst-case; set to 0 for best-case analysis. |
 | `wptr_sync_stages` | int | No | `2` | Number of synchronizer flip-flop stages for write pointer CDC crossing (non-negative). Typical values are 2-3 stages for MTBF requirements. |
 | `rd_react_cycles` | int | No | `1` | Read-domain cycles for read logic to react after seeing new data (non-negative). |
 | `rptr_inc_cycles` | int | No | `1` | Read-domain cycles to increment read pointer after a read (non-negative). |
-| `rptr_sync_slip_cycles` | int | No | `0` | Write-domain cycles for read pointer synchronization slips/metastability settling (non-negative). |
+| `rptr_sync_latency_uncertainty` | int | No | `1` | Additional write-domain cycles for read pointer synchronizer latency uncertainty (non-negative). Accounts for ±1 cycle variation depending on when the pointer updates relative to the sampling clock edge. Default 1 covers worst-case; set to 0 for best-case analysis. |
 | `rptr_sync_stages` | int | No | `2` | Number of synchronizer flip-flop stages for read pointer CDC crossing (non-negative). Typical values are 2-3 stages for MTBF requirements. |
 | `wr_full_update_cycles` | int | No | `1` | Write-domain cycles to update the full flag after read pointer synchronization (non-negative). |
 | `window_cycles` | int or "auto" | No | `"auto"` | Horizon size in cycles for the `big_fifo_domain`. When `"auto"`, extracted from `horizon` field or compiled from layered profiles. Must be positive when specified as integer. |
@@ -1086,9 +1086,8 @@ The CDC-specific results are:
 
 | Result | Description |
 | -------- | ------------- |
-| `depth` | Required small CDC FIFO buffer depth (after margin and rounding). Sum of `credit_loop_depth`, `phase_margin_depth`, and `ppm_drift_depth`. |
-| `credit_loop_depth` | Depth component for steady-state round-trip latency. Accounts for write pointer increment, write pointer CDC crossing, read reaction, read pointer increment, read pointer CDC crossing, and full flag update—all converted to items at the write rate. |
-| `phase_margin_depth` | Depth component for clock phase uncertainty. Accounts for one read cycle of uncertainty due to unknown relative phase between write and read clocks. |
+| `depth` | Required small CDC FIFO buffer depth (after margin and rounding). Sum of `credit_loop_depth` and `ppm_drift_depth`. |
+| `credit_loop_depth` | Depth component for steady-state round-trip latency. Accounts for write pointer increment, write pointer CDC crossing (including latency uncertainty), read reaction, read pointer increment, read pointer CDC crossing (including latency uncertainty), and full flag update—all converted to items at the write rate. |
 | `ppm_drift_depth` | Depth component for PPM frequency drift. Accumulated worst-case drift over the horizon in both write and read domains (combined). |
 | `base_sync_fifo_depth` | Minimum depth for the large synchronous FIFO in stage 2. Based on long-term rate mismatch over the window: `window_cycles × items_per_cycle × max(0, 1 - f_rd/f_wr)`. Only positive when write clock is faster than read clock. |
 | `wptr_cdc_cycles_in_wr` | Write pointer CDC latency (time for write pointer to become visible in read domain) converted to write-domain cycles. Used as initial condition parameter for stage 2 synchronous FIFO solver's `rd_latency` adjustment. |
