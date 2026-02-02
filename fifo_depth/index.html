@@ -3555,11 +3555,11 @@ CDC-specific parameters:</p>
 <td>Write-domain cycles to increment write pointer after a write (non-negative).</td>
 </tr>
 <tr>
-<td><code>wptr_sync_slip_cycles</code></td>
+<td><code>wptr_sync_latency_uncertainty</code></td>
 <td>int</td>
 <td>No</td>
-<td><code>0</code></td>
-<td>Read-domain cycles for write pointer synchronization slips/metastability settling (non-negative).</td>
+<td><code>1</code></td>
+<td>Additional read-domain cycles for write pointer synchronizer latency uncertainty (non-negative). Accounts for ±1 cycle variation depending on when the pointer updates relative to the sampling clock edge. Default 1 covers worst-case; set to 0 for best-case analysis.</td>
 </tr>
 <tr>
 <td><code>wptr_sync_stages</code></td>
@@ -3583,11 +3583,11 @@ CDC-specific parameters:</p>
 <td>Read-domain cycles to increment read pointer after a read (non-negative).</td>
 </tr>
 <tr>
-<td><code>rptr_sync_slip_cycles</code></td>
+<td><code>rptr_sync_latency_uncertainty</code></td>
 <td>int</td>
 <td>No</td>
-<td><code>0</code></td>
-<td>Write-domain cycles for read pointer synchronization slips/metastability settling (non-negative).</td>
+<td><code>1</code></td>
+<td>Additional write-domain cycles for read pointer synchronizer latency uncertainty (non-negative). Accounts for ±1 cycle variation depending on when the pointer updates relative to the sampling clock edge. Default 1 covers worst-case; set to 0 for best-case analysis.</td>
 </tr>
 <tr>
 <td><code>rptr_sync_stages</code></td>
@@ -3624,15 +3624,11 @@ CDC-specific parameters:</p>
 <tbody>
 <tr>
 <td><code>depth</code></td>
-<td>Required small CDC FIFO buffer depth (after margin and rounding). Sum of <code>credit_loop_depth</code>, <code>phase_margin_depth</code>, and <code>ppm_drift_depth</code>.</td>
+<td>Required small CDC FIFO buffer depth (after margin and rounding). Sum of <code>credit_loop_depth</code> and <code>ppm_drift_depth</code>.</td>
 </tr>
 <tr>
 <td><code>credit_loop_depth</code></td>
-<td>Depth component for steady-state round-trip latency. Accounts for write pointer increment, write pointer CDC crossing, read reaction, read pointer increment, read pointer CDC crossing, and full flag update—all converted to items at the write rate.</td>
-</tr>
-<tr>
-<td><code>phase_margin_depth</code></td>
-<td>Depth component for clock phase uncertainty. Accounts for one read cycle of uncertainty due to unknown relative phase between write and read clocks.</td>
+<td>Depth component for steady-state round-trip latency. Accounts for write pointer increment, write pointer CDC crossing (including latency uncertainty), read reaction, read pointer increment, read pointer CDC crossing (including latency uncertainty), and full flag update—all converted to items at the write rate.</td>
 </tr>
 <tr>
 <td><code>ppm_drift_depth</code></td>
