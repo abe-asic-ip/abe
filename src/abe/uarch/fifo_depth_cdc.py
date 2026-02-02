@@ -114,11 +114,11 @@ class CdcModel(FifoBaseModel):
     wr_clk_ppm: NonNegativeInt = 0
     rd_clk_ppm: NonNegativeInt = 0
     wptr_inc_cycles: NonNegativeInt = 1
-    wptr_sync_slip_cycles: NonNegativeInt = 1
+    wptr_sync_slip_cycles: NonNegativeInt = 0
     wptr_sync_stages: NonNegativeInt = 2
     rd_react_cycles: NonNegativeInt = 1
     rptr_inc_cycles: NonNegativeInt = 1
-    rptr_sync_slip_cycles: NonNegativeInt = 1
+    rptr_sync_slip_cycles: NonNegativeInt = 0
     rptr_sync_stages: NonNegativeInt = 2
     wr_full_update_cycles: NonNegativeInt = 1
     window_cycles: Literal["auto"] | NonNegativeInt = "auto"
@@ -143,11 +143,11 @@ class CdcParams(FifoBaseParams):  # pylint: disable=too-many-instance-attributes
         wr_clk_ppm: int = 0,
         rd_clk_ppm: int = 0,
         wptr_inc_cycles: int = 1,
-        wptr_sync_slip_cycles: int = 1,
+        wptr_sync_slip_cycles: int = 0,
         wptr_sync_stages: int = 2,
         rd_react_cycles: int = 1,
         rptr_inc_cycles: int = 1,
-        rptr_sync_slip_cycles: int = 1,
+        rptr_sync_slip_cycles: int = 0,
         rptr_sync_stages: int = 2,
         wr_full_update_cycles: int = 1,
     ) -> None:
