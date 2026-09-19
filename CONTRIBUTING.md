@@ -10,7 +10,9 @@ SPDX-License-Identifier: MIT
 
 Thank you for your interest in contributing!
 
-ABE is a lightweight, open-source environment for ASIC IP development. Contributions are welcome across microarchitecture tools, RAD blocks, DV infrastructure, documentation, and developer tooling.
+ABE is a lightweight, open-source environment for ASIC IP development.
+Contributions are welcome across microarchitecture tools, RAD blocks, DV
+infrastructure, documentation, and developer tooling.
 
 ---
 
@@ -20,7 +22,9 @@ Please see:
 
 - [Creating a New RAD Design](docs/rad_new_design.md)
 
-This document provides the full workflow for proposing, designing, verifying, and documenting a new RAD block using the ABE flows (RTL, synthesis, formal, DV, reference model, and documentation).
+This document provides the full workflow for proposing, designing, verifying,
+and documenting a new RAD block using the ABE flows (RTL, synthesis, formal,
+DV, reference model, and documentation).
 
 ---
 
@@ -46,6 +50,7 @@ License texts are in the `LICENSES/` directory.
 
 ## 🙏 Community
 
-If you would like to discuss ideas, propose improvements, or get help with a contribution, please open an issue or pull request on GitHub.
+If you would like to discuss ideas, propose improvements, or get help with a
+contribution, please open an issue or pull request on GitHub.
 
 Thank you for helping improve ABE!
