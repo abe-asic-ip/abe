@@ -197,7 +197,8 @@ out_dv/tests/<rad_design>.<hash>.<test>.<seed>
 │       │   │   ├── dv_regress.py
 │       │   │   ├── dv_report.py
 │       │   │   ├── dv.py
-│       │   │   └── flatten_srclist.sh
+│       │   │   ├── flatten_srclist.sh
+│       │   │   └── parse_srclist.awk
 │       │   └── __init__.py
 ├── Makefile
 ```

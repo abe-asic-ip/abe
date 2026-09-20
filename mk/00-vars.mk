@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2025 Hugh Walsh
+# SPDX-FileCopyrightText: 2026 Hugh Walsh
 #
 # SPDX-License-Identifier: MIT
 
@@ -101,29 +101,18 @@ endif
 #   INC_DIRS      := space-separated include dirs
 #   DEFINES_LIST  := space-separated NAME[=VAL] tokens
 
+# The parsing lives in a script, not inline: GNU Make 3.81 (macOS /usr/bin/make)
+# cannot parse regexes with parentheses inside a multi-line $(shell ...) call.
+SRCLIST_AWK := $(RAD_ROOT)/tools/parse_srclist.awk
+
 ifeq ($(wildcard $(SV_SRCLIST)),)
   SV_FILES      := $(SV_SRCS)
   INC_DIRS      :=
   DEFINES_LIST  :=
 else
-  SV_FILES := $(shell awk '\
-    {gsub(/\r/,"")} \
-    /^[ \t]*($$|#|\/\/)/{next} \
-    /^[ \t]*\+incdir\+/{next} \
-    /^[ \t]*-I[ \t]*/{next} \
-    /^[ \t]*\+define\+/{next} \
-    /^[ \t]*-D[ \t]*/{next} \
-    {print $$0}' $(SV_SRCLIST))
-  INC_DIRS := $(shell awk '\
-    {gsub(/\r/,"")} \
-    /^[ \t]*($$|#|\/\/)/{next} \
-    /^[ \t]*\+incdir\+/{sub(/^[ \t]*\+incdir\+/,""); gsub(/^[ \t]+|[ \t]+$$/,""); print $$0; next} \
-    /^[ \t]*-I[ \t]*/  {sub(/^[ \t]*-I[ \t]*/,"");   gsub(/^[ \t]+|[ \t]+$$/,""); print $$0; next}' $(SV_SRCLIST))
-  DEFINES_LIST := $(shell awk '\
-    {gsub(/\r/,"")} \
-    /^[ \t]*($$|#|\/\/)/{next} \
-    /^[ \t]*\+define\+/{sub(/^[ \t]*\+define\+/,""); gsub(/^[ \t]+|[ \t]+$$/,""); print $$0; next} \
-    /^[ \t]*-D[ \t]*/  {sub(/^[ \t]*-D[ \t]*/,"");   gsub(/^[ \t]+|[ \t]+$$/,""); print $$0; next}' $(SV_SRCLIST))
+  SV_FILES     := $(shell awk -v mode=files   -f $(SRCLIST_AWK) $(SV_SRCLIST))
+  INC_DIRS     := $(shell awk -v mode=incdirs -f $(SRCLIST_AWK) $(SV_SRCLIST))
+  DEFINES_LIST := $(shell awk -v mode=defines -f $(SRCLIST_AWK) $(SV_SRCLIST))
 endif
 
 # Map canonical lists to per-tool flag styles
