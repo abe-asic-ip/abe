@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2025 Hugh Walsh
+# SPDX-FileCopyrightText: 2026 Hugh Walsh
 #
 # SPDX-License-Identifier: MIT
 
@@ -23,6 +23,12 @@ help:
 	@echo "  make uarch-pq-help   # Show Packet Quantization help"
 	@echo "  make uarch-fd-help   # Show Fifo Depth help"
 	@echo "  make all-help        # Show all help targets"
+	@echo ""
+	@echo "Other:"
+	@echo ""
+	@echo "  make tool-versions        # List the version of every tool ABE uses"
+	@echo "  make check-header-years   # Check the SPDX header year of changed files"
+	@echo "  make fix-header-years     # Update the header year of changed files"
 
 .PHONY: all-help
 all-help: py-help rtl-help synth-help formal-help dv-help docs-help uarch-pq-help uarch-fd-help

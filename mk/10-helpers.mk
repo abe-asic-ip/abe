@@ -28,6 +28,16 @@ deps-dv:
 tool-versions:
 	@MAKE_BIN=$(MAKE) scripts/tool_versions.sh $(PYTHON)
 
+# HEADER_YEARS_OPTS passes extra options to scripts/check_header_years.py, e.g.
+# make check-header-years HEADER_YEARS_OPTS=--all (every tracked file)
+.PHONY: check-header-years
+check-header-years: py-ensure-venv
+	@$(PYTHON) scripts/check_header_years.py $(HEADER_YEARS_OPTS)
+
+.PHONY: fix-header-years
+fix-header-years: py-ensure-venv
+	@$(PYTHON) scripts/check_header_years.py --fix $(HEADER_YEARS_OPTS)
+
 .PHONY: deps-formal
 deps-formal:
 	@command -v sby           >/dev/null || { echo "Missing sby (SymbiYosys)"; exit 1; }
