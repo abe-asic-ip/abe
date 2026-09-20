@@ -11,9 +11,9 @@ This module provides a framework for building and testing HDL designs using:
 - pyuvm for UVM-style verification infrastructure
 - pytest for test orchestration and reporting
 
-Supports multiple simulators (Verilator, Icarus) and configurable waveform
-generation (FST, VCD). Handles multi-seed regression testing with automatic
-test manifest generation for result tracking.
+Simulates with Verilator and supports configurable waveform generation (FST,
+VCD). Handles multi-seed regression testing with automatic test manifest
+generation for result tracking.
 
 Command-line interface:
     dv --design=<design> --test=<test> [OPTIONS]
@@ -161,9 +161,9 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     )
     ap.add_argument(
         "--sim",
-        choices=["verilator", "icarus"],
+        choices=["verilator"],
         default=os.getenv("SIM", "verilator"),
-        help="simulator (verilator, icarus)",
+        help="simulator (verilator)",
     )
     ap.add_argument("--outdir", default=DEFAULT_OUT_DIR, help="output directory")
     ap.add_argument(
@@ -571,32 +571,11 @@ def _verilator_test_switches(waves: bool, wave_file: Path) -> list[str]:
     return ["--trace-file", str(wave_file.resolve())]
 
 
-def _icarus_wave_plusarg(waves: bool, wave_file: Path) -> list[str]:
-    """Return the dumpfile_path plusarg for Icarus waveform output.
-
-    This must be a plusarg (not test_args) so it appears after the .vvp file.
-    """
-    if not waves:
-        return []
-    # Icarus docs: "To redirect the wave file to a different location,
-    # use the plusarg dumpfile_path when running the test."
-    return [f"+dumpfile_path={wave_file.resolve()}"]
-
-
 def _make_build_cfg(ctx: dict) -> BuildCfg:
     sim = str(ctx.get("sim", "verilator"))
     waves = bool(ctx.get("waves", True))
     waves_fmt = str(ctx.get("waves_fmt", "fst")).lower()
     waves_fmt = waves_fmt if waves_fmt in {"fst", "vcd"} else "fst"
-
-    # Icarus runner only supports FST traces; normalize to fst
-    if sim == "icarus" and waves and waves_fmt != "fst":
-        logging.getLogger(__name__).warning(
-            "Icarus only supports FST waveforms with the cocotb runner; "
-            "overriding waves_fmt=%s -> fst",
-            waves_fmt,
-        )
-        waves_fmt = "fst"
 
     design = str(ctx.get("design", DEFAULT_DESIGN))
     build_force = bool(ctx.get("build_force", False))
@@ -637,15 +616,6 @@ def _make_test_cfg(ctx: dict) -> TestCfg:  # pylint: disable=too-many-locals
     waves_fmt = str(ctx.get("waves_fmt", "fst")).lower()
     waves_fmt = waves_fmt if waves_fmt in {"fst", "vcd"} else "fst"
 
-    # Icarus runner only supports FST traces; normalize to fst
-    if sim == "icarus" and waves and waves_fmt != "fst":
-        logging.getLogger(__name__).warning(
-            "Icarus only supports FST waveforms with the cocotb runner; "
-            "overriding waves_fmt=%s -> fst",
-            waves_fmt,
-        )
-        waves_fmt = "fst"
-
     design = str(ctx.get("design", DEFAULT_DESIGN))
 
     test = str(ctx.get("test", DEFAULT_TEST))
@@ -678,10 +648,6 @@ def _make_test_cfg(ctx: dict) -> TestCfg:  # pylint: disable=too-many-locals
         extra_plusargs.append(f"+CHECK_EN={int(bool(ctx['check_en']))}")
     if "coverage_en" in ctx:
         extra_plusargs.append(f"+COVERAGE_EN={int(bool(ctx['coverage_en']))}")
-
-    # For Icarus, add the dumpfile_path plusarg
-    if sim == "icarus":
-        extra_plusargs.extend(_icarus_wave_plusarg(waves, wave_file))
 
     # Simulator-side env (no global env writes)
     verbosity = str(ctx.get("verbosity", "info")).upper()

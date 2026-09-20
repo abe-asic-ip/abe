@@ -28,7 +28,6 @@ from typing import Final, Sequence
 UNAVAILABLE: Final = "unavailable"
 SIM_VERSION_CMDS: Final[dict[str, tuple[str, ...]]] = {
     "verilator": ("verilator", "--version"),
-    "icarus": ("iverilog", "-V"),
 }
 
 
@@ -57,7 +56,7 @@ def toolchain_fingerprint(sim: str) -> dict[str, str]:
     """Identify the toolchain that a build depends on (cached per process).
 
     Args:
-        sim: Simulator name ("verilator" or "icarus").
+        sim: Simulator name (currently only "verilator").
 
     Returns:
         Python version, cocotb version and install directory, and the

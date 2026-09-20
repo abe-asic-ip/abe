@@ -80,7 +80,7 @@ def test_toolchain_change_gives_new_build_dir(
         {"waves": False},
         {"waves_fmt": "vcd"},
         {"user_build_args": ["-DSIMULATE_METASTABILITY"]},
-        {"sim": "icarus"},
+        {"sim": "other-sim"},  # a hypothetical second simulator
     ],
 )
 def test_original_build_knobs_still_matter(
@@ -112,8 +112,8 @@ def test_build_dir_asks_for_the_toolchain_of_its_simulator(
         return dict(TOOLCHAIN)
 
     monkeypatch.setattr(dv, "toolchain_fingerprint", fake)
-    _leaf(build_ctx(sim="icarus"))
-    assert asked == ["icarus"]
+    _leaf(build_ctx(sim="other-sim"))
+    assert asked == ["other-sim"]
 
 
 def test_manifest_records_toolchain(

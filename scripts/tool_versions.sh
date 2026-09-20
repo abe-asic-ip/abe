@@ -104,7 +104,6 @@ ver "z3" z3 --version
 ver "dot (Graphviz)" dot -V
 
 section "DV support"
-ver "iverilog" iverilog -V
 ver "lz4 (cli)" lz4 --version
 ver "surfer" surfer --version
 

@@ -55,13 +55,6 @@ def test_fingerprint_contents(monkeypatch: pytest.MonkeyPatch) -> None:
     }
 
 
-def test_icarus_uses_its_own_version_command(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Each simulator is asked for its version the way it understands."""
-    monkeypatch.setattr(dv_toolchain, "first_line", " ".join)
-    fp = dv_toolchain.toolchain_fingerprint("icarus")
-    assert fp["simulator"] == "iverilog -V"
-
-
 def test_unknown_simulator_runs_nothing(monkeypatch: pytest.MonkeyPatch) -> None:
     """An unrecognised simulator is reported as unavailable, without running it."""
 

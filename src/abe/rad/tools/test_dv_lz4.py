@@ -44,7 +44,7 @@ def _fake_compiler(monkeypatch: pytest.MonkeyPatch) -> None:
 @pytest.mark.parametrize(
     ("sim", "waves", "waves_fmt"),
     [
-        ("icarus", True, "fst"),
+        ("other-sim", True, "fst"),  # not Verilator
         ("verilator", False, "fst"),
         ("verilator", True, "vcd"),
     ],

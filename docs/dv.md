@@ -278,8 +278,7 @@ directly in Python with the testbench:
 
 #### Rich Python Ecosystem
 
-Open-source simulators like [Verilator](https://verilator.org) and
-[Icarus Verilog](https://steveicarus.github.io/iverilog) provide basic
+Open-source simulators like [Verilator](https://verilator.org) provide basic
 simulation capabilities. They do not have the integrated test management,
 analysis, and debugging tools found in commercial products. Python's
 ecosystem fills this gap and gives open-source developers access to similar
@@ -298,11 +297,13 @@ capabilities:
 
 ### Known Limitations
 
-- **Simulator support**: Only [Verilator](https://verilator.org) and
-  [Icarus Verilog](https://steveicarus.github.io/iverilog) are currently
+- **Simulator support**: Only [Verilator](https://verilator.org) is currently
   supported. While [cocotb](https://www.cocotb.org) supports many
   commercial simulators (VCS, Questa, Xcelium, etc.), integration into RAD
   DV requires access to licenses for testing and validation.
+- **Two-state simulation**: Verilator does not model X and Z values, so bugs
+  that show up as X in a four-state simulator (a missing reset, for example)
+  are not visible in simulation
 - **Sequential test execution**: Regression tests run one at a time instead
   of in parallel. This makes large test suites run slower
 - **Third-party VIP integration**: Does not integrate with commercial VIP
@@ -311,8 +312,8 @@ capabilities:
 ### Future Enhancements
 
 - **Additional simulator support**: Expand beyond
-  [Verilator](https://verilator.org) and
-  [Icarus Verilog](https://steveicarus.github.io/iverilog)
+  [Verilator](https://verilator.org), for example with a four-state simulator
+  such as [Icarus Verilog](https://steveicarus.github.io/iverilog)
 - **Parallel test execution**: Enable concurrent test runs for faster
   regression completion
 - **Multi-agent single-clock example**: Example bench demonstrating single
@@ -440,8 +441,7 @@ docstrings for more detail.
 - Verify RTL designs using [cocotb](https://www.cocotb.org) +
   [pyuvm](https://github.com/pyuvm/pyuvm) +
   [pytest](https://docs.pytest.org/en/stable) framework
-- Support multiple simulators ([Verilator](https://verilator.org),
-  [Icarus Verilog](https://steveicarus.github.io/iverilog)) with configurable
+- Simulate with [Verilator](https://verilator.org), with configurable
   waveform generation (FST, VCD)
 - Execute single or multi-seed regression testing with automatic result
   tracking
@@ -461,7 +461,7 @@ make DESIGN=rad_async_fifo TEST=test_rad_async_fifo DV_OPTS='-seed=123' dv
 | Argument | Type | Required | Default | Description |
 | ---------- | ------ | ---------- | --------- | ------------- |
 | `--cmd` | choice | No | `both` | Run only build, only test, or both (choices: build, test, both) |
-| `--sim` | choice | No | `verilator` | Simulator to use (choices: verilator, icarus) |
+| `--sim` | choice | No | `verilator` | Simulator to use (choices: verilator) |
 | `--outdir` | string | No | `out_dv` | Output directory for build and test artifacts |
 | `--verbosity` | choice | No | `info` | Logging level for Python/pyuvm/cocotb (choices: critical, error, warning, info, debug, notset) |
 | `--waves` | choice | No | `0` | Enable waveform generation (choices: 0, 1) |
@@ -504,7 +504,7 @@ Key files:
 
 | File | Description |
 | ------ | ------------- |
-| `build.log` | Complete build log from the simulator (Verilator/Icarus) |
+| `build.log` | Complete build log from the simulator (Verilator) |
 | `manifest.json` | Build metadata including status (started/built/failed), timestamp, simulator config, waveform settings, toolchain (Python, cocotb, simulator), build arguments, and fingerprint for reproducibility |
 | `srclist.abs.f` | Absolutized source file list with include paths, generated from the design's rtl/srclist.f |
 
@@ -923,7 +923,7 @@ Yes, with caveats:
 
 - [cocotb](https://www.cocotb.org) supports VCS, Questa, Xcelium, and others
 - RAD DV tools (`dv`, `dv-regress`) currently only configure
-[Verilator](https://verilator.org) and [Icarus Verilog](https://steveicarus.github.io/iverilog)
+  [Verilator](https://verilator.org)
 - Extending to commercial simulators requires license access for testing
 
 The testbench code itself is simulator-agnostic.
@@ -957,11 +957,10 @@ complex block-level verification, RAD DV benefits from UVM's structural framewor
 
 ### Can I use SystemVerilog assertions with RAD DV?
 
-Yes. SVA assertions in RTL are fully supported by
-[Verilator](https://verilator.org) and
-[Icarus Verilog](https://steveicarus.github.io/iverilog). They complement the
-Python testbench by checking protocol compliance and design constraints at the
-RTL level. See also [RAD Formal](formal.md) for property-based verification.
+Yes, within the subset of SVA that [Verilator](https://verilator.org) supports.
+Assertions complement the Python testbench by checking protocol compliance and
+design constraints at the RTL level. See also [RAD Formal](formal.md) for
+property-based verification.
 
 ---
 
@@ -1035,7 +1034,6 @@ Add debug logging to both reference model and monitors to trace mismatches.
 - [pyuvm](https://github.com/pyuvm/pyuvm)
 - [pytest](https://docs.pytest.org/en/stable)
 - [Verilator](https://verilator.org)
-- [Icarus Verilog](https://steveicarus.github.io/iverilog)
 - [Surfer](https://surfer-project.org)
 - [cocotb-coverage](https://github.com/mciepluc/cocotb-coverage)
 

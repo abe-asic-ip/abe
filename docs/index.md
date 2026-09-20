@@ -284,8 +284,7 @@ Both approaches have advantages and disadvantages.
 
 ### **Can I use ABE with commercial simulators?**
 
-ABE currently supports [Verilator](https://verilator.org) and
-[Icarus Verilog](https://steveicarus.github.io/iverilog). While
+ABE currently supports [Verilator](https://verilator.org). While
 [cocotb](https://www.cocotb.org) works with commercial simulators, ABE's test
 infrastructure would need updates to support them. Contributors with simulator
 access can extend the [`dv`](dv.md#1-dv-main-front-end-runs-a-single-test)
