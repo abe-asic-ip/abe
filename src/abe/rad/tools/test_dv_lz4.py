@@ -14,8 +14,9 @@ Run with: pytest src/abe/rad/tools/test_dv_lz4.py
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from pathlib import Path
-from types import SimpleNamespace
+from unittest.mock import Mock
 
 import pytest
 
@@ -122,7 +123,7 @@ def test_candidate_prefixes_order_env_then_brew_then_defaults(
     """$LZ4_PREFIX wins, then `brew --prefix lz4`, then well-known locations."""
     monkeypatch.setenv(dv.LZ4_PREFIX_ENV, "/custom/lz4")
 
-    proc = SimpleNamespace(returncode=0, stdout=f"{BREW_PREFIX}\n")
+    proc = Mock(returncode=0, stdout=f"{BREW_PREFIX}\n")
     monkeypatch.setattr(dv.subprocess, "run", lambda *_a, **_k: proc)
 
     prefixes = dv._lz4_candidate_prefixes()  # pylint: disable=protected-access
@@ -141,17 +142,12 @@ def test_candidate_prefixes_without_brew(monkeypatch: pytest.MonkeyPatch) -> Non
     assert prefixes == DEFAULT_PREFIXES
 
 
-def test_detected_args_precede_user_args(tmp_path: Path) -> None:
+def test_detected_args_precede_user_args(build_ctx: Callable[..., dict]) -> None:
     """Detected flags follow the defaults; user --build-arg values stay last."""
-    ctx = {
-        "sim": "verilator",
-        "outdir": str(tmp_path),
-        "waves": True,
-        "waves_fmt": "fst",
-        "design": "rad_async_fifo",
-        "detected_build_args": ["-CFLAGS", "-I/x/include"],
-        "user_build_args": ["-DUSER_FLAG"],
-    }
+    ctx = build_ctx(
+        detected_build_args=["-CFLAGS", "-I/x/include"],
+        user_build_args=["-DUSER_FLAG"],
+    )
 
     cfg = dv._make_build_cfg(ctx)  # pylint: disable=protected-access
 

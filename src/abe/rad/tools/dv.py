@@ -50,6 +50,8 @@ from typing import Any, Final, Sequence
 import pytest
 from cocotb_tools.runner import get_runner
 
+from abe.rad.tools.dv_toolchain import toolchain_fingerprint
+
 # If executed as a script (path mode), __package__ is empty/None and __spec__ is None.
 if (__package__ in (None, "")) and (__spec__ is None):
     print("[dv] ERROR: Please run as 'dv'", file=sys.stderr)
@@ -390,7 +392,9 @@ def _build_dir_for_ctx(ctx: dict) -> Path:
 
     Creates a unique build directory path based on build-affecting parameters.
     The path format is: <outdir>/builds/<design>.<hash10>
-    The hash is computed from simulator, waves settings, and build arguments.
+    The hash is computed from simulator, waves settings, build arguments and
+    the toolchain (Python, cocotb and simulator versions and locations), so a
+    new virtual environment or tool upgrade never reuses a stale build.
 
     Args:
         ctx: Context dictionary containing build configuration.
@@ -412,6 +416,7 @@ def _build_dir_for_ctx(ctx: dict) -> Path:
         "waves": waves,
         "waves_fmt": waves_fmt if waves else "",
         "user_build_args": user_build_args,
+        "toolchain": toolchain_fingerprint(sim),
     }
     raw = json.dumps(fp_obj, sort_keys=True, separators=(",", ":")).encode()
     build_hash = hashlib.sha1(raw).hexdigest()[:10]
@@ -440,6 +445,7 @@ def _write_build_manifest(cfg: "BuildCfg", *, status: str) -> None:
         "build_force": cfg.build_force,
         "build_dir": str(cfg.build_dir),
         "fingerprint": cfg.build_dir.name,  # last path element (hash)
+        "toolchain": toolchain_fingerprint(cfg.sim),  # Python/cocotb/simulator
         "build_args": cfg.build_args,  # final, ordered, verbatim
     }
     cfg.build_dir.mkdir(parents=True, exist_ok=True)
