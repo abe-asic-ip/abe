@@ -40,7 +40,7 @@ module rad_cdc_sync #(
   bit                       enable_hold_check;
 
   localparam realtime TsetupTu = rad_cdc_meta_cfg_pkg::CDC_T_SETUP;
-  localparam realtime TholdTu = rad_cdc_meta_cfg_pkg::CDC_T_HOLD;
+  localparam realtime TholdTu  = rad_cdc_meta_cfg_pkg::CDC_T_HOLD;
 
   initial begin
     $display("%m: SIMULATE_METASTABILITY: STAGES=%0d, RESET=%b", STAGES, RESET);

@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2025 Hugh Walsh
+// SPDX-FileCopyrightText: 2026 Hugh Walsh
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -20,7 +20,11 @@ package rad_cdc_meta_cfg_pkg;
   `define RAD_CDC_RAND_SEED 32'hC0FFEE01
 `endif
   // Global defaults (edit here or override with +define)
+  // These are only referenced when SIMULATE_METASTABILITY is defined (see
+  // rad_cdc_sync.sv), so a lint run without that define sees them as unused.
+  // verilator lint_off UNUSEDPARAM
   parameter realtime CDC_T_SETUP = `RAD_CDC_T_SETUP;
   parameter realtime CDC_T_HOLD = `RAD_CDC_T_HOLD;
   parameter int unsigned CDC_RAND_SEED = `RAD_CDC_RAND_SEED;
+  // verilator lint_on UNUSEDPARAM
 endpackage
