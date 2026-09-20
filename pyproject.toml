@@ -40,6 +40,7 @@ dev = [
     "isort>=9.0,<10",
     "pylint>=4.0.8,<5",
     "mypy>=2.3,<3",
+    "pyright[nodejs]>=1.1.414,<2",
     "pytest>=9.1,<10",
     "pytest-xdist>=3.8,<4",
     "types-setuptools>=84.0.0.20260812",
@@ -96,4 +97,11 @@ target-version = ["py314"]
 typevar-rgx = "^[A-Z][A-Z0-9_]*$"
 
 [tool.pyright]
+# Mirrors mypy.ini: the same Python version and import paths (src and typings),
+# and parameters must be annotated (mypy: disallow_untyped_defs). Pylance in
+# VS Code runs the same engine, so `make py-pyright` reproduces its Problems tab.
+pythonVersion = "3.14"
+typeCheckingMode = "standard"
 stubPath = "typings"
+extraPaths = ["src"]
+reportMissingParameterType = "error"

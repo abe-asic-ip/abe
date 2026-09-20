@@ -21,9 +21,10 @@ py-help:
 	@echo "  make PY_SRCS=<files> py-format-check     # Run isort and formatter on <files> but don't modify"
 	@echo "  make PY_SRCS=<files> py-format-fix       # Run isort and formatter on <files> and modify"
 	@echo "  make PY_SRCS=<files> py-lint             # Run linter on <files>"
-	@echo "  make PY_SRCS=<files> py-typecheck        # Run static type checker on <files>"
-	@echo "  make PY_SRCS=<files> py-static-check     # Run isort, formatter, linter, type checker on <files> but don't modify"
-	@echo "  make PY_SRCS=<files> py-static-fix       # Run isort, formatter, linter, type checker on <files> and modify"
+	@echo "  make PY_SRCS=<files> py-mypy             # Run mypy type checker on <files>"
+	@echo "  make PY_SRCS=<files> py-pyright          # Run Pyright type checker on <files>"
+	@echo "  make PY_SRCS=<files> py-static-check     # Run isort, formatter, linter, type checkers on <files> but don't modify"
+	@echo "  make PY_SRCS=<files> py-static-fix       # Run isort, formatter, linter, type checkers on <files> and modify"
 
 .PHONY: py-version-same
 py-version-same:
@@ -84,13 +85,14 @@ py-outdated: py-ensure-venv
 
 .PHONY: py-tools
 py-tools: py-ensure-venv
-	@echo "Python: $$($(PYTHON) --version)"
-	@echo "pip:    $$($(PIP) --version)"
-	@echo "black:  $$($(PY_FORMAT) --version)"
-	@echo "isort:  $$($(PY_ISORT) --version)"
-	@echo "pylint: $$($(PY_LINT) --version 2>/dev/null || echo 'via module')"
-	@echo "mypy:   $$($(PY_TYPECHECK) --version)"
-	@echo "pytest: $$($(PYTEST) --version)"
+	@echo "Python:  $$($(PYTHON) --version)"
+	@echo "pip:     $$($(PIP) --version)"
+	@echo "black:   $$($(PY_FORMAT) --version)"
+	@echo "isort:   $$($(PY_ISORT) --version)"
+	@echo "pylint:  $$($(PY_LINT) --version 2>/dev/null || echo 'via module')"
+	@echo "mypy:    $$($(PY_MYPY) --version)"
+	@echo "pyright: $$($(PY_PYRIGHT) --version)"
+	@echo "pytest:  $$($(PYTEST) --version)"
 
 .PHONY: py-import-check
 py-import-check:
@@ -130,16 +132,21 @@ py-lint: py-check-srcs
 	@echo "running $@ ..."
 	@$(PY_LINT) $(PY_LINT_FLAGS) $(PY_SRCS_RESOLVED)
 
-.PHONY: py-typecheck
-py-typecheck: py-check-srcs
+.PHONY: py-mypy
+py-mypy: py-check-srcs
 	@echo "running $@ ..."
-	@$(PY_TYPECHECK) $(PY_TYPECHECK_FLAGS) $(PY_SRCS_RESOLVED)
+	@$(PY_MYPY) $(PY_MYPY_FLAGS) $(PY_SRCS_RESOLVED)
+
+.PHONY: py-pyright
+py-pyright: py-check-srcs
+	@echo "running $@ ..."
+	@$(PY_PYRIGHT) $(PY_PYRIGHT_FLAGS) $(PY_SRCS_RESOLVED)
 
 .PHONY: py-static-check
-py-static-check: py-isort-check py-format-check py-lint py-typecheck
+py-static-check: py-isort-check py-format-check py-lint py-mypy py-pyright
 
 .PHONY: py-static-fix
-py-static-fix: py-format-fix py-lint py-typecheck
+py-static-fix: py-format-fix py-lint py-mypy py-pyright
 
 .PHONY: py-clean
 py-clean:

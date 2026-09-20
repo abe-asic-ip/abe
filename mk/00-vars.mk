@@ -32,7 +32,8 @@ PIP_INSTALL ?= $(PIP) install $(if $(strip $(PY_CONSTRAINTS)),-c $(PY_CONSTRAINT
 PY_ISORT ?= $(BIN)/isort
 PY_FORMAT ?= $(BIN)/black
 PY_LINT ?= $(PYTHON) -m pylint
-PY_TYPECHECK ?= $(BIN)/mypy
+PY_MYPY ?= $(BIN)/mypy
+PY_PYRIGHT ?= $(BIN)/pyright
 PYTEST ?= $(BIN)/pytest
 
 PY_SRCS ?=
@@ -40,7 +41,8 @@ PY_SRCS ?=
 PY_ISORT_FLAGS ?= --profile black --line-length 88
 PY_FORMAT_FLAGS ?= --line-length 88
 PY_LINT_FLAGS ?= --max-line-length=88
-PY_TYPECHECK_FLAGS ?= --config-file mypy.ini
+PY_MYPY_FLAGS ?= --config-file mypy.ini
+PY_PYRIGHT_FLAGS ?= --project pyproject.toml --pythonpath $(PYTHON)
 
 # ---------- uarch ----------
 UARCH_DIR := src/abe/uarch
