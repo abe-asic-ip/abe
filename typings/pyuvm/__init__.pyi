@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2025 Hugh Walsh
+# SPDX-FileCopyrightText: 2026 Hugh Walsh
 #
 # SPDX-License-Identifier: MIT
 
@@ -14,6 +14,9 @@ T = TypeVar("T")
 OT = TypeVar("OT", bound="uvm_object")
 CT = TypeVar("CT", bound="uvm_component")
 TT = TypeVar("TT", bound="uvm_test")
+
+class UVMConfigItemNotFound(Exception):
+    """UVMConfigItemNotFound"""
 
 def uvm_config_db() -> Any:
     """uvm_config_db"""

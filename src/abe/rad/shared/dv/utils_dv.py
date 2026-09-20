@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2025 Hugh Walsh
+# SPDX-FileCopyrightText: 2026 Hugh Walsh
 #
 # SPDX-License-Identifier: MIT
 
@@ -63,7 +63,6 @@ from typing import Any, Protocol, TypeVar, Union, cast
 import pyuvm
 from cocotb.handle import SimHandleBase
 from cocotb.types import Logic, LogicArray
-from pyuvm import error_classes
 
 T = TypeVar("T")
 TT = TypeVar("TT", bound=pyuvm.uvm_test)
@@ -116,7 +115,7 @@ def uvm_config_db_get_try(
         inst = ""
     try:
         return cast(Any, uvm_config_db().get(comp, inst, key))
-    except error_classes.UVMConfigItemNotFound:
+    except pyuvm.UVMConfigItemNotFound:
         return None
 
 
