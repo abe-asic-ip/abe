@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2025 Hugh Walsh
+# SPDX-FileCopyrightText: 2026 Hugh Walsh
 #
 # SPDX-License-Identifier: MIT
 
@@ -15,6 +15,7 @@ dv-help:
 	@echo "  make dv-report                           # Report test results"
 	@echo "  make dv-regress-design-and-report        # Run all tests in <design>/dv/dv_regress.yaml, then report"
 	@echo "  make dv-regress-all-and-report           # Run all tests in **/dv_regress.yaml, then report"
+	@echo "  make dv-test                             # Same as dv-regress-all-and-report, without activating .venv"
 
 .PHONY: dv
 dv: check-design check-test
@@ -46,9 +47,11 @@ dv-clean:
 .PHONY: clean
 clean: dv-clean
 
+# Run every regression and report. The venv is put on PATH so the dv commands are
+# found even when the venv is not activated.
 .PHONY: dv-test
-dv-test:
-	@echo "Test dv - not implemented yet"
+dv-test: py-ensure-venv
+	@PATH="$(CURDIR)/$(BIN):$$PATH" $(MAKE) --no-print-directory dv-regress-all-and-report
 
 .PHONY: test
 test: dv-test

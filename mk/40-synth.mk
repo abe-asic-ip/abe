@@ -12,6 +12,7 @@ synth-help:
 	@echo "  make DESIGN=<design> synth               # sv2v + Yosys stat"
 	@echo "  make DESIGN=<design> synth-report        # Summarize Yosys stat"
 	@echo "  make DESIGN=<design> synth-dot           # Show -format dot"
+	@echo "  make synth-test                          # Synthesize every design (part of make test)"
 
 $(SYNTH_OUT_DIR):
 	@mkdir -p $(SYNTH_OUT_DIR)
@@ -67,9 +68,25 @@ synth-clean:
 .PHONY: clean
 clean: synth-clean
 
+# Synthesize every design that has RTL (shared/ has no top module). All designs
+# run, and the target fails if any did. Output is shown only for a design that
+# fails.
 .PHONY: synth-test
 synth-test:
-	@echo "Test synth - not implemented yet"
+	@rc=0; for d in $(RAD_ROOT)/*/rtl ; do \
+	  [ -d "$$d" ] || continue; \
+	  b=$${d%/rtl}; b=$${b##*/}; \
+	  if [ "$$b" = "shared" ]; then continue; fi; \
+	  if [ -f "$$d/srclist.f" ] || [ -f "$$d/$$b.sv" ]; then \
+	    log=$$(mktemp); \
+	    if $(MAKE) -s DESIGN="$$b" synth >"$$log" 2>&1; then \
+	      echo "synth PASS: $$b"; \
+	    else \
+	      cat "$$log"; echo "synth FAIL: $$b"; rc=1; \
+	    fi; \
+	    rm -f "$$log"; \
+	  fi; \
+	done; exit $$rc
 
 .PHONY: test
 test: synth-test

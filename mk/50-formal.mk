@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2025 Hugh Walsh
+# SPDX-FileCopyrightText: 2026 Hugh Walsh
 #
 # SPDX-License-Identifier: MIT
 
@@ -11,6 +11,7 @@ formal-help:
 	@echo ""
 	@echo "  make DESIGN=<design> formal              # Formal prove"
 	@echo "  make DESIGN=<design> formal-cover        # Formal cover"
+	@echo "  make formal-test                         # Formal prove and cover for every design"
 
 .PHONY: formal
 formal: check-design
@@ -30,9 +31,21 @@ formal-clean:
 .PHONY: clean
 clean: formal-clean
 
+# Prove and cover every design that has a formal directory. All designs run, and
+# the target fails if any did. Output is shown only for a design that fails.
 .PHONY: formal-test
 formal-test:
-	@echo "Test formal - not implemented yet"
+	@rc=0; for d in $(RAD_ROOT)/*/formal ; do \
+	  [ -d "$$d" ] || continue; \
+	  b=$${d%/formal}; b=$${b##*/}; \
+	  log=$$(mktemp); \
+	  if $(MAKE) -s DESIGN="$$b" formal formal-cover >"$$log" 2>&1; then \
+	    echo "formal PASS: $$b (prove, cover)"; \
+	  else \
+	    cat "$$log"; echo "formal FAIL: $$b"; rc=1; \
+	  fi; \
+	  rm -f "$$log"; \
+	done; exit $$rc
 
 .PHONY: test
 test: formal-test

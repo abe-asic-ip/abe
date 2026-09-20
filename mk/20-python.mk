@@ -25,6 +25,7 @@ py-help:
 	@echo "  make PY_SRCS=<files> py-pyright          # Run Pyright type checker on <files>"
 	@echo "  make PY_SRCS=<files> py-static-check     # Run isort, formatter, linter, type checkers on <files> but don't modify"
 	@echo "  make PY_SRCS=<files> py-static-fix       # Run isort, formatter, linter, type checkers on <files> and modify"
+	@echo "  make py-test                             # Run the Python unit tests (PY_TEST_PATHS=<paths> to select)"
 
 .PHONY: py-version-same
 py-version-same:
@@ -159,8 +160,9 @@ py-clean:
 clean: py-clean
 
 .PHONY: py-test
-py-test:
-	@echo "Test python - not implemented yet"
+py-test: py-ensure-venv
+	@echo "running $@ ..."
+	@$(PYTEST) $(PY_TEST_OPTS) $(PY_TEST_PATHS)
 
 .PHONY: test
 test: py-test

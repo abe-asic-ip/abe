@@ -35,6 +35,9 @@ PY_LINT ?= $(PYTHON) -m pylint
 PY_MYPY ?= $(BIN)/mypy
 PY_PYRIGHT ?= $(BIN)/pyright
 PYTEST ?= $(BIN)/pytest
+# Unit tests only; the cocotb benches under rad/*/dv run through dv-regress.
+PY_TEST_PATHS ?= src/abe/rad/tools scripts
+PY_TEST_OPTS ?= -q
 
 PY_SRCS ?=
 
@@ -109,7 +112,7 @@ endif
 
 # The parsing lives in a script, not inline: GNU Make 3.81 (macOS /usr/bin/make)
 # cannot parse regexes with parentheses inside a multi-line $(shell ...) call.
-SRCLIST_AWK := $(RAD_ROOT)/tools/parse_srclist.awk
+SRCLIST_AWK := src/abe/rad/tools/parse_srclist.awk
 
 ifeq ($(wildcard $(SV_SRCLIST)),)
   SV_FILES      := $(SV_SRCS)

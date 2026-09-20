@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2025 Hugh Walsh
+# SPDX-FileCopyrightText: 2026 Hugh Walsh
 #
 # SPDX-License-Identifier: MIT
 
@@ -16,6 +16,7 @@ rtl-help:
 	@echo "  make DESIGN=<design> rtl-nice            # Formatter followed by both linters"
 	@echo "  make rtl-format-all                      # Format all designs"
 	@echo "  make rtl-lint-all                        # Lint all designs"
+	@echo "  make rtl-test                            # Same as rtl-lint-all (part of make test)"
 
 .PHONY: rtl-format
 rtl-format: check-design
@@ -71,9 +72,9 @@ rtl-clean:
 .PHONY: clean
 clean: rtl-clean
 
+# The RTL test is a lint of every design.
 .PHONY: rtl-test
-rtl-test:
-	@echo "Test rtl - not implemented yet"
+rtl-test: rtl-lint-all
 
 .PHONY: test
 test: rtl-test
