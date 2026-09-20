@@ -90,6 +90,18 @@ make DESIGN=rad_async_fifo synth
 make DESIGN=rad_async_fifo synth-report
 ```
 
+To lint or synthesize every design in one command:
+
+```bash
+make rtl-test
+make synth-test
+```
+
+`rtl-test` is `rtl-lint-all`. It stops at the first design that fails lint.
+`synth-test` prints one `PASS` or `FAIL` line per design and shows the tool
+output only for a design that fails. It runs every design, and fails if any
+design did.
+
 ### Examine Outputs
 
 - `rtl-*` targets print to the console
@@ -132,6 +144,8 @@ Makefiles are in directory `mk`
 - Common flags come from `00-vars.mk`.
 - RTL commands are in `30-rtl.mk`.
 - [Synthesis](#synthesis-flow) commands are in `40-synth.mk`.
+
+The makefiles work with GNU Make 3.81 (the version macOS ships) and newer.
 
 Common commands:
 
@@ -184,6 +198,16 @@ This file lists:
 - SystemVerilog source files
 - Include directories
 - Compile-time defines
+
+One item per line, with paths relative to the repository root:
+
+- `#` or `//` at the start of a line: comment
+- `+incdir+<dir>` or `-I <dir>`: include directory
+- `+define+NAME[=VALUE]` or `-D NAME[=VALUE]`: compile-time define
+- `-f <file>`: nested source list
+- anything else: a source file
+
+The makefiles read the list with `src/abe/rad/tools/parse_srclist.awk`.
 
 Every tool ([Verilator](https://verilator.org),
 [Verible](https://github.com/chipsalliance/verible),
@@ -274,6 +298,18 @@ make DESIGN=<design> rtl-lint-verilator
 [Verilator](https://verilator.org) linting is important because RAD DV uses
 [Verilator](https://verilator.org) as the default simulator.
 
+Lint runs with `--Wall`, so every warning is an error. If a warning is
+intentional, waive it locally instead of disabling it for the whole project. For
+example, `rad_cdc_meta_cfg_pkg` declares parameters that are used only when
+`SIMULATE_METASTABILITY` is defined, so lint would report them as unused. They
+are wrapped in a local waiver:
+
+```systemverilog
+// verilator lint_off UNUSEDPARAM
+parameter realtime CDC_T_SETUP = `RAD_CDC_T_SETUP;
+// verilator lint_on UNUSEDPARAM
+```
+
 ---
 
 ## Synthesis Flow
@@ -296,6 +332,12 @@ out_synth/<design>/
 ```bash
 make DESIGN=<design> synth
 ```
+
+The [sv2v](https://github.com/zachjs/sv2v) netlist
+(`out_synth/<design>/<design>.v`) is regenerated whenever the design's
+`srclist.f`, the source files it lists (including nested lists), or the files in
+its include directories change. Otherwise `synth` reuses it and only reruns
+[Yosys](https://github.com/YosysHQ/yosys).
 
 ### Examine Synthesis Outputs
 

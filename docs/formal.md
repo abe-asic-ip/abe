@@ -67,11 +67,20 @@ make py-install-all
 ### Install Required Tools
 
 ```bash
-make deps
+make deps-formal
 ```
 
-This shows any missing tools. Installation steps depend on your platform and
-are not covered in this document.
+This checks for [SymbiYosys](https://github.com/YosysHQ/sby) (`sby`),
+`yosys-smtbmc`, and the [Z3](https://github.com/Z3Prover/z3) SMT solver that the
+`.sby` files use, and shows any that are missing. To install Z3:
+
+| Platform | Install command |
+| ---------- | ----------------- |
+| macOS (Homebrew) | `brew install z3` |
+| Debian / Ubuntu | `sudo apt install z3` |
+
+Other installation steps depend on your platform and are not covered in this
+document. `make deps` checks the design and formal tools together.
 
 ### Run Examples
 
@@ -79,6 +88,16 @@ are not covered in this document.
 make DESIGN=rad_async_fifo formal
 make DESIGN=rad_async_fifo formal-cover
 ```
+
+Prove and cover every design in one command:
+
+```bash
+make formal-test
+```
+
+It prints one `PASS` or `FAIL` line per design and shows the solver output only
+for a design that fails. Every design runs, and the command fails if any design
+did.
 
 ### Examine Outputs
 

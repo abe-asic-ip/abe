@@ -116,6 +116,15 @@ All regressions in the repo:
 make dv-regress-all-and-report
 ```
 
+`make dv-test` does the same and also works when `.venv` is not activated. It
+fails if any test has an unexpected outcome.
+
+The DV tools themselves have unit tests:
+
+```bash
+make py-test
+```
+
 ### Examine Outputs
 
 ```text
@@ -193,13 +202,18 @@ out_dv/tests/<rad_design>.<hash>.<test>.<seed>
 │       │   │   └── __init__.py
 │       │   ├── tools
 │       │   │   ├── __init__.py
+│       │   │   ├── conftest.py
 │       │   │   ├── dv_make_bench.py
 │       │   │   ├── dv_regress_all.py
 │       │   │   ├── dv_regress.py
 │       │   │   ├── dv_report.py
 │       │   │   ├── dv.py
+│       │   │   ├── dv_toolchain.py
 │       │   │   ├── flatten_srclist.sh
-│       │   │   └── parse_srclist.awk
+│       │   │   ├── parse_srclist.awk
+│       │   │   ├── test_dv_build_fingerprint.py
+│       │   │   ├── test_dv_lz4.py
+│       │   │   └── test_dv_toolchain.py
 │       │   └── __init__.py
 ├── Makefile
 ```
@@ -473,16 +487,25 @@ Output directory:
 ```
 
 The hash is a 10-character SHA-1 fingerprint computed from build-affecting
-parameters: simulator type, waveform settings (enabled/format), and user build
-arguments. This ensures identical build configurations reuse the same directory
-while different configurations get separate builds.
+parameters: simulator type, waveform settings (enabled/format), user build
+arguments, and the toolchain (Python version, cocotb version and install
+location, and the simulator's version). This ensures identical build
+configurations reuse the same directory while different configurations get
+separate builds.
+
+Including the toolchain matters because a build refers to files inside the
+virtual environment (cocotb's libraries) and the simulator's install by absolute
+path. After recreating `.venv` or upgrading Python, cocotb or the simulator, an
+old build directory would fail (`make: *** No rule to make target ...`), so
+`dv` starts a fresh build directory instead. Old build directories are not
+deleted automatically; `make clean` removes them.
 
 Key files:
 
 | File | Description |
 | ------ | ------------- |
 | `build.log` | Complete build log from the simulator (Verilator/Icarus) |
-| `manifest.json` | Build metadata including status (started/built/failed), timestamp, simulator config, waveform settings, build arguments, and fingerprint for reproducibility |
+| `manifest.json` | Build metadata including status (started/built/failed), timestamp, simulator config, waveform settings, toolchain (Python, cocotb, simulator), build arguments, and fingerprint for reproducibility |
 | `srclist.abs.f` | Absolutized source file list with include paths, generated from the design's rtl/srclist.f |
 
 #### `dv`  Test Outputs

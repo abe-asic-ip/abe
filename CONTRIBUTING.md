@@ -1,5 +1,5 @@
 <!--
-SPDX-FileCopyrightText: 2025 Hugh Walsh
+SPDX-FileCopyrightText: 2026 Hugh Walsh
 
 SPDX-License-Identifier: MIT
 -->
@@ -28,12 +28,31 @@ DV, reference model, and documentation).
 
 ---
 
-## 🧪 Running Tests
+## 🧪 Running Tests and Checks
 
 To run the Python-based DV environment for any RAD design, see:
 
 - [RAD DV](docs/dv.md)
-- The [`dv`](dv.md#1-dv--main-front-end-runs-a-single-test) command
+- The [`dv`](docs/dv.md#1-dv--main-front-end-runs-a-single-test) command
+
+Set up the environment first (see
+[Python setup](docs/python_dev.md#set-up-and-install-the-environment)), then,
+with `.venv` active, run these before you submit a change:
+
+| Check | Command |
+| ------- | --------- |
+| Unit tests for the DV tools and helper scripts | `make py-test` |
+| Everything: unit tests, RTL lint, synthesis, formal, all DV regressions | `make test` |
+| Python static checks (isort, black, pylint, mypy, pyright) | `make PY_SRCS=ALL py-static-check` |
+| Makefile lint | `make checkmake` |
+| License headers | `reuse lint` |
+| Header years of changed files | `make check-header-years` |
+
+`PY_SRCS=ALL` covers the Python files that git tracks, so `git add` new files
+first, or name them: `make PY_SRCS="path/a.py path/b.py" py-static-check`.
+
+Python packages are pinned in `constraints.txt`. To upgrade one, see
+[How do I upgrade a package?](docs/python_dev.md#how-do-i-upgrade-a-package)
 
 ---
 
@@ -43,6 +62,9 @@ To run the Python-based DV environment for any RAD design, see:
 - Python code uses **MIT**.
 - SystemVerilog RTL uses **Apache-2.0**.
 - Please include or preserve the correct **SPDX header** in every file.
+- Set the copyright year in the SPDX header of every file you change to the
+  current year. `make check-header-years` lists the changed files that need it
+  and `make fix-header-years` updates them.
 
 License texts are in the `LICENSES/` directory.
 

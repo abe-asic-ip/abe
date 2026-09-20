@@ -1,5 +1,5 @@
 <!--
-SPDX-FileCopyrightText: 2025 Hugh Walsh
+SPDX-FileCopyrightText: 2026 Hugh Walsh
 
 SPDX-License-Identifier: MIT
 -->
@@ -8,7 +8,7 @@ SPDX-License-Identifier: MIT
 
 # ABE: A Better Environment for Open-Source ASIC IP Development
 
-[![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](https://www.python.org/downloads/)
+[![Python 3.14+](https://img.shields.io/badge/python-3.14+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![GitHub](https://img.shields.io/badge/github-abe--asic--ip%2Fabe-blue.svg)](https://github.com/abe-asic-ip/abe)
@@ -134,6 +134,10 @@ and **Python-based verification** for ASIC IP development.
 
 ## How Can I Get Started?
 
+**Requirements**: Python 3.14 or newer, and GNU Make 3.81 or newer (the `make`
+that ships with macOS works). The free EDA tools are listed in the guides
+linked in step 4.
+
 1. **Clone the repository**
 2. **Set up the Python environment** ([see details](python_dev.md#set-up-and-install-the-environment))
 3. **Try [fifo-depth](fifo_depth.md)** on an example YAML spec to see CP-SAT
@@ -200,11 +204,18 @@ metrics for packet-based interfaces where packets are quantized to bus beats.
 ABE includes:
 
 - Standard directory layout
-- [Python environment setup](python_dev.md)
+- [Python environment setup](python_dev.md), with version ranges in
+`pyproject.toml` and the exact verified versions in `constraints.txt`
+([details](python_dev.md#package-versions))
 - [Python static analysis](python_dev.md) with
 [isort](https://pycqa.github.io/isort), [black](https://github.com/psf/black),
-[pylint](https://pylint.org), and [mypy](https://mypy-lang.org)
+[pylint](https://pylint.org), [mypy](https://mypy-lang.org), and
+[pyright](https://github.com/microsoft/pyright)
 - Make targets for RTL development, synthesis, formal, and DV
+- Checks for contributors: `make test` runs the unit tests, RTL lint, synthesis,
+formal proofs, and all DV regressions, `make tool-versions` lists every tool
+version, `make py-outdated` shows newer Python packages, and
+`make check-header-years` checks SPDX header years
 - Documentation conventions
 
 All designed to help you build ASIC IP quickly and consistently.
