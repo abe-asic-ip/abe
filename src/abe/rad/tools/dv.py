@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2025 Hugh Walsh
+# SPDX-FileCopyrightText: 2026 Hugh Walsh
 #
 # SPDX-License-Identifier: MIT
 
@@ -38,7 +38,10 @@ import logging
 import os
 import random
 import shlex
+import shutil
+import subprocess
 import sys
+import tempfile
 import time
 from dataclasses import dataclass
 from pathlib import Path
@@ -63,6 +66,30 @@ DEFAULT_FRAMEWORK = f"{Path(__file__).resolve()}::test_framework"
 DEFAULT_PYTEST_OPTS: tuple[str, ...] = ("-vv", "-s", "-ra", "-x")
 DEFAULT_DESIGN = ""
 DEFAULT_TEST = ""
+
+# Verilator's FST writer includes <lz4.h> and links -llz4. Package managers such
+# as Homebrew and MacPorts install it outside the compiler's default search path.
+LZ4_PREFIX_ENV: Final = "LZ4_PREFIX"
+_LZ4_FALLBACK_PREFIXES: Final[tuple[str, ...]] = (
+    "/opt/homebrew",  # Homebrew (Apple Silicon)
+    "/usr/local",  # Homebrew (Intel), manual installs
+    "/opt/local",  # MacPorts
+)
+_LZ4_PROBE_SRC: Final = (
+    "#include <lz4.h>\nint main() { return LZ4_versionNumber() > 0 ? 0 : 1; }\n"
+)
+_LZ4_MISSING_MSG: Final = """\
+[dv]: error: Verilator FST waveforms require the lz4 library (lz4.h and liblz4), \
+but it was not found.
+  Searched: {searched}
+  Install lz4, then rerun:
+    macOS (Homebrew):  brew install lz4
+    Debian/Ubuntu:     sudo apt install liblz4-dev
+    Fedora/RHEL:       sudo dnf install lz4-devel
+  If lz4 is installed elsewhere, set {env}=<prefix> (the directory that contains
+  include/lz4.h and lib/liblz4).
+  To avoid the dependency, use VCD waveforms (--waves_fmt vcd) or disable waves
+  (--waves 0)."""
 
 
 @dataclass
@@ -435,6 +462,94 @@ def _verilator_build_switches(waves: bool, waves_fmt: str) -> list[str]:
     return args
 
 
+def _cxx_links_lz4(cxx_argv: Sequence[str], prefix: Path | None = None) -> bool:
+    """Return True if the C++ compiler can compile and link against lz4.
+
+    Args:
+        cxx_argv: C++ compiler command (e.g. ["c++"] or ["ccache", "g++"]).
+        prefix: Optional install prefix to add via -I<prefix>/include and
+            -L<prefix>/lib. With None, only the compiler's default search paths
+            are used.
+    """
+    flags = [f"-I{prefix}/include", f"-L{prefix}/lib"] if prefix else []
+    with tempfile.TemporaryDirectory() as tmp:
+        cmd = [*cxx_argv, "-x", "c++", "-", *flags, "-llz4", "-o", f"{tmp}/probe"]
+        try:
+            proc = subprocess.run(
+                cmd,
+                input=_LZ4_PROBE_SRC,
+                text=True,
+                capture_output=True,
+                timeout=60,
+                check=False,
+            )
+        except (OSError, subprocess.SubprocessError):
+            return False
+    return proc.returncode == 0
+
+
+def _lz4_candidate_prefixes() -> list[Path]:
+    """Return install prefixes to try for lz4, most specific first."""
+    prefixes: list[Path] = []
+    if env_prefix := os.environ.get(LZ4_PREFIX_ENV):
+        prefixes.append(Path(env_prefix))
+    if brew := shutil.which("brew"):
+        try:
+            proc = subprocess.run(
+                [brew, "--prefix", "lz4"],
+                capture_output=True,
+                text=True,
+                timeout=30,
+                check=False,
+            )
+        except (OSError, subprocess.SubprocessError):
+            proc = None
+        if proc and proc.returncode == 0 and proc.stdout.strip():
+            prefixes.append(Path(proc.stdout.strip()))
+    prefixes += [Path(p) for p in _LZ4_FALLBACK_PREFIXES]
+    return prefixes
+
+
+def verilator_lz4_build_args(sim: str, waves: bool, waves_fmt: str) -> list[str]:
+    """Return extra Verilator args needed for FST tracing to find lz4.
+
+    Verilator's FST writer needs lz4 headers and libraries. If the compiler
+    already finds them, no extra args are needed. Otherwise common install
+    prefixes (Homebrew, MacPorts, $LZ4_PREFIX) are tried.
+
+    Args:
+        sim: Simulator name.
+        waves: Whether waveform tracing is enabled.
+        waves_fmt: Waveform format ("fst" or "vcd").
+
+    Returns:
+        Verilator -CFLAGS/-LDFLAGS args (possibly empty).
+
+    Raises:
+        SystemExit: If FST tracing is requested and lz4 cannot be found.
+    """
+    if sim != "verilator" or not waves or waves_fmt != "fst":
+        return []
+
+    cxx_argv = shlex.split(os.environ.get("CXX", "c++"))
+    if not cxx_argv or shutil.which(cxx_argv[0]) is None:
+        return []  # No compiler: let the build report that instead.
+
+    if _cxx_links_lz4(cxx_argv):
+        return []
+
+    prefixes = _lz4_candidate_prefixes()
+    for prefix in prefixes:
+        if _cxx_links_lz4(cxx_argv, prefix):
+            logging.getLogger(__name__).info(
+                "lz4 is not on the default compiler path; using %s", prefix
+            )
+            return ["-CFLAGS", f"-I{prefix}/include", "-LDFLAGS", f"-L{prefix}/lib"]
+
+    searched = ", ".join(["compiler default paths", *(str(p) for p in prefixes)])
+    raise SystemExit(_LZ4_MISSING_MSG.format(searched=searched, env=LZ4_PREFIX_ENV))
+
+
 def _verilator_test_switches(waves: bool, wave_file: Path) -> list[str]:
     """Generate Verilator-specific test runtime switches.
 
@@ -486,6 +601,7 @@ def _make_build_cfg(ctx: dict) -> BuildCfg:
     build_args: list[str] = []
     if sim == "verilator":
         build_args += _verilator_build_switches(waves, waves_fmt)
+        build_args += [str(x) for x in ctx.get("detected_build_args", [])]
 
     if design:
         srclist_file = PROJ_DIR / "src" / "abe" / "rad" / design / "rtl" / "srclist.f"
@@ -787,6 +903,13 @@ def main(argv: Sequence[str] | None = None) -> int:
     validate_args(args)
     _configure_logging(str(args.verbosity))
 
+    # Fail fast (before pytest) if the build needs lz4 and it is missing.
+    detected_build_args: list[str] = []
+    if args.cmd in {"both", "build"}:
+        detected_build_args = verilator_lz4_build_args(
+            args.sim, args.waves == "1", str(args.waves_fmt).lower()
+        )
+
     tests_root = Path(f"{args.outdir}/{DEFAULT_TESTS_SUBDIR}").resolve()
 
     # Shared context for all seeds (no env; carried in-process)
@@ -801,6 +924,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         "design": args.design,
         "build_force": bool(args.build_force),
         "user_build_args": list(args.build_args or []),
+        "detected_build_args": detected_build_args,
         "test": args.test,
         "expect": args.expect,
         "check_en": (args.check_en == "1"),

@@ -1,5 +1,5 @@
 <!--
-SPDX-FileCopyrightText: 2025 Hugh Walsh
+SPDX-FileCopyrightText: 2026 Hugh Walsh
 
 SPDX-License-Identifier: MIT
 -->
@@ -74,6 +74,26 @@ make py-install-all
 
 Install [Verilator](https://verilator.org) and a waveform viewer such as
 [Surfer](https://surfer-project.org) or [GTKWave](https://gtkwave.sourceforge.net).
+
+Verilator's FST waveform writer (the default `--waves_fmt`) also needs the
+[lz4](https://lz4.org) library and its development headers:
+
+| Platform | Install command |
+| ---------- | ----------------- |
+| macOS (Homebrew) | `brew install lz4` |
+| Debian / Ubuntu | `sudo apt install liblz4-dev` |
+| Fedora / RHEL | `sudo dnf install lz4-devel` |
+
+`dv` looks for lz4 in the compiler's default search paths, then in
+`$LZ4_PREFIX`, Homebrew (`brew --prefix lz4`), `/opt/homebrew`, `/usr/local`,
+and `/opt/local` (MacPorts), and passes the matching `-I`/`-L` flags to
+Verilator automatically.
+If lz4 lives somewhere else, set `LZ4_PREFIX` to the directory that contains
+`include/lz4.h` and `lib/liblz4`. If lz4 cannot be found, `dv` stops before the
+build with instructions. You can also skip the dependency entirely with
+`--waves_fmt vcd` (larger files) or `--waves 0`.
+
+Run `make deps-dv` to check that the DV tools are available.
 
 ### Run Examples
 
@@ -429,7 +449,7 @@ make DESIGN=rad_async_fifo TEST=test_rad_async_fifo DV_OPTS='-seed=123' dv
 | `--outdir` | string | No | `out_dv` | Output directory for build and test artifacts |
 | `--verbosity` | choice | No | `info` | Logging level for Python/pyuvm/cocotb (choices: critical, error, warning, info, debug, notset) |
 | `--waves` | choice | No | `0` | Enable waveform generation (choices: 0, 1) |
-| `--waves_fmt` | choice | No | `fst` | Waveform format (choices: fst, vcd) |
+| `--waves_fmt` | choice | No | `fst` | Waveform format (choices: fst, vcd). Verilator FST requires lz4 (see [Install Required Tools](#install-required-tools)) |
 | `--design` | string | Yes | - | Design to build (e.g., rad_async_fifo) |
 | `--build-force` | flag | No | `False` | Force a rebuild even if build directory exists |
 | `--build-arg` | string | No | - | Extra build argument passed verbatim to the simulator (repeatable, e.g., --build-arg=-DSIMULATE_METASTABILITY) |

@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2025 Hugh Walsh
+# SPDX-FileCopyrightText: 2026 Hugh Walsh
 #
 # SPDX-License-Identifier: MIT
 
@@ -16,6 +16,13 @@ deps-design:
 	@command -v yosys                  >/dev/null || { echo "Missing yosys"; exit 1; }
 	@command -v dot                    >/dev/null || { echo "Missing dot (Graphviz)"; exit 1; }
 	@echo "All design deps found."
+
+.PHONY: deps-dv
+deps-dv:
+	@test -x "$(BIN)/python" || { echo "ERROR: .venv missing. Run: make py-venv-all"; exit 2; }
+	@command -v verilator >/dev/null || { echo "Missing verilator"; exit 1; }
+	@$(PYTHON) -c "from abe.rad.tools.dv import verilator_lz4_build_args as chk; chk('verilator', True, 'fst')"
+	@echo "All dv deps found."
 
 .PHONY: deps-formal
 deps-formal:
