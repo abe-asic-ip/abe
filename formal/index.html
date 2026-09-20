@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -31,7 +31,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
       
       
 
@@ -1192,7 +1192,7 @@
 
 
 <!--
-SPDX-FileCopyrightText: 2025 Hugh Walsh
+SPDX-FileCopyrightText: 2026 Hugh Walsh
 
 SPDX-License-Identifier: MIT
 -->
@@ -1234,7 +1234,7 @@ design‑side checks</em> and <em>before <a href="../dv/">DV</a> simulation</em>
 <li><a href="https://github.com/YosysHQ/sby">SymbiYosys</a>‑based flow (<code>prove</code> and <code>cover</code>)</li>
 <li>Reusable SBY templates for each design</li>
 <li>Standard formal testbench structure</li>
-<li>Open‑source SMT solvers (<a href="https://github.com/Boolector/boolector">Boolector</a> recommended)</li>
+<li>Open‑source SMT solvers (<a href="https://github.com/Z3Prover/z3">Z3</a> is the default)</li>
 <li>Make‑based automation for proofs and coverage</li>
 <li>Same directory structure for each <code>rad_&lt;design&gt;</code> design</li>
 </ul>
@@ -1248,16 +1248,44 @@ make<span class="w"> </span>py-install-all
 </code></pre></div>
 
 <h3 id="install-required-tools">Install Required Tools<a class="headerlink" href="#install-required-tools" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code>make<span class="w"> </span>deps
+<div class="codehilite"><pre><span></span><code>make<span class="w"> </span>deps-formal
 </code></pre></div>
 
-<p>This shows any missing tools. Installation steps depend on your platform and
-are not covered in this document.</p>
+<p>This checks for <a href="https://github.com/YosysHQ/sby">SymbiYosys</a> (<code>sby</code>),
+<code>yosys-smtbmc</code>, and the <a href="https://github.com/Z3Prover/z3">Z3</a> SMT solver that the
+<code>.sby</code> files use, and shows any that are missing. To install Z3:</p>
+<table>
+<thead>
+<tr>
+<th>Platform</th>
+<th>Install command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>macOS (Homebrew)</td>
+<td><code>brew install z3</code></td>
+</tr>
+<tr>
+<td>Debian / Ubuntu</td>
+<td><code>sudo apt install z3</code></td>
+</tr>
+</tbody>
+</table>
+<p>Other installation steps depend on your platform and are not covered in this
+document. <code>make deps</code> checks the design and formal tools together.</p>
 <h3 id="run-examples">Run Examples<a class="headerlink" href="#run-examples" title="Permanent link">&para;</a></h3>
 <div class="codehilite"><pre><span></span><code>make<span class="w"> </span><span class="nv">DESIGN</span><span class="o">=</span>rad_async_fifo<span class="w"> </span>formal
 make<span class="w"> </span><span class="nv">DESIGN</span><span class="o">=</span>rad_async_fifo<span class="w"> </span>formal-cover
 </code></pre></div>
 
+<p>Prove and cover every design in one command:</p>
+<div class="codehilite"><pre><span></span><code>make<span class="w"> </span>formal-test
+</code></pre></div>
+
+<p>It prints one <code>PASS</code> or <code>FAIL</code> line per design and shows the solver output only
+for a design that fails. Every design runs, and the command fails if any design
+did.</p>
 <h3 id="examine-outputs">Examine Outputs<a class="headerlink" href="#examine-outputs" title="Permanent link">&para;</a></h3>
 <ul>
 <li><code>out_formal/&lt;design&gt;</code></li>
@@ -1479,9 +1507,12 @@ testing</a>. It can help find:</p>
 <hr />
 <h3 id="which-solvers-should-i-use">Which solvers should I use?<a class="headerlink" href="#which-solvers-should-i-use" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong><a href="https://github.com/Boolector/boolector">Boolector</a></strong> (recommended to start).</li>
-<li><a href="https://yices.csl.sri.com/">Yices</a> or <a href="https://github.com/Z3Prover/z3">Z3</a>
-can help if Boolector does not support something.</li>
+<li><strong><a href="https://github.com/Z3Prover/z3">Z3</a></strong> is the default in every RAD <code>.sby</code>
+  file (<code>smtbmc z3</code>). Install it with <code>brew install z3</code> or <code>sudo apt install z3</code>.</li>
+<li><a href="https://yices.csl.sri.com/">Yices</a> is another good choice. To try it, install
+  <code>yices-smt2</code> and change the engine line to <code>smtbmc yices</code>.</li>
+<li><a href="https://github.com/Boolector/boolector">Boolector</a> is no longer used. Its
+  upstream repository is archived and Homebrew has disabled its formula.</li>
 </ul>
 <hr />
 <h3 id="difference-between-formal-and-formal-cover">Difference between <code>formal</code> and <code>formal-cover</code>?<a class="headerlink" href="#difference-between-formal-and-formal-cover" title="Permanent link">&para;</a></h3>
@@ -1532,7 +1563,7 @@ Each run includes everything:</p>
 <ul>
 <li><a href="https://github.com/YosysHQ/sby">SymbiYosys</a></li>
 <li><a href="https://yosyshq.readthedocs.io/projects/yosys/en/latest/cmd/smtbmc.html">yosys-smtbmc</a></li>
-<li><a href="https://github.com/Boolector/boolector">Boolector</a></li>
+<li><a href="https://github.com/Z3Prover/z3">Z3</a></li>
 </ul>
 <hr />
 <h2 id="licensing">Licensing<a class="headerlink" href="#licensing" title="Permanent link">&para;</a></h2>
@@ -1595,7 +1626,7 @@ Each run includes everything:</p>
       <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.top", "content.code.copy", "toc.integrate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -31,7 +31,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
       
       
 
@@ -401,10 +401,32 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#package-versions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Package Versions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#run-example" class="md-nav__link">
     <span class="md-ellipsis">
       
         Run Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-unit-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run Unit Tests
       
     </span>
   </a>
@@ -606,6 +628,45 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#type-check-with-pyright" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Type Check with pyright
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Type Check with pyright">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pyright-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pyright Commands
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pyright-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pyright Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#faq" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -618,10 +679,32 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#why-doesnt-abe-use-the-latest-python-version" class="md-nav__link">
+  <a href="#which-python-version-does-abe-use" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why doesn't ABE use the latest Python version?
+        Which Python version does ABE use?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-are-versions-in-both-pyprojecttoml-and-constraintstxt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why are versions in both pyproject.toml and constraints.txt?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-do-i-upgrade-a-package" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How do I upgrade a package?
       
     </span>
   </a>
@@ -1182,7 +1265,7 @@
 
 
 <!--
-SPDX-FileCopyrightText: 2025 Hugh Walsh
+SPDX-FileCopyrightText: 2026 Hugh Walsh
 
 SPDX-License-Identifier: MIT
 -->
@@ -1202,6 +1285,7 @@ document describes the static analysis tools that help maintain code quality.</p
 <li><a href="#format-with-black">black</a> - Format code</li>
 <li><a href="#lint-with-pylint">pylint</a> - Lint for errors and style</li>
 <li><a href="#type-check-with-mypy">mypy</a> - Type check</li>
+<li><a href="#type-check-with-pyright">pyright</a> - Type check (the engine behind Pylance)</li>
 </ul>
 <hr />
 <h2 id="getting-started">Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
@@ -1211,11 +1295,45 @@ document describes the static analysis tools that help maintain code quality.</p
 make<span class="w"> </span>py-install-all
 </code></pre></div>
 
+<h3 id="package-versions">Package Versions<a class="headerlink" href="#package-versions" title="Permanent link">&para;</a></h3>
+<p>ABE fixes Python package versions in two places:</p>
+<ul>
+<li><code>pyproject.toml</code> declares <strong>ranges</strong>. Each starts at the version verified with
+  ABE's tests and stops before the next major release, so an unverified major
+  release is never picked up by accident.</li>
+<li><code>constraints.txt</code> lists the <strong>exact</strong> version of every package (direct and
+  indirect) that was verified. <code>make py-install-*</code> installs with it, so a fresh
+  clone gets the verified environment.</li>
+</ul>
+<p>Two make targets keep them current. <code>make py-outdated</code> compares the installed
+packages with PyPI's latest stable releases and explains why any are not
+installed. <code>make py-lock</code> rewrites <code>constraints.txt</code> from the current <code>.venv</code>
+after you have verified an upgrade.</p>
+<p>To install the newest versions the ranges allow instead, skip the file:</p>
+<div class="codehilite"><pre><span></span><code>make<span class="w"> </span>py-install-all<span class="w"> </span><span class="nv">PY_CONSTRAINTS</span><span class="o">=</span>
+</code></pre></div>
+
 <h3 id="run-example">Run Example<a class="headerlink" href="#run-example" title="Permanent link">&para;</a></h3>
 <div class="codehilite"><pre><span></span><code>make<span class="w"> </span><span class="nv">PY_SRCS</span><span class="o">=</span>ALL<span class="w"> </span>py-static-fix
 </code></pre></div>
 
 <p>See <a href="#faq">FAQ</a> for more usage examples.</p>
+<h3 id="run-unit-tests">Run Unit Tests<a class="headerlink" href="#run-unit-tests" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code>make<span class="w"> </span>py-test
+</code></pre></div>
+
+<p>These cover the DV tools (<code>dv</code> and its helpers) and the helper scripts behind
+<code>make py-outdated</code> and <code>make check-header-years</code>. The cocotb benches under
+<code>src/abe/rad/*/dv</code> are not unit tests; they run through <code>dv-regress</code>.</p>
+<p><code>make test</code> runs the unit tests (<code>py-test</code>), the RTL lint of every design
+(<code>rtl-test</code>), the synthesis of every design (<code>synth-test</code>), every formal proof
+and cover (<code>formal-test</code>), and every DV regression (<code>dv-test</code>). The other areas
+do not have tests yet.</p>
+<p>To run a subset or change the pytest options:</p>
+<div class="codehilite"><pre><span></span><code>make<span class="w"> </span>py-test<span class="w"> </span><span class="nv">PY_TEST_PATHS</span><span class="o">=</span>scripts/test_py_outdated.py
+make<span class="w"> </span>py-test<span class="w"> </span><span class="nv">PY_TEST_OPTS</span><span class="o">=</span><span class="s2">"-v -x"</span>
+</code></pre></div>
+
 <h3 id="examine-outputs">Examine Outputs<a class="headerlink" href="#examine-outputs" title="Permanent link">&para;</a></h3>
 <p>Outputs appear at the console.</p>
 <h3 id="explore-relevant-directory-layout">Explore Relevant Directory Layout<a class="headerlink" href="#explore-relevant-directory-layout" title="Permanent link">&para;</a></h3>
@@ -1223,9 +1341,26 @@ make<span class="w"> </span>py-install-all
 ├── mk
 │   ├── 00-vars.mk
 │   ├── 20-python.mk
-├── isort.cfg
+├── scripts
+│   ├── check_header_years.py
+│   ├── generate_readme.py
+│   ├── py_lock.sh
+│   ├── py_outdated.py
+│   ├── test_check_header_years.py
+│   ├── test_py_outdated.py
+│   └── tool_versions.sh
+├── src
+│   └── abe
+│       └── rad
+│           └── tools
+│               ├── conftest.py
+│               ├── test_dv_build_fingerprint.py
+│               ├── test_dv_lz4.py
+│               └── test_dv_toolchain.py
+├── .isort.cfg
+├── constraints.txt
 ├── mypy.ini
-├── pyproject.toml
+└── pyproject.toml
 </code></pre></div>
 
 <hr />
@@ -1237,6 +1372,9 @@ make<span class="w"> </span>py-install-all
 </ul>
 <p>Common commands:</p>
 <div class="codehilite"><pre><span></span><code>make<span class="w"> </span>py-help
+make<span class="w"> </span>py-test
+make<span class="w"> </span>py-outdated
+make<span class="w"> </span>py-lock
 </code></pre></div>
 
 <hr />
@@ -1294,7 +1432,7 @@ in <code>mk/00-vars.mk</code>.</p>
 type annotations without running the code and finds type-related bugs early.</p>
 <h3 id="mypy-commands"><a href="https://mypy-lang.org">mypy</a> Commands<a class="headerlink" href="#mypy-commands" title="Permanent link">&para;</a></h3>
 <p>Run <a href="https://mypy-lang.org">mypy</a> type checking on specified files:</p>
-<div class="codehilite"><pre><span></span><code>make<span class="w"> </span><span class="nv">PY_SRCS</span><span class="o">=</span>&lt;files&gt;<span class="w"> </span>py-typecheck
+<div class="codehilite"><pre><span></span><code>make<span class="w"> </span><span class="nv">PY_SRCS</span><span class="o">=</span>&lt;files&gt;<span class="w"> </span>py-mypy
 </code></pre></div>
 
 <h3 id="mypy-configuration"><a href="https://mypy-lang.org">mypy</a> Configuration<a class="headerlink" href="#mypy-configuration" title="Permanent link">&para;</a></h3>
@@ -1303,23 +1441,73 @@ type annotations without running the code and finds type-related bugs early.</p>
 <li>The <code>typings</code> directory contains necessary type stubs for imports.</li>
 </ul>
 <hr />
+<h2 id="type-check-with-pyright">Type Check with <a href="https://github.com/microsoft/pyright">pyright</a><a class="headerlink" href="#type-check-with-pyright" title="Permanent link">&para;</a></h2>
+<p><a href="https://github.com/microsoft/pyright">pyright</a> is a second static type checker.
+It is the engine behind Pylance in VS Code, so <code>make py-pyright</code> reproduces what
+the editor's Problems tab reports. It and mypy disagree in places, and each
+catches things the other misses. For example, Pyright rejects
+<code>__doc__.split(...)</code> because a module docstring can be <code>None</code>, and mypy accepts
+it. ABE runs both.</p>
+<h3 id="pyright-commands"><a href="https://github.com/microsoft/pyright">pyright</a> Commands<a class="headerlink" href="#pyright-commands" title="Permanent link">&para;</a></h3>
+<p>Run <a href="https://github.com/microsoft/pyright">pyright</a> type checking on specified
+files:</p>
+<div class="codehilite"><pre><span></span><code>make<span class="w"> </span><span class="nv">PY_SRCS</span><span class="o">=</span>&lt;files&gt;<span class="w"> </span>py-pyright
+</code></pre></div>
+
+<h3 id="pyright-configuration"><a href="https://github.com/microsoft/pyright">pyright</a> Configuration<a class="headerlink" href="#pyright-configuration" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Configured in <code>pyproject.toml</code> under <code>[tool.pyright]</code>. It mirrors <code>mypy.ini</code>:
+  the same Python version and import paths, and every parameter must be
+  annotated.</li>
+<li>The <code>typings</code> directory contains necessary type stubs for imports.</li>
+<li>Pyright is installed as the <code>pyright[nodejs]</code> package, which includes the
+  Pyright engine and its Node.js runtime. Nothing is downloaded when it first
+  runs, it works offline, and both are pinned in <code>constraints.txt</code> like every
+  other package.</li>
+</ul>
+<hr />
 <h2 id="faq">FAQ<a class="headerlink" href="#faq" title="Permanent link">&para;</a></h2>
-<h3 id="why-doesnt-abe-use-the-latest-python-version">Why doesn't ABE use the latest Python version?<a class="headerlink" href="#why-doesnt-abe-use-the-latest-python-version" title="Permanent link">&para;</a></h3>
-<p>ABE targets the latest Python version when dependencies support it.</p>
+<h3 id="which-python-version-does-abe-use">Which Python version does ABE use?<a class="headerlink" href="#which-python-version-does-abe-use" title="Permanent link">&para;</a></h3>
+<p>ABE requires Python 3.14 or newer (<code>requires-python</code> in <code>pyproject.toml</code>) and
+targets the latest stable Python once its dependencies support it. Black's
+<code>target-version</code> is <code>py314</code>, so some syntax, such as <code>except A, B:</code> without
+parentheses, does not run on older versions.</p>
+<hr />
+<h3 id="why-are-versions-in-both-pyprojecttoml-and-constraintstxt">Why are versions in both <code>pyproject.toml</code> and <code>constraints.txt</code>?<a class="headerlink" href="#why-are-versions-in-both-pyprojecttoml-and-constraintstxt" title="Permanent link">&para;</a></h3>
+<p><code>pyproject.toml</code> says which versions ABE supports. It can only name the direct
+dependencies, and exact pins there would still leave the indirect ones (for
+example <code>protobuf</code> or <code>numpy</code>) free to change. <code>constraints.txt</code> pins all of
+them, so an install reproduces the environment that was verified.</p>
+<hr />
+<h3 id="how-do-i-upgrade-a-package">How do I upgrade a package?<a class="headerlink" href="#how-do-i-upgrade-a-package" title="Permanent link">&para;</a></h3>
+<ol>
+<li>See what is behind, and why: <code>make py-outdated</code>. It lists upgrade
+   candidates, packages held back by another package or by the Python
+   version, and packages your own range excludes.</li>
+<li>If the new version is outside the range in <code>pyproject.toml</code>, widen the range.</li>
+<li>Install it: <code>.venv/bin/pip install -U &lt;package&gt;</code>.</li>
+<li>Verify: run the DV regression, formal, static checks and the uarch tools.</li>
+<li>Record the result with <code>make py-lock</code>, and commit <code>pyproject.toml</code> and
+   <code>constraints.txt</code> together.</li>
+</ol>
 <hr />
 <h3 id="what-does-py_srcsall-mean">What does <code>PY_SRCS=ALL</code> mean?<a class="headerlink" href="#what-does-py_srcsall-mean" title="Permanent link">&para;</a></h3>
-<p><code>ALL</code> runs tools on all Python files in the workspace tracked by git.</p>
+<p><code>ALL</code> runs tools on all Python files in the workspace tracked by git. New files
+are not included until you <code>git add</code> them. To check them earlier, name them:
+<code>make PY_SRCS="path/a.py path/b.py" py-static-check</code>.</p>
 <hr />
 <h3 id="how-do-i-run-all-static-checks-at-once">How do I run all static checks at once?<a class="headerlink" href="#how-do-i-run-all-static-checks-at-once" title="Permanent link">&para;</a></h3>
 <div class="codehilite"><pre><span></span><code>make<span class="w"> </span><span class="nv">PY_SRCS</span><span class="o">=</span>ALL<span class="w"> </span>py-static-check<span class="w">  </span><span class="c1"># check only</span>
 make<span class="w"> </span><span class="nv">PY_SRCS</span><span class="o">=</span>ALL<span class="w"> </span>py-static-fix<span class="w">    </span><span class="c1"># check and fix</span>
 </code></pre></div>
 
+<p>Both run isort, black, pylint, mypy and pyright.</p>
 <hr />
 <h3 id="can-i-run-tools-on-specific-files">Can I run tools on specific files?<a class="headerlink" href="#can-i-run-tools-on-specific-files" title="Permanent link">&para;</a></h3>
 <p>Yes, set <code>PY_SRCS</code> to specific file patterns:</p>
-<div class="codehilite"><pre><span></span><code>make<span class="w"> </span><span class="nv">PY_SRCS</span><span class="o">=</span><span class="s2">&quot;src/abe/uarch/*.py&quot;</span><span class="w"> </span>py-lint
-make<span class="w"> </span><span class="nv">PY_SRCS</span><span class="o">=</span><span class="s2">&quot;src/abe/rad/tools/dv.py&quot;</span><span class="w"> </span>py-typecheck
+<div class="codehilite"><pre><span></span><code>make<span class="w"> </span><span class="nv">PY_SRCS</span><span class="o">=</span><span class="s2">"src/abe/uarch/*.py"</span><span class="w"> </span>py-lint
+make<span class="w"> </span><span class="nv">PY_SRCS</span><span class="o">=</span><span class="s2">"src/abe/rad/tools/dv.py"</span><span class="w"> </span>py-mypy
+make<span class="w"> </span><span class="nv">PY_SRCS</span><span class="o">=</span><span class="s2">"src/abe/rad/tools/dv.py"</span><span class="w"> </span>py-pyright
 </code></pre></div>
 
 <hr />
@@ -1329,6 +1517,7 @@ make<span class="w"> </span><span class="nv">PY_SRCS</span><span class="o">=</sp
 <li><a href="https://github.com/psf/black">black</a></li>
 <li><a href="https://pylint.org">pylint</a></li>
 <li><a href="https://mypy-lang.org">mypy</a></li>
+<li><a href="https://github.com/microsoft/pyright">pyright</a></li>
 </ul>
 <hr />
 <h2 id="licensing">Licensing<a class="headerlink" href="#licensing" title="Permanent link">&para;</a></h2>
@@ -1391,7 +1580,7 @@ make<span class="w"> </span><span class="nv">PY_SRCS</span><span class="o">=</sp
       <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.top", "content.code.copy", "toc.integrate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

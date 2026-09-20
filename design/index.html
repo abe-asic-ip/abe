@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -31,7 +31,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
       
       
 
@@ -1314,7 +1314,7 @@
 
 
 <!--
-SPDX-FileCopyrightText: 2025 Hugh Walsh
+SPDX-FileCopyrightText: 2026 Hugh Walsh
 
 SPDX-License-Identifier: MIT
 -->
@@ -1372,6 +1372,15 @@ make<span class="w"> </span>py-install-all
 
 <p>This prints any missing host‑side tools. Installation is platform‑specific and
 outside the scope of this document.</p>
+<p>To list the installed version of every tool ABE uses (host tools and Python
+packages), run <code>make tool-versions</code>. Save the output before and after updating
+tools to see exactly what changed:</p>
+<div class="codehilite"><pre><span></span><code>make<span class="w"> </span>tool-versions<span class="w"> </span>&gt;<span class="w"> </span>versions.before.txt
+<span class="c1"># ... update tools ...</span>
+make<span class="w"> </span>tool-versions<span class="w"> </span>&gt;<span class="w"> </span>versions.after.txt
+diff<span class="w"> </span>versions.before.txt<span class="w"> </span>versions.after.txt
+</code></pre></div>
+
 <h3 id="run-examples">Run Examples<a class="headerlink" href="#run-examples" title="Permanent link">&para;</a></h3>
 <div class="codehilite"><pre><span></span><code>make<span class="w"> </span><span class="nv">DESIGN</span><span class="o">=</span>rad_async_fifo<span class="w"> </span>rtl-format
 make<span class="w"> </span><span class="nv">DESIGN</span><span class="o">=</span>rad_async_fifo<span class="w"> </span>rtl-lint-verible
@@ -1380,6 +1389,15 @@ make<span class="w"> </span><span class="nv">DESIGN</span><span class="o">=</spa
 make<span class="w"> </span><span class="nv">DESIGN</span><span class="o">=</span>rad_async_fifo<span class="w"> </span>synth-report
 </code></pre></div>
 
+<p>To lint or synthesize every design in one command:</p>
+<div class="codehilite"><pre><span></span><code>make<span class="w"> </span>rtl-test
+make<span class="w"> </span>synth-test
+</code></pre></div>
+
+<p><code>rtl-test</code> is <code>rtl-lint-all</code>. It stops at the first design that fails lint.
+<code>synth-test</code> prints one <code>PASS</code> or <code>FAIL</code> line per design and shows the tool
+output only for a design that fails. It runs every design, and fails if any
+design did.</p>
 <h3 id="examine-outputs">Examine Outputs<a class="headerlink" href="#examine-outputs" title="Permanent link">&para;</a></h3>
 <ul>
 <li><code>rtl-*</code> targets print to the console</li>
@@ -1419,6 +1437,7 @@ make<span class="w"> </span><span class="nv">DESIGN</span><span class="o">=</spa
 <li>RTL commands are in <code>30-rtl.mk</code>.</li>
 <li><a href="#synthesis-flow">Synthesis</a> commands are in <code>40-synth.mk</code>.</li>
 </ul>
+<p>The makefiles work with GNU Make 3.81 (the version macOS ships) and newer.</p>
 <p>Common commands:</p>
 <div class="codehilite"><pre><span></span><code>make<span class="w"> </span>rtl-help
 make<span class="w"> </span>synth-help
@@ -1454,13 +1473,22 @@ RAD library:</p>
 <li>Include directories</li>
 <li>Compile-time defines</li>
 </ul>
+<p>One item per line, with paths relative to the repository root:</p>
+<ul>
+<li><code>#</code> or <code>//</code> at the start of a line: comment</li>
+<li><code>+incdir+&lt;dir&gt;</code> or <code>-I &lt;dir&gt;</code>: include directory</li>
+<li><code>+define+NAME[=VALUE]</code> or <code>-D NAME[=VALUE]</code>: compile-time define</li>
+<li><code>-f &lt;file&gt;</code>: nested source list</li>
+<li>anything else: a source file</li>
+</ul>
+<p>The makefiles read the list with <code>src/abe/rad/tools/parse_srclist.awk</code>.</p>
 <p>Every tool (<a href="https://verilator.org">Verilator</a>,
 <a href="https://github.com/chipsalliance/verible">Verible</a>,
 <a href="https://github.com/zachjs/sv2v">sv2v</a>,
 <a href="https://github.com/YosysHQ/yosys">Yosys</a>, DV) uses the same <code>srclist.f</code>.</p>
 <h3 id="timescale-and-shared-headers">Timescale And Shared Headers<a class="headerlink" href="#timescale-and-shared-headers" title="Permanent link">&para;</a></h3>
 <p>RTL should include the shared timescale:</p>
-<div class="codehilite"><pre><span></span><code><span class="no">`include</span><span class="w"> </span><span class="s">&quot;rad_timescale.svh&quot;</span>
+<div class="codehilite"><pre><span></span><code><span class="no">`include</span><span class="w"> </span><span class="s">"rad_timescale.svh"</span>
 </code></pre></div>
 
 <p>Consider using reusable components from:</p>
@@ -1521,6 +1549,16 @@ structure</a>, conventions, and Make integration.</p>
 
 <p><a href="https://verilator.org">Verilator</a> linting is important because RAD DV uses
 <a href="https://verilator.org">Verilator</a> as the default simulator.</p>
+<p>Lint runs with <code>--Wall</code>, so every warning is an error. If a warning is
+intentional, waive it locally instead of disabling it for the whole project. For
+example, <code>rad_cdc_meta_cfg_pkg</code> declares parameters that are used only when
+<code>SIMULATE_METASTABILITY</code> is defined, so lint would report them as unused. They
+are wrapped in a local waiver:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1">// verilator lint_off UNUSEDPARAM</span>
+<span class="k">parameter</span><span class="w"> </span><span class="kt">realtime</span><span class="w"> </span><span class="n">CDC_T_SETUP</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">`RAD_CDC_T_SETUP</span><span class="p">;</span>
+<span class="c1">// verilator lint_on UNUSEDPARAM</span>
+</code></pre></div>
+
 <hr />
 <h2 id="synthesis-flow">Synthesis Flow<a class="headerlink" href="#synthesis-flow" title="Permanent link">&para;</a></h2>
 <p><a href="https://github.com/YosysHQ/yosys">Yosys</a> synthesis checks that designs can be
@@ -1538,6 +1576,11 @@ synthesized and provides statistics.</p>
 <div class="codehilite"><pre><span></span><code>make<span class="w"> </span><span class="nv">DESIGN</span><span class="o">=</span>&lt;design&gt;<span class="w"> </span>synth
 </code></pre></div>
 
+<p>The <a href="https://github.com/zachjs/sv2v">sv2v</a> netlist
+(<code>out_synth/&lt;design&gt;/&lt;design&gt;.v</code>) is regenerated whenever the design's
+<code>srclist.f</code>, the source files it lists (including nested lists), or the files in
+its include directories change. Otherwise <code>synth</code> reuses it and only reruns
+<a href="https://github.com/YosysHQ/yosys">Yosys</a>.</p>
 <h3 id="examine-synthesis-outputs">Examine Synthesis Outputs<a class="headerlink" href="#examine-synthesis-outputs" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -1701,7 +1744,7 @@ This keeps the RAD synthesis flow open‑source and portable.</p>
       <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.top", "content.code.copy", "toc.integrate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -29,7 +29,7 @@
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="assets/stylesheets/main.ec1eaa64.min.css">
       
       
 
@@ -1144,7 +1144,7 @@
 
 
 <!--
-SPDX-FileCopyrightText: 2025 Hugh Walsh
+SPDX-FileCopyrightText: 2026 Hugh Walsh
 
 SPDX-License-Identifier: MIT
 -->
@@ -1152,7 +1152,7 @@ SPDX-License-Identifier: MIT
 <!--- This file: docs/index.md -->
 
 <h1 id="abe-a-better-environment-for-open-source-asic-ip-development">ABE: A Better Environment for Open-Source ASIC IP Development<a class="headerlink" href="#abe-a-better-environment-for-open-source-asic-ip-development" title="Permanent link">&para;</a></h1>
-<p><a href="https://www.python.org/downloads/"><img alt="Python 3.13+" src="https://img.shields.io/badge/python-3.13+-blue.svg" /></a>
+<p><a href="https://www.python.org/downloads/"><img alt="Python 3.14+" src="https://img.shields.io/badge/python-3.14+-blue.svg" /></a>
 <a href="https://opensource.org/licenses/MIT"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" /></a>
 <a href="https://github.com/psf/black"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg" /></a>
 <a href="https://github.com/abe-asic-ip/abe"><img alt="GitHub" src="https://img.shields.io/badge/github-abe--asic--ip%2Fabe-blue.svg" /></a>
@@ -1251,6 +1251,9 @@ focusing on <strong>general-purpose ASIC blocks</strong> with <strong>microarchi
 and <strong>Python-based verification</strong> for ASIC IP development.</p>
 <hr />
 <h2 id="how-can-i-get-started">How Can I Get Started?<a class="headerlink" href="#how-can-i-get-started" title="Permanent link">&para;</a></h2>
+<p><strong>Requirements</strong>: Python 3.14 or newer, and GNU Make 3.81 or newer (the <code>make</code>
+that ships with macOS works). The free EDA tools are listed in the guides
+linked in step 4.</p>
 <ol>
 <li><strong>Clone the repository</strong></li>
 <li><strong>Set up the Python environment</strong> (<a href="python_dev/#set-up-and-install-the-environment">see details</a>)</li>
@@ -1304,11 +1307,18 @@ metrics for packet-based interfaces where packets are quantized to bus beats.</p
 <p>ABE includes:</p>
 <ul>
 <li>Standard directory layout</li>
-<li><a href="python_dev/">Python environment setup</a></li>
+<li><a href="python_dev/">Python environment setup</a>, with version ranges in
+<code>pyproject.toml</code> and the exact verified versions in <code>constraints.txt</code>
+(<a href="python_dev/#package-versions">details</a>)</li>
 <li><a href="python_dev/">Python static analysis</a> with
 <a href="https://pycqa.github.io/isort">isort</a>, <a href="https://github.com/psf/black">black</a>,
-<a href="https://pylint.org">pylint</a>, and <a href="https://mypy-lang.org">mypy</a></li>
+<a href="https://pylint.org">pylint</a>, <a href="https://mypy-lang.org">mypy</a>, and
+<a href="https://github.com/microsoft/pyright">pyright</a></li>
 <li>Make targets for RTL development, synthesis, formal, and DV</li>
+<li>Checks for contributors: <code>make test</code> runs the unit tests, RTL lint, synthesis,
+formal proofs, and all DV regressions, <code>make tool-versions</code> lists every tool
+version, <code>make py-outdated</code> shows newer Python packages, and
+<code>make check-header-years</code> checks SPDX header years</li>
 <li>Documentation conventions</li>
 </ul>
 <p>All designed to help you build ASIC IP quickly and consistently.</p>
@@ -1385,8 +1395,7 @@ UVM. Some users may prefer Python UVM. Others may prefer SystemVerilog UVM.
 Both approaches have advantages and disadvantages.</p>
 <hr />
 <h3 id="can-i-use-abe-with-commercial-simulators"><strong>Can I use ABE with commercial simulators?</strong><a class="headerlink" href="#can-i-use-abe-with-commercial-simulators" title="Permanent link">&para;</a></h3>
-<p>ABE currently supports <a href="https://verilator.org">Verilator</a> and
-<a href="https://steveicarus.github.io/iverilog">Icarus Verilog</a>. While
+<p>ABE currently supports <a href="https://verilator.org">Verilator</a>. While
 <a href="https://www.cocotb.org">cocotb</a> works with commercial simulators, ABE's test
 infrastructure would need updates to support them. Contributors with simulator
 access can extend the <a href="dv/#1-dv-main-front-end-runs-a-single-test"><code>dv</code></a>
@@ -1456,7 +1465,7 @@ CP‑SAT solver to determine worst‑case depths and flow-control parameters.</p
       <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.sections", "navigation.top", "content.code.copy", "toc.integrate"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>
