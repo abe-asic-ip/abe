@@ -25,6 +25,10 @@ VENV := .venv
 BIN := $(VENV)/bin
 PYTHON ?= $(BIN)/python
 PIP ?= $(PYTHON) -m pip
+# Exact verified versions of all packages (see docs/python_dev.md). Set
+# PY_CONSTRAINTS= (empty) to install without them.
+PY_CONSTRAINTS ?= constraints.txt
+PIP_INSTALL ?= $(PIP) install $(if $(strip $(PY_CONSTRAINTS)),-c $(PY_CONSTRAINTS))
 PY_ISORT ?= $(BIN)/isort
 PY_FORMAT ?= $(BIN)/black
 PY_LINT ?= $(PYTHON) -m pylint

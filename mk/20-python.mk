@@ -12,7 +12,9 @@ py-help:
 	@echo "  make py-venv                             # Make virtual environment"
 	@echo "  source .venv/bin/activate                # Activate (Unix/macOS)"
 	@printf '%s\n' '  .venv\Scripts\activate                   # Activate (Windows)'
-	@echo "  make py-install-<usage>                  # Install python tools"
+	@echo "  make py-install-<usage>                  # Install python tools (pinned by constraints.txt)"
+	@echo "  make py-lock                             # Refresh constraints.txt from the verified .venv"
+	@echo "  make py-outdated                         # Show packages behind PyPI's latest stable, and why"
 	@echo ""
 	@echo "Python Static:"
 	@echo ""
@@ -53,24 +55,32 @@ py-venv-all: py-version-same py-venv-rad
 .PHONY: py-install-dev
 py-install-dev: py-ensure-venv
 	$(PIP) install -U pip
-	$(PIP) install -e ".[dev]"
+	$(PIP_INSTALL) -e ".[dev]"
 
 .PHONY: py-install-docs
 py-install-docs: py-ensure-venv
-	$(PIP) install -e ".[docs]"
+	$(PIP_INSTALL) -e ".[docs]"
 
 .PHONY: py-install-rad
 py-install-rad: py-install-dev py-install-docs
-	$(PIP) install -e ".[rad]"
+	$(PIP_INSTALL) -e ".[rad]"
 
 .PHONY: py-install-uarch
 py-install-uarch: py-install-dev py-install-docs
-	$(PIP) install -e ".[uarch]"
+	$(PIP_INSTALL) -e ".[uarch]"
 
 .PHONY: py-install-all
 py-install-all: py-install-dev py-install-docs
-	$(PIP) install -e ".[rad]"
-	$(PIP) install -e ".[uarch]"
+	$(PIP_INSTALL) -e ".[rad]"
+	$(PIP_INSTALL) -e ".[uarch]"
+
+.PHONY: py-lock
+py-lock: py-ensure-venv
+	@scripts/py_lock.sh $(PYTHON)
+
+.PHONY: py-outdated
+py-outdated: py-ensure-venv
+	@$(PYTHON) scripts/py_outdated.py
 
 .PHONY: py-tools
 py-tools: py-ensure-venv
