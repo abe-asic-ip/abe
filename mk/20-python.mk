@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2025 Hugh Walsh
+# SPDX-FileCopyrightText: 2026 Hugh Walsh
 #
 # SPDX-License-Identifier: MIT
 
@@ -11,7 +11,7 @@ py-help:
 	@echo ""
 	@echo "  make py-venv                             # Make virtual environment"
 	@echo "  source .venv/bin/activate                # Activate (Unix/macOS)"
-	@echo "  .venv\\Scripts\\activate                 # Activate (Windows)"
+	@printf '%s\n' '  .venv\Scripts\activate                   # Activate (Windows)'
 	@echo "  make py-install-<usage>                  # Install python tools"
 	@echo ""
 	@echo "Python Static:"

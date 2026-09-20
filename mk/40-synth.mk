@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2025 Hugh Walsh
+# SPDX-FileCopyrightText: 2026 Hugh Walsh
 #
 # SPDX-License-Identifier: MIT
 
@@ -16,7 +16,16 @@ synth-help:
 $(SYNTH_OUT_DIR):
 	@mkdir -p $(SYNTH_OUT_DIR)
 
-$(SYNTH_OUT_DIR)/$(DESIGN).v: | $(SYNTH_OUT_DIR)
+# Inputs of the sv2v netlist, so it is regenerated when any of them change: the
+# srclist.f file(s), every .sv/.svh they reference (nested lists included), and
+# the files in the +incdir+ directories (headers are found there, not listed),
+# or the single RTL file when the design has no srclist.f.
+# Only computed for the goals that use the netlist, to keep other targets fast.
+ifneq ($(filter synth synth-dot,$(MAKECMDGOALS)),)
+  SYNTH_DEPS = $(if $(wildcard $(SV_SRCLIST)),$(SV_SRCLIST) $(filter %.f,$(SV_FILES)) $(shell bash src/abe/rad/tools/flatten_srclist.sh $(SV_SRCLIST)) $(wildcard $(addsuffix /*,$(INC_DIRS))),$(SV_SRCS))
+endif
+
+$(SYNTH_OUT_DIR)/$(DESIGN).v: $(SYNTH_DEPS) | $(SYNTH_OUT_DIR)
 ifeq ($(wildcard $(SV_SRCLIST)),)
 	sv2v $(SV2V_FLAGS) $(INCFLAGS_SV2V) $(DEFFLAGS_SV2V) $(SV_SRCS) > $(SYNTH_OUT_DIR)/$(DESIGN).v
 else
