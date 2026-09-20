@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2025 Hugh Walsh
+# SPDX-FileCopyrightText: 2026 Hugh Walsh
 #
 # SPDX-License-Identifier: MIT
 
@@ -9,7 +9,7 @@ mode cover
 depth 32
 
 [engines]
-smtbmc boolector
+smtbmc z3
 
 [files]
 src/abe/rad/shared/rtl/rad_timescale.svh

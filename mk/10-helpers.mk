@@ -28,11 +28,7 @@ deps-dv:
 deps-formal:
 	@command -v sby           >/dev/null || { echo "Missing sby (SymbiYosys)"; exit 1; }
 	@command -v yosys-smtbmc  >/dev/null || { echo "Missing yosys-smtbmc"; exit 1; }
-	@if command -v boolector >/dev/null || command -v z3 >/dev/null || command -v yices-smt2 >/dev/null; then \
-	  true; \
-	else \
-	  echo "Missing SMT solver (install one of: boolector, z3, yices-smt2)"; exit 1; \
-	fi
+	@command -v z3            >/dev/null || { echo "Missing z3 (SMT solver used by the .sby files). Install: brew install z3 | sudo apt install z3"; exit 1; }
 	@echo "All formal deps found."
 
 .PHONY: check-design

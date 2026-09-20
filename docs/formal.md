@@ -1,5 +1,5 @@
 <!--
-SPDX-FileCopyrightText: 2025 Hugh Walsh
+SPDX-FileCopyrightText: 2026 Hugh Walsh
 
 SPDX-License-Identifier: MIT
 -->
@@ -46,7 +46,7 @@ design‑side checks* and *before [DV](dv.md) simulation*.
 - [SymbiYosys](https://github.com/YosysHQ/sby)‑based flow (`prove` and `cover`)
 - Reusable SBY templates for each design
 - Standard formal testbench structure
-- Open‑source SMT solvers ([Boolector](https://github.com/Boolector/boolector) recommended)
+- Open‑source SMT solvers ([Z3](https://github.com/Z3Prover/z3) is the default)
 - Make‑based automation for proofs and coverage
 - Same directory structure for each `rad_<design>` design
 
@@ -291,9 +291,12 @@ Making assumptions simpler or stronger can often fix induction problems.
 
 ### Which solvers should I use?
 
-- **[Boolector](https://github.com/Boolector/boolector)** (recommended to start).
-- [Yices](https://yices.csl.sri.com/) or [Z3](https://github.com/Z3Prover/z3)
-can help if Boolector does not support something.
+- **[Z3](https://github.com/Z3Prover/z3)** is the default in every RAD `.sby`
+  file (`smtbmc z3`). Install it with `brew install z3` or `sudo apt install z3`.
+- [Yices](https://yices.csl.sri.com/) is another good choice. To try it, install
+  `yices-smt2` and change the engine line to `smtbmc yices`.
+- [Boolector](https://github.com/Boolector/boolector) is no longer used. Its
+  upstream repository is archived and Homebrew has disabled its formula.
 
 ---
 
@@ -340,7 +343,7 @@ Each run includes everything:
 
 - [SymbiYosys](https://github.com/YosysHQ/sby)
 - [yosys-smtbmc](https://yosyshq.readthedocs.io/projects/yosys/en/latest/cmd/smtbmc.html)
-- [Boolector](https://github.com/Boolector/boolector)
+- [Z3](https://github.com/Z3Prover/z3)
 
 ---
 
