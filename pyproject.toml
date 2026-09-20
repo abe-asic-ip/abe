@@ -13,7 +13,7 @@ name = "abe"
 dynamic = ["version"]
 description = "ABE: A Better Environment for Open-Source ASIC IP Development"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.14"
 license = { text = "MIT" }
 authors = [{ name = "Hugh Walsh" }]
 classifiers = [
@@ -90,7 +90,7 @@ line_length = 88
 
 [tool.black]
 line-length = 88
-target-version = ["py313"]
+target-version = ["py314"]
 
 [tool.pylint.BASIC]
 typevar-rgx = "^[A-Z][A-Z0-9_]*$"

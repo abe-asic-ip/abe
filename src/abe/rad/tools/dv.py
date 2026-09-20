@@ -483,7 +483,7 @@ def _cxx_links_lz4(cxx_argv: Sequence[str], prefix: Path | None = None) -> bool:
                 timeout=60,
                 check=False,
             )
-        except (OSError, subprocess.SubprocessError):
+        except OSError, subprocess.SubprocessError:
             return False
     return proc.returncode == 0
 
@@ -502,7 +502,7 @@ def _lz4_candidate_prefixes() -> list[Path]:
                 timeout=30,
                 check=False,
             )
-        except (OSError, subprocess.SubprocessError):
+        except OSError, subprocess.SubprocessError:
             proc = None
         if proc and proc.returncode == 0 and proc.stdout.strip():
             prefixes.append(Path(proc.stdout.strip()))

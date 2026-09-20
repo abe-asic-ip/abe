@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2025 Hugh Walsh
+# SPDX-FileCopyrightText: 2026 Hugh Walsh
 #
 # SPDX-License-Identifier: MIT
 
@@ -25,7 +25,7 @@ try:
         PlotLine,
         ensure_dir,
     )
-except (ImportError, ModuleNotFoundError):
+except ImportError, ModuleNotFoundError:
     # when run as a standalone script
     from abe.utils import (
         PlotLine,

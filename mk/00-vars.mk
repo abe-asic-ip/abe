@@ -19,8 +19,8 @@ SV_SRCS     ?= $(RTL_DIR)/$(DESIGN).sv
 SV_SRCLIST  ?= $(RTL_DIR)/srclist.f
 
 # ---------- Python ----------
-PYTHON_VER_RAD ?= 3.13
-PYTHON_VER_UARCH ?= 3.13
+PYTHON_VER_RAD ?= 3.14
+PYTHON_VER_UARCH ?= 3.14
 VENV := .venv
 BIN := $(VENV)/bin
 PYTHON ?= $(BIN)/python

@@ -621,7 +621,7 @@ class FifoSolver(  # pylint: disable=too-many-instance-attributes, too-many-publ
             self.cdc_ctx["wptr_cdc_cycles_in_wr"] = int(
                 data.get("wptr_cdc_cycles_in_wr", 0)
             )
-        except (json.JSONDecodeError, KeyError, ValueError, TypeError):
+        except json.JSONDecodeError, KeyError, ValueError, TypeError:
             # Corrupt/partial file? Fall back to empty (no CDC effect)
             self.cdc_ctx = {}
 

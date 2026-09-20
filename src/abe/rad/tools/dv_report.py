@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2025 Hugh Walsh
+# SPDX-FileCopyrightText: 2026 Hugh Walsh
 #
 # SPDX-License-Identifier: MIT
 
@@ -135,7 +135,7 @@ def _load_run(run_dir: Path) -> TestRun | None:
     mpath = run_dir / "manifest.json"
     try:
         data = json.loads(mpath.read_text(encoding="utf-8"))
-    except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+    except OSError, UnicodeDecodeError, json.JSONDecodeError:
         return None
     status = str(data.get("status", "")).strip().upper()
     expect = str(data.get("expect", "PASS")).strip().upper()
