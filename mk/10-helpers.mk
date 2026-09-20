@@ -24,6 +24,10 @@ deps-dv:
 	@$(PYTHON) -c "from abe.rad.tools.dv import verilator_lz4_build_args as chk; chk('verilator', True, 'fst')"
 	@echo "All dv deps found."
 
+.PHONY: tool-versions
+tool-versions:
+	@MAKE_BIN=$(MAKE) scripts/tool_versions.sh $(PYTHON)
+
 .PHONY: deps-formal
 deps-formal:
 	@command -v sby           >/dev/null || { echo "Missing sby (SymbiYosys)"; exit 1; }

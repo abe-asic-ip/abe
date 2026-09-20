@@ -72,8 +72,8 @@ make py-install-all
 
 ### Install Required Tools
 
-Install [Verilator](https://verilator.org) and a waveform viewer such as
-[Surfer](https://surfer-project.org) or [GTKWave](https://gtkwave.sourceforge.net).
+Install [Verilator](https://verilator.org) and the
+[Surfer](https://surfer-project.org) waveform viewer.
 
 Verilator's FST waveform writer (the default `--waves_fmt`) also needs the
 [lz4](https://lz4.org) library and its development headers:
@@ -93,7 +93,8 @@ If lz4 lives somewhere else, set `LZ4_PREFIX` to the directory that contains
 build with instructions. You can also skip the dependency entirely with
 `--waves_fmt vcd` (larger files) or `--waves 0`.
 
-Run `make deps-dv` to check that the DV tools are available.
+Run `make deps-dv` to check that the DV tools are available, and
+`make tool-versions` to list the version of every tool.
 
 ### Run Examples
 
@@ -1013,7 +1014,6 @@ Add debug logging to both reference model and monitors to trace mismatches.
 - [Verilator](https://verilator.org)
 - [Icarus Verilog](https://steveicarus.github.io/iverilog)
 - [Surfer](https://surfer-project.org)
-- [GTKWave](https://gtkwave.sourceforge.net)
 - [cocotb-coverage](https://github.com/mciepluc/cocotb-coverage)
 
 ---

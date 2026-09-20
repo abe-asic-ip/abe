@@ -1,5 +1,5 @@
 <!--
-SPDX-FileCopyrightText: 2025 Hugh Walsh
+SPDX-FileCopyrightText: 2026 Hugh Walsh
 
 SPDX-License-Identifier: MIT
 -->
@@ -68,6 +68,17 @@ make deps-design
 
 This prints any missing host‑side tools. Installation is platform‑specific and
 outside the scope of this document.
+
+To list the installed version of every tool ABE uses (host tools and Python
+packages), run `make tool-versions`. Save the output before and after updating
+tools to see exactly what changed:
+
+```bash
+make tool-versions > versions.before.txt
+# ... update tools ...
+make tool-versions > versions.after.txt
+diff versions.before.txt versions.after.txt
+```
 
 ### Run Examples
 
